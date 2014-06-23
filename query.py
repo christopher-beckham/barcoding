@@ -2,73 +2,75 @@ from Bio import Entrez
 
 Entrez.email = 'cjb60@students.waikato.ac.nz'
 
-# http://biopython.org/DIST/docs/tutorial/Tutorial.html#sec125
-# Section 9.15.1 -- Searching for and DL using history
-# 346447553
-
-# Insecta[ORGN] AND family[RANK]
-
 import sys
 import time
 
+DEBUG = False
 
-t_handle = Entrez.esearch(db="taxonomy", term="Insecta[ORGN] AND genus[RANK]", retmax=100000)
-t_records = Entrez.read(t_handle)
-t_records_idlist = t_records['IdList']
+nuc_handle = Entrez.esearch(db="nuccore", term="Insecta[ORGN] AND cox1[GENE] NOT genome[title]", retmax=1000)
+nuc_records = Entrez.read(nuc_handle)
+nuc_ids = nuc_records['IdList'][0:200]
 
-
-"""
-t2n maps from tax ids to nuccore ids
-e.g. t2n[6091] = [24232, 53252, ..., 436436]
-"""
-t2n = dict()
-nuccore_ids = []
-for k in range(0, len(t_records_idlist), 500):
-	t2n_handle = Entrez.elink(dbfrom="taxonomy", db="nuccore", id=t_records_idlist[k:k+500])
-	t2n_records = Entrez.read(t2n_handle)
-	for elem in t2n_records:
+nuc2tax = dict()
+for k in range(0, len(nuc_ids), 500):
+	link_handle = Entrez.elink( dbfrom="nuccore", db="taxonomy", id=nuc_ids[k:k+500] )
+	link_records = Entrez.read(link_handle)
+	for elem in link_records:
 		if len(elem['LinkSetDb']) > 0:
-			tax_id = elem['IdList'][0]
-			if tax_id not in t2n:
-				t2n[tax_id] = []
-			nuc_ids = elem['LinkSetDb'][0]['Link']
-			for nuc_id in nuc_ids:
-				t2n[tax_id].append(nuc_id)
-				nuccore_ids.append(nuc_id)
+			assert len(elem['IdList']) == 1
+			nuc_id = elem['IdList'][0]
 
+			tax_ids = elem['LinkSetDb'][0]['Link']
+			assert len(tax_ids) == 1
 
-n2n_handle = Entrez.elink(dbfrom="nuccore", db="nuccore", term="cox1[gene] OR coxI[gene] OR CO1[gene] OR COI[gene]", id=nuccore_ids[0:100])
-n2n_records = Entrez.read(n2n_handle)
-
-print n2n_records
-
-
+			nuc2tax[ nuc_id ] = tax_ids[0]['Id']
+		
+tax2genus = dict()
+for k in range(0, len(nuc_ids), 500):
+	genus_handle = Entrez.efetch( db="taxonomy", id=nuc2tax.values()[k:k+500] )
+	genus_records = Entrez.read(genus_handle)
+	for record in genus_records:
+		classes = record['LineageEx']
+		for clas in classes:
+			if clas['Rank'].lower() == 'family':
+				tax2genus[ record['TaxId'] ] = clas['ScientificName']
+				
+				
+"""				
+xml_handle = Entrez.efetch( db="nuccore", id=nuc_ids[0], rettype="native", retmode="xml" )
+xml_records = Entrez.read(xml_handle)
+				
+print xml_records
+				
+				
+				
+sys.exit(0)
 """
-Entrez query used to limit the output set of linked UIDs. 
-The query in the term parameter will be applied after the link operation,
-and only those UIDs matching the query will be returned by ELink.
-The term parameter only functions when db and dbfrom are set to the same database value.
-"""
+			
+# ok, get the FASTA files from the nuc_ids
 
-"""
-n_handle = Entrez.esearch(db="nuccore", term="(cox1[gene] OR coxI[gene] OR CO1[gene] OR COI[gene])", retmax=2000, id=saved_nuc_ids[0:100])
-n_records = Entrez.read(n_handle)
+for k in range(0, len(nuc_ids), 500):
+	fasta_handle = Entrez.efetch( db="nuccore", id=nuc_ids[k:k+500], rettype="fasta", retmode="xml" )
+	fasta_records = Entrez.read(fasta_handle)
 
+	for elem in fasta_records:
+	
+		key = elem['TSeq_gi']
+		key2 = nuc2tax[key]
+		
+		fasta_id = "__".join( [ key, key2, tax2genus[key2] ] )
+		
+		# TODO
+		if len( elem['TSeq_sequence'] ) <= 1000:	
+			print '>' + fasta_id
+			print elem['TSeq_sequence']
 
-print
-print
-print n_records
-
-#for elem in g_records[0]['LinkSetDb'][0]['Link']:
-#	print elem
-
-
-#gg_handle = Entrez.esearch(db="gene", term="(cox1[gene] OR coxI[gene] OR CO1[gene] OR COI[gene]) AND #1", retmax=2000, webenv=t_records_webenv, querykey=t_records_querykey, id=t_records_idlist)
-#print Entrez.read(gg_handle)
-
-
-#handle2 = Entrez.esearch(db="gene", term="COX", id=recs[1:100])
-
-"""
-
-# cox1[gene] OR coxI[gene] OR CO1[gene] OR COI[gene]
+if DEBUG:
+	for key in nuc2tax:
+		print key,
+		print "==>",
+		key2 = nuc2tax[key]
+		print key2,
+		print "==>",
+		print tax2genus[key2]
+	
