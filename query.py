@@ -4,12 +4,16 @@ Entrez.email = 'cjb60@students.waikato.ac.nz'
 
 import sys
 import time
+import random
+
+LIMIT = int(sys.argv[1])
 
 DEBUG = False
 
-nuc_handle = Entrez.esearch(db="nuccore", term="Insecta[ORGN] AND cox1[GENE] NOT genome[title]", retmax=1000)
+nuc_handle = Entrez.esearch(db="nuccore", term="Insecta[ORGN] AND (cox1[GENE] OR coxI[GENE] OR CO1[GENE] OR COI[GENE]) NOT genome[title]", retmax=100000)
 nuc_records = Entrez.read(nuc_handle)
-nuc_ids = nuc_records['IdList'][0:200]
+nuc_ids = nuc_records['IdList'][0:LIMIT]
+random.shuffle(nuc_ids)
 
 nuc2tax = dict()
 for k in range(0, len(nuc_ids), 500):
@@ -34,18 +38,6 @@ for k in range(0, len(nuc_ids), 500):
 		for clas in classes:
 			if clas['Rank'].lower() == 'family':
 				tax2genus[ record['TaxId'] ] = clas['ScientificName']
-				
-				
-"""				
-xml_handle = Entrez.efetch( db="nuccore", id=nuc_ids[0], rettype="native", retmode="xml" )
-xml_records = Entrez.read(xml_handle)
-				
-print xml_records
-				
-				
-				
-sys.exit(0)
-"""
 			
 # ok, get the FASTA files from the nuc_ids
 
@@ -54,16 +46,15 @@ for k in range(0, len(nuc_ids), 500):
 	fasta_records = Entrez.read(fasta_handle)
 
 	for elem in fasta_records:
-	
-		key = elem['TSeq_gi']
-		key2 = nuc2tax[key]
-		
-		fasta_id = "__".join( [ key, key2, tax2genus[key2] ] )
-		
-		# TODO
-		if len( elem['TSeq_sequence'] ) <= 1000:	
-			print '>' + fasta_id
-			print elem['TSeq_sequence']
+		key = elem['TSeq_gi']		
+		if key in nuc2tax:	
+			key2 = nuc2tax[key]			
+			if key2 in tax2genus:		
+				fasta_id = "__".join( [ key, key2, tax2genus[key2] ] )		
+				# TODO
+				if len( elem['TSeq_sequence'] ) <= 1000:	
+					print '>' + fasta_id
+					print elem['TSeq_sequence']
 
 if DEBUG:
 	for key in nuc2tax:
