@@ -9,10 +9,10 @@ res.clean: res.omega
 
 res.omega: res.fasta
 	# clustalw2 -align -type=dna -infile=res.fasta -outfile=res.aln
-	/cygdrive/c/clustal-omega-1.2.1/src/clustalo.exe --infile=output/res.fasta --outfile=output/res.omega --infmt=fasta --seqtype=dna --threads=4 --verbose
+	$CLUSTALO --infile=output/res.fasta --outfile=output/res.omega --infmt=fasta --seqtype=dna --threads=4 --verbose
 
 res.fasta:
-	python 01-query.py 3000 > output/res.fasta
+	python 01-query.py $EXP01_NUCLIMIT > output/res.fasta
 	
 clean:
 	rm output/*.*
