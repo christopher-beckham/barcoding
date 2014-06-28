@@ -29,7 +29,7 @@ output/res.omega: output/res.fasta
 	$(CLUSTALO) --infile=output/res.fasta --outfile=output/res.omega --infmt=fasta --seqtype=dna --threads=4 --verbose --force
 
 output/res.fasta:
-	python 01-query.py $(EXP01_NUCLIMIT) > output/res.fasta
+	python 01-query.py --limit $(EXP01_NUCLIMIT) > output/res.fasta
 	
 clean:
 	# ignore error for now, it works

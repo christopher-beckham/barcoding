@@ -5,8 +5,14 @@ Entrez.email = 'cjb60@students.waikato.ac.nz'
 import sys
 import time
 import random
+import argparse
 
-LIMIT = int(sys.argv[1])
+parser = argparse.ArgumentParser(description="Query GenBank")
+parser.add_argument('--limit', dest='limit', type=int, help="The number of nucleotide db ids to return from the query (after shuffling)")
+args = parser.parse_args()
+
+#LIMIT = int(sys.argv[1])
+LIMIT = args.limit
 
 DEBUG = False
 
