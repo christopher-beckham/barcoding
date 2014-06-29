@@ -8,12 +8,21 @@
 #    and will end up trying to "make" it.
 .PHONY : train clean fullclean
 
+
+#train: output/res.csv
+#	java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l output/res.csv` output/res.csv > output/res.csv.arff
+#	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv.arff -c last -x 3 > output/res.csv.arff.naivebayes
+
+train: output/res.csv.arff
+	cp -r java-workspace/wekatest/src/wekatest/ wekatest
+	javac wekatest/*.java
+	java wekatest/NaiveBayesTest output/res.csv.arff > output/res.csv.arff.naivebayes
+	
 # WEKA's CSV loader is incremental so it uses B rows as the memory buffer, so there will be certain attrvals
 # it won't expect in the later rows, so set B to be line count of res.csv
-train: output/res.csv
+output/res.csv.arff: output/res.csv
 	java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l output/res.csv` output/res.csv > output/res.csv.arff
-	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv.arff -c last -x 3 > output/res.csv.arff.naivebayes
-
+	
 output/res.csv: output/res.clean
 	python 04-csv.py < output/res.clean > output/res.csv
 	
@@ -36,6 +45,8 @@ output/res.fasta:
 	
 clean:
 	find output/* | grep -v "output/res.fasta" | xargs rm
+	rm -r wekatest
 	
 fullclean:
 	rm output/*.*
+	rm -r wekatest

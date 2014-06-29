@@ -10,7 +10,7 @@ import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 
-public class NaiveBayesTest {
+class NaiveBayesTest {
 	
 	public static void main(String[] args) throws Exception {
 		
