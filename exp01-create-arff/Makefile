@@ -8,9 +8,9 @@
 #    and will end up trying to "make" it.
 .PHONY : train clean fullclean
 
+# WEKA's CSV loader is incremental so it uses B rows as the memory buffer, so there will be certain attrvals
+# it won't expect in the later rows, so set B to be line count of res.csv
 train: output/res.csv
-	# WEKA's CSV loader is incremental so it uses B rows as the memory buffer, so there will be certain attrvals
-	# it won't expect in the later rows, so set B to be line count of res.csv
 	java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l output/res.csv` output/res.csv > output/res.csv.arff
 	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv.arff -c last -x 3 > output/res.csv.arff.naivebayes
 
