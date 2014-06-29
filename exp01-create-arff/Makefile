@@ -9,7 +9,10 @@
 .PHONY : train clean fullclean
 
 train: output/res.csv
-	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv -c last -x 3 > output/res.csv.naivebayes
+	# WEKA's CSV loader is incremental so it uses B rows as the memory buffer, so there will be certain attrvals
+	# it won't expect in the later rows, so set B to be line count of res.csv
+	java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l output/res.csv` output/res.csv > output/res.csv.arff
+	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv.arff -c last -x 3 > output/res.csv.arff.naivebayes
 
 output/res.csv: output/res.clean
 	python 04-csv.py < output/res.clean > output/res.csv
@@ -29,11 +32,10 @@ output/res.omega: output/res.fasta
 	$(CLUSTALO) --infile=output/res.fasta --outfile=output/res.omega --infmt=fasta --seqtype=dna --threads=4 --verbose --force
 
 output/res.fasta:
-	python 01-query.py --limit $(EXP01_NUCLIMIT) > output/res.fasta
+	python 01-query.py --limit=$(EXP01_NUCLIMIT) --fraglen=$(EXP01_FRAGLEN) > output/res.fasta
 	
 clean:
-	# ignore error for now, it works
-	find output | grep -v "output/res.fasta" | xargs rm
+	find output/* | grep -v "output/res.fasta" | xargs rm
 	
 fullclean:
 	rm output/*.*
