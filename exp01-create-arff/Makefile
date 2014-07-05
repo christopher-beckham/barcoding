@@ -9,9 +9,9 @@
 .PHONY : train clean fullclean
 
 
-#train: output/res.csv
-#	java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l output/res.csv` output/res.csv > output/res.csv.arff
-#	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv.arff -c last -x 3 > output/res.csv.arff.naivebayes
+trainold: output/res.csv
+	java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l output/res.csv` output/res.csv > output/res.csv.arff
+	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -t output/res.csv.arff -c last -x 3 > output/res.csv.arff.naivebayes
 
 train: output/res.csv.arff
 	cp -r java-workspace/wekatest/src/wekatest/ wekatest
@@ -36,12 +36,15 @@ output/res.clean: output/res.omega
 	#python aln-consensus.py < res.aln > res.clean
 	python 03-clean.py < output/res.omega > output/res.clean
 
-output/res.omega: output/res.fasta
+output/res.omega: output/res.fasta.chop
 	# clustalw2 -align -type=dna -infile=res.fasta -outfile=res.aln
 	$(CLUSTALO) --infile=output/res.fasta --outfile=output/res.omega --infmt=fasta --seqtype=dna --threads=4 --verbose --force
 
+output/res.fasta.chop: output/res.fasta
+	python 02-chop.py --fraglen=$(EXP01_FRAGLEN) --seed=0 < output/res.fasta > output/res.fasta.chop
+	
 output/res.fasta:
-	python 01-query.py --limit=$(EXP01_NUCLIMIT) --fraglen=$(EXP01_FRAGLEN) > output/res.fasta
+	python 01-query.py --limit=$(EXP01_NUCLIMIT) > output/res.fasta
 	
 clean:
 	find output/* | grep -v "output/res.fasta" | xargs rm

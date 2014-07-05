@@ -9,12 +9,10 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Query GenBank")
 parser.add_argument('--limit', dest='limit', required=True, type=int, help="The number of nucleotide db ids to return from the query (after shuffling)")
-parser.add_argument('--fraglen', dest='fraglen', required=True, type=int, help="Fragment lengths to randomly sample from (0 = don't use this)")
 args = parser.parse_args()
 
 #LIMIT = int(sys.argv[1])
 LIMIT = args.limit
-FRAGLEN = args.fraglen
 
 DEBUG = False
 
@@ -62,11 +60,7 @@ for k in range(0, len(nuc_ids), 500):
 				# TODO
 				if len( elem['TSeq_sequence'] ) <= 1000:	
 					print '>' + fasta_id
-					if FRAGLEN > 0:
-						idx = random.randint(0, len(elem['TSeq_sequence']) - FRAGLEN)
-						print elem['TSeq_sequence'][ idx : idx + FRAGLEN ]
-					else:
-						print elem['TSeq_sequence']
+					print elem['TSeq_sequence']
 
 if DEBUG:
 	for key in nuc2tax:
