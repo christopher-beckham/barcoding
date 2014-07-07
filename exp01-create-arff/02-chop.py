@@ -17,14 +17,24 @@ random.seed(SEED)
 
 fstring = StringIO.StringIO( sys.stdin.read() )
 
+nc = 0
+
 records = SeqIO.parse(fstring, "fasta")
 for rec in records:
 
 	if len(rec.seq) < FRAGLEN:
 		continue
+		
+	if 'N' in rec.seq or 'n' in rec.seq:
+		nc += 1
+		continue
 
 	if FRAGLEN > 0:
 		idx = random.randint(0, len(rec.seq) - FRAGLEN)
-		print rec.id + "," + rec.seq[ idx : idx + FRAGLEN ]
+		print '>' + rec.id
+		print rec.seq[ idx : idx + FRAGLEN ]
 	else:
-		print rec.id + "," + rec.seq
+		print '>' + rec.id
+		print rec.seq
+		
+sys.stderr.write("Number of sequences with N's: " + str(nc) + "\n")

@@ -31,11 +31,12 @@ class NaiveBayesTest {
 		
 		Attribute classAttr = trainingSet.attribute( trainingSet.classIndex() );
 		DecimalFormat df = new DecimalFormat("#.##");
-		System.out.println("class,recall,precision");
+		System.out.println("class,recall,accuracy");
 		for(int x = 0; x < trainingSet.numClasses(); x++) {
 			System.out.print( classAttr.value(x) + "," );
 			System.out.print( df.format( xVal.recall(x) ) + "," );
-			System.out.println( df.format( xVal.precision(x) ) );
+			//System.out.println( df.format( xVal.precision(x) ) );
+			System.out.println( df.format( xVal.pctCorrect() ) );
 		}
 	}
 
