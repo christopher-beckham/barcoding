@@ -8,11 +8,13 @@
 #    and will end up trying to "make" it.
 .PHONY : train clean fullclean
 
+# ./seq.py 0,500,100 1,10,1 | parallel './exp.sh {1} {2}' --threads 4
+# python gen-params.py 0,500,100 1,10,1 | parallel --colsep ' ' 'echo {1} {2}'
 
 train: output/res.fasta
 	cp -r java-workspace/wekatest/src/wekatest/ wekatest
 	javac wekatest/*.java
-	./exp.sh
+	python gen-params.py 0,500,100 1,5,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './exp.sh {1} {2}'
 	
 output/res.fasta:
 	python 01-query.py --limit=$(EXP01_NUCLIMIT) > output/res.fasta
