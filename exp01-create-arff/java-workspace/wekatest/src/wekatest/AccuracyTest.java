@@ -23,8 +23,10 @@ class AccuracyTest {
 		Evaluation xVal = new Evaluation(trainingSet);
 		xVal.crossValidateModel(classifier, trainingSet, 3, new Random(0) );
 		
-		sb.append( xVal.correct() );
+		sb.append( xVal.pctCorrect() );
 		sb.append("\n");
+		
+		System.out.println( xVal.pctCorrect() );
 		
 		return sb.toString();
 	}
@@ -48,6 +50,8 @@ class AccuracyTest {
 					i += Integer.parseInt(sampleNums[2])) {
 				
 				sb.append(f + ",");
+				
+				System.out.println(f + "," + i);
 				
 				classifyAccuracy(outDir + "/" + "res." + f + "." + i + ".arff", sb);
 			}

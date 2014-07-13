@@ -20,6 +20,7 @@ train: $(OUT_FOLDER)/res.fasta
 	javac wekatest/*.java
 	java wekatest/RecallTest 0,500,100 1,5,1 $(OUT_FOLDER)
 	java wekatest/AccuracyTest 0,500,100 1,5,1 $(OUT_FOLDER)
+	python get-class-dist.py $(OUT_FOLDER_WIN)/res.0.1.csv $(OUT_FOLDER_WIN)/class-dist.csv
 	
 $(OUT_FOLDER)/res.fasta:
 	python 01-query.py --limit=$(EXP01_NUCLIMIT) > output/res.fasta
