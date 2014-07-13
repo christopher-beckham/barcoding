@@ -11,12 +11,17 @@
 # ./seq.py 0,500,100 1,10,1 | parallel './exp.sh {1} {2}' --threads 4
 # python gen-params.py 0,500,100 1,10,1 | parallel --colsep ' ' 'echo {1} {2}'
 
-train: output/res.fasta
+
+#python gen-params.py 0,500,100 1,5,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './exp.sh {1} {2}'
+#python gen-params.py 0,500,100 0,0,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './plot.sh {1}'
+
+train: $(OUT_FOLDER)/res.fasta
 	cp -r java-workspace/wekatest/src/wekatest/ wekatest
 	javac wekatest/*.java
-	python gen-params.py 0,500,100 1,5,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './exp.sh {1} {2}'
+	java wekatest/RecallTest 0,500,100 1,5,1 $(OUT_FOLDER)
+	java wekatest/AccuracyTest 0,500,100 1,5,1 $(OUT_FOLDER)
 	
-output/res.fasta:
+$(OUT_FOLDER)/res.fasta:
 	python 01-query.py --limit=$(EXP01_NUCLIMIT) > output/res.fasta
 	
 clean:
