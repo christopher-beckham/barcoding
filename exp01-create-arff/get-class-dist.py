@@ -13,5 +13,7 @@ for line in f:
 		
 f.close()
 
+print "class,count"
+
 for key in hm:
 	print key + "," + str(hm[key])

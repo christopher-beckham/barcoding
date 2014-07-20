@@ -14,6 +14,6 @@ mafft --nomemsave --alga --parttree --retree 2 --partsize 1000 --thread 4 --inpu
 python 03-clean.py < $OUT_FOLDER/res.$f.$i.omega > $OUT_FOLDER/res.$f.$i.clean
 python 04-csv.py < $OUT_FOLDER/res.$f.$i.clean > $OUT_FOLDER/res.$f.$i.csv
 
-java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l $OUT_FOLDER_WIN/res.$f.$i.csv` $OUT_FOLDER/res.$f.$i.csv > $OUT_FOLDER/res.$f.$i.arff
+java -Xmx6000M weka.core.converters.CSVLoader -B `wc -l $OUT_FOLDER/res.$f.$i.csv` $OUT_FOLDER/res.$f.$i.csv > $OUT_FOLDER/res.$f.$i.arff
 
 rm $OUT_FOLDER/res.fasta.$f.$i.chop $OUT_FOLDER/res.$f.$i.omega $OUT_FOLDER/res.$f.$i.clean
