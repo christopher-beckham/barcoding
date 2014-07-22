@@ -4,12 +4,16 @@ from Bio import Seq
 import sys
 import StringIO
 import operator
+import argparse
 
+parser = argparse.ArgumentParser(description="Create kmer freq csv from res.fasta")
+parser.add_argument('--kmer', dest='kmer', required=True, type=int, help="Value of k for kmer freq")
+args = parser.parse_args()
 
 contents = sys.stdin.read()
 
 globals = set()
-KMER_SIZE = 4
+KMER_SIZE = args.kmer
 
 """
 There will likely be a lot of classes, so let's put a limit on them,
