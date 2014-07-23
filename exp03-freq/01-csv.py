@@ -5,9 +5,13 @@ import sys
 import StringIO
 import operator
 import argparse
+import math
 
 parser = argparse.ArgumentParser(description="Create kmer freq csv from res.fasta")
 parser.add_argument('--kmer', dest='kmer', required=True, type=int, help="Value of k for kmer freq")
+parser.add_argument('--outfile', dest='outfile', required=True, help="Output file for training CSV")
+parser.add_argument('--outlist', dest='outlist', required=True, help="Output file for mer list")
+#parser.add_argument('--seed', dest='seed', type=int, required=True, help="Random seed for training/testing split")
 args = parser.parse_args()
 
 contents = sys.stdin.read()
@@ -23,6 +27,10 @@ MAX_CLASS.
 MAX_CLASS = 40
 class_counts = dict()
 
+"""
+Create a string "file" from stdin, parse it with BioPython,
+and find the most common classes.
+"""
 fstring = StringIO.StringIO(contents)
 records = SeqIO.parse(fstring, "fasta")
 for rec in records:
@@ -39,13 +47,29 @@ for rec in records:
 sorted_counts = sorted(class_counts.iteritems(), key=operator.itemgetter(1), reverse=True)
 chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:MAX_CLASS] ] )
 
+records.close()
+
+"""
+Open a file defined by args.outlist, and write the mers to it
+"""
+f_outlist = open(args.outlist, 'wb')
+for glob in globals:
+        f_outlist.write(glob)
+        f_outlist.write("\n")
+f_outlist.close()
+
+"""
+Open a file defined by args.outfile, and write the training data
+to it
+"""
+
+f_outfile = open(args.outfile, 'wb')
+
 labels = []			
 for glob in globals:
 	labels.append(glob + "_f")
 labels.append("class")
-print ",".join(labels)
-
-records.close()
+f_outfile.write( ",".join(labels) + "\n" )
 
 fstring = StringIO.StringIO(contents)
 records = SeqIO.parse(fstring, "fasta")
@@ -64,9 +88,13 @@ for rec in records:
 			if glob not in hm:
 				vector.append('0')
 			else:
-				vector.append( str( float(hm[glob]) / float( len(rec.seq) - KMER_SIZE )) )
+                                prop = float(hm[glob]) / float( len(rec.seq) - KMER_SIZE )
+                                log_prop = -1 * math.log(prop,10)
+				vector.append( str(log_prop) )
 				#vector.append( str(float(hm[glob])))
 		vector.append( classname )
-		print ",".join(vector)
+		f_outfile.write( ",".join(vector) + "\n" )
 	
 records.close()
+
+f_outfile.close()
