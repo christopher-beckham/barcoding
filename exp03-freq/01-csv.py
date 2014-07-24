@@ -7,17 +7,25 @@ import operator
 import argparse
 import math
 
+def err(st):
+	sys.stderr.write( str(st) )
+	sys.stderr.write("\n")
+
 parser = argparse.ArgumentParser(description="Create kmer freq csv from res.fasta")
-parser.add_argument('--kmer', dest='kmer', required=True, type=int, help="Value of k for kmer freq")
 parser.add_argument('--outfile', dest='outfile', required=True, help="Output file for training CSV")
 parser.add_argument('--outlist', dest='outlist', required=True, help="Output file for mer list")
+parser.add_argument('--kmerrange', dest='kmerrange', required=True, help="kmer range")
 #parser.add_argument('--seed', dest='seed', type=int, required=True, help="Random seed for training/testing split")
 args = parser.parse_args()
 
 contents = sys.stdin.read()
 
-globals = set()
-KMER_SIZE = args.kmer
+kmerrange = args.kmerrange.split(',')
+
+KMER_MIN = int(kmerrange[0])
+KMER_MAX = int(kmerrange[1])
+kmer_sets = [ set() for x in range(0, KMER_MAX - KMER_MIN + 1) ]
+
 
 """
 There will likely be a lot of classes, so let's put a limit on them,
@@ -28,73 +36,88 @@ MAX_CLASS = 40
 class_counts = dict()
 
 """
-Create a string "file" from stdin, parse it with BioPython,
-and find the most common classes.
+For each value of n, i.e. n = 3, 4, ..., k, look at all the FASTA
+sequences and extract the n-mers, then stash them in the set,
+"globals". Also find the most common classes and keep a count in
+another hash table, "class_counts".
 """
-fstring = StringIO.StringIO(contents)
-records = SeqIO.parse(fstring, "fasta")
-for rec in records:
-	for x in range(0, len(rec.seq) - KMER_SIZE + 1):
-		kmer = str(rec.seq[x:x+KMER_SIZE])
-		if kmer not in globals:
-			globals.add(kmer)
-	classname = rec.id.split('__')[2]
-	if classname not in class_counts:
-		class_counts[classname] = 1
-	else:
-		class_counts[classname] += 1
+for k in range(KMER_MIN, KMER_MAX+1):
+	err("Processing k = " + str(k))
+	fstring = StringIO.StringIO(contents)
+	records = SeqIO.parse(fstring, "fasta")
+	for rec in records:
+		for x in range(0, len(rec.seq) - k + 1):
+			kmer = str(rec.seq[x:x+k])
+			if kmer not in kmer_sets[k - KMER_MIN]:
+				kmer_sets[k - KMER_MIN].add(kmer)				
+		# only do this step once, since it's not related to kmer counting
+		if k == KMER_MIN:
+			classname = rec.id.split('__')[2]
+			if classname not in class_counts:
+				class_counts[classname] = 1
+			else:
+				class_counts[classname] += 1
+	records.close()
 		
 sorted_counts = sorted(class_counts.iteritems(), key=operator.itemgetter(1), reverse=True)
 chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:MAX_CLASS] ] )
 
-records.close()
-
 """
 Open a file defined by args.outlist, and write the mers to it
+args.outlist is in the following format:
+
+3mer_startidx, 3mer_endidx, 3mer_1, 3mer_2, ..., 3mer_p
+4mer_startidx, 4mer_endidx, 4mer_1, 4mer_2, ..., 4mer_p
+...
+kmer_startidx, kmer_endidx, kmer_1, kmer_2, ..., kmer_p
 """
+err("Writing kmer sets to " + args.outlist)
 f_outlist = open(args.outlist, 'wb')
-for glob in globals:
-        f_outlist.write(glob)
-        f_outlist.write("\n")
+idx = 1
+for kmer_set in kmer_sets:
+	f_outlist.write(str(idx) + "," + str(len(kmer_set) + idx - 1) + "," );
+	f_outlist.write(",".join(kmer_set))
+	f_outlist.write("\n")
+	idx += len(kmer_set)
 f_outlist.close()
 
 """
 Open a file defined by args.outfile, and write the training data
 to it
 """
-
+err("Writing training file to " + args.outfile)
 f_outfile = open(args.outfile, 'wb')
-
-labels = []			
-for glob in globals:
-	labels.append(glob + "_f")
+labels = []
+for kmer_set in kmer_sets:	
+	for kmer in kmer_set:
+		labels.append(kmer + "_f")
 labels.append("class")
 f_outfile.write( ",".join(labels) + "\n" )
 
 fstring = StringIO.StringIO(contents)
 records = SeqIO.parse(fstring, "fasta")
 for rec in records:
+	vector = [] # one particular instance
 	classname = rec.id.split('__')[2]
 	if classname in chosen_classnames:
-		hm = dict()
-		for x in range(0, len(rec.seq) - KMER_SIZE + 1):
-			kmer = str(rec.seq[x:x+KMER_SIZE])
-			if kmer not in hm:
-				hm[kmer] = 1
-			else:
-				hm[kmer] += 1
-		vector = []
-		for glob in globals:
-			if glob not in hm:
-				vector.append('0')
-			else:
-                                prop = float(hm[glob]) / float( len(rec.seq) - KMER_SIZE )
-                                log_prop = -1 * math.log(prop,10)
-				vector.append( str(log_prop) )
-				#vector.append( str(float(hm[glob])))
+		for k in range(KMER_MIN, KMER_MAX+1):
+			kmer_set = kmer_sets[k - KMER_MIN]
+			hm = dict()
+			for x in range(0, len(rec.seq) - k + 1):
+				kmer = str(rec.seq[x:x+k])
+				if kmer not in hm:
+					hm[kmer] = 1
+				else:
+					hm[kmer] += 1
+			for kmer in kmer_set:
+				if kmer not in hm:
+					vector.append('0')
+				else:
+					prop = float(hm[kmer]) / float( len(rec.seq) - k )
+					log_prop = -1 * math.log(prop,10)
+					vector.append( str(log_prop) )
 		vector.append( classname )
 		f_outfile.write( ",".join(vector) + "\n" )
-	
 records.close()
 
 f_outfile.close()
