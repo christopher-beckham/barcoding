@@ -15,26 +15,11 @@
 #python gen-params.py 0,500,100 1,5,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './exp.sh {1} {2}'
 #python gen-params.py 0,500,100 0,0,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './plot.sh {1}'
 
-train: $(OUT_FOLDER_MAKEFRIENDLY)/res.fasta
+train: $(OUT_FOLDER)/res.fasta
 	python gen-params.py 0,500,100 1,5,1 | parallel --no-notice --colsep ' ' --max-procs=1 --bar './exp.sh {1} {2}'
 	rm -r wekatest
 	cp -r java-workspace/wekatest/src/wekatest/ wekatest
 	javac wekatest/*.java
-	java wekatest/RecallTest 0,500,100 1,5,1 $(OUT_FOLDER)
-	java wekatest/AccuracyTest 0,500,100 1,5,1 $(OUT_FOLDER)
-	python get-class-dist.py $(OUT_FOLDER)/res.0.1.csv > $(OUT_FOLDER)/class-dist.csv
-	
-$(OUT_FOLDER_MAKEFRIENDLY)/res.fasta:
-	python 01-query.py --limit=$(EXP01_NUCLIMIT) > $(OUT_FOLDER)/res.fasta
-	
-# ----
-# no longer in use
-# ----	
-	
-clean:
-	find output/* | grep -v "output/res.fasta" | xargs rm
-	rm -r wekatest
-	
-fullclean:
-	rm output/*.*
-	rm -r wekatest
+	java wekatest/RecallTest 0,500,100 1,5,1 $(OUT_FOLDER_WIN)
+	java wekatest/AccuracyTest 0,500,100 1,5,1 $(OUT_FOLDER_WIN)
+	python get-class-dist.py $(OUT_FOLDER_WIN)/res.0.1.csv > $(OUT_FOLDER_WIN)/class-dist.csv
