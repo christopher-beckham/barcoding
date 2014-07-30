@@ -12,7 +12,7 @@ weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute
 
 cmd_prefix = [
 "java -Xmx6000M",
-'weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.Vote -- -S 1'
+'weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.Vote -c last -t $1 -x 10 -o -- -S 1'
 ]
 
 cmd_mid = []
@@ -22,7 +22,6 @@ cmd_postfix = [
 ]
 
 cmd_postpostfix = [
-"-t $1 -d $1.model"
 ]
 
 meta_template = '-B "weka.classifiers.meta.FilteredClassifier -F \\"weka.filters.unsupervised.attribute.Remove -V -R xxxx-yyyy,last\\" -W weka.classifiers.bayes.NaiveBayes"'
