@@ -29,7 +29,7 @@ while True:
 		nuc_records = Entrez.read(nuc_handle)
 		nuc_handle.close()
 		break
-	except HTTPException as e:
+	except:
 		err("HTTPException - retrying...")
 		
 nuc_ids = nuc_records['IdList'][0:LIMIT]
@@ -56,7 +56,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 
 					nuc2tax[ nuc_id ] = tax_ids[0]['Id']
 			break
-		except HTTPException as e:
+		except:
 			err("HTTPException - retrying...")
 		
 err("Getting taxonomic information...")		
@@ -76,7 +76,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 					if clas['Rank'].lower() == 'family':
 						tax2genus[ record['TaxId'] ] = clas['ScientificName']
 			break
-		except HTTPException as e:
+		except:
 			err("HTTPException - retrying...")
 			
 # ok, get the FASTA files from the nuc_ids
@@ -102,7 +102,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 							print '>' + fasta_id
 							print elem['TSeq_sequence']
 			break
-		except HTTPException as e:
+		except:
 			err("HTTPException - retrying...")
 
 if DEBUG:
