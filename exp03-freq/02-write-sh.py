@@ -1,8 +1,18 @@
 import sys
 
+"""
+weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.Vote -- -S 1 -B "weka.classifiers.meta.FilteredClassifier -F \"weka.filters.unsupervised.attribute.Remove -V -R xxxx-yyyy\" -W weka.classifiers.bayes.NaiveBayes" -R MAJ
+"""
+
+"""
+inside weka:
+
+weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.Vote -- -S 1 -B "weka.classifiers.meta.FilteredClassifier -F \"weka.filters.unsupervised.attribute.Remove -V -R 200-300\" -W weka.classifiers.bayes.NaiveBayes" -R MAX
+"""
+
 cmd_prefix = [
 "java -Xmx6000M",
-"weka.classifiers.meta.Vote -S 1"
+'weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.Vote -- -S 1'
 ]
 
 cmd_mid = []
@@ -15,16 +25,7 @@ cmd_postpostfix = [
 "-t $1 -d $1.model"
 ]
 
-"""
-weka.classifiers.meta.Vote -S 1 -B "weka.classifiers.meta.FilteredClassifier -F \"weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last\" -W weka.classifiers.meta.FilteredClassifier -- -F \"weka.filters.unsupervised.attribute.Remove -V -R xxxx-yyyy,last\" -W weka.classifiers.bayes.NaiveBayes" -R MAJ
-"""
-
-"""
-'-B "weka.classifiers.meta.FilteredClassifier -F \"weka.filters.unsupervised.attribute.Discretize -B 5 -M -1.0 -R first-last\" -W weka.classifiers.meta.FilteredClassifier -- -F \"weka.filters.unsupervised.attribute.Remove -R 1-330\" -W weka.classifiers.bayes.NaiveBayes"',
-'-B "weka.classifiers.meta.FilteredClassifier -F \"weka.filters.unsupervised.attribute.Discretize -B 5 -M -1.0 -R first-last\" -W weka.classifiers.meta.FilteredClassifier -- -F \"weka.filters.unsupervised.attribute.Remove -R 331-1369\" -W weka.classifiers.bayes.NaiveBayes"',
-"""
-
-meta_template = '-B "weka.classifiers.meta.FilteredClassifier -F \\"weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last\\" -W weka.classifiers.meta.FilteredClassifier -- -F \\"weka.filters.unsupervised.attribute.Remove -V -R xxxx-yyyy,last\\" -W weka.classifiers.bayes.NaiveBayes"'
+meta_template = '-B "weka.classifiers.meta.FilteredClassifier -F \\"weka.filters.unsupervised.attribute.Remove -V -R xxxx-yyyy,last\\" -W weka.classifiers.bayes.NaiveBayes"'
 
 for line in sys.stdin:
 	idxs = line.rstrip().split(',')[0:2]
