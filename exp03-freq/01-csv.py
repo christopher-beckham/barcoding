@@ -1,11 +1,9 @@
-from Bio import SeqIO
-from Bio import Seq
-
 import sys
 import StringIO
 import operator
 import argparse
 import math
+import json
 
 def err(st):
 	sys.stderr.write( str(st) )
@@ -15,12 +13,14 @@ parser = argparse.ArgumentParser(description="Create kmer freq csv from res.fast
 parser.add_argument('--outfile', dest='outfile', required=True, help="Output file for training CSV")
 parser.add_argument('--outlist', dest='outlist', required=True, help="Output file for mer list")
 parser.add_argument('--kmerrange', dest='kmerrange', required=True, help="kmer range")
+parser.add_argument('--taxlevel', dest='taxlevel', required=True, help="The taxonomic levels to be used (i.e. family, genus, etc.)")
 #parser.add_argument('--seed', dest='seed', type=int, required=True, help="Random seed for training/testing split")
 args = parser.parse_args()
 
 contents = sys.stdin.read()
 
 kmerrange = args.kmerrange.split(',')
+taxlevel = args.taxlevel
 
 KMER_MIN = int(kmerrange[0])
 KMER_MAX = int(kmerrange[1])
@@ -41,23 +41,21 @@ sequences and extract the n-mers, then stash them in the set,
 "globals". Also find the most common classes and keep a count in
 another hash table, "class_counts".
 """
+records = json.loads(contents)
 for k in range(KMER_MIN, KMER_MAX+1):
 	err("Processing k = " + str(k))
-	fstring = StringIO.StringIO(contents)
-	records = SeqIO.parse(fstring, "fasta")
 	for rec in records:
-		for x in range(0, len(rec.seq) - k + 1):
-			kmer = str(rec.seq[x:x+k])
+		for x in range(0, len(rec['fasta']) - k + 1):
+			kmer = str(rec['fasta'][x:x+k])
 			if kmer not in kmer_sets[k - KMER_MIN]:
 				kmer_sets[k - KMER_MIN].add(kmer)				
 		# only do this step once, since it's not related to kmer counting
 		if k == KMER_MIN:
-			classname = rec.id.split('__')[2]
+			classname = rec['taxinfo'][taxlevel]
 			if classname not in class_counts:
 				class_counts[classname] = 1
 			else:
 				class_counts[classname] += 1
-	records.close()
 		
 sorted_counts = sorted(class_counts.iteritems(), key=operator.itemgetter(1), reverse=True)
 chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:MAX_CLASS] ] )
@@ -94,17 +92,15 @@ for kmer_set in kmer_sets:
 labels.append("class")
 f_outfile.write( ",".join(labels) + "\n" )
 
-fstring = StringIO.StringIO(contents)
-records = SeqIO.parse(fstring, "fasta")
 for rec in records:
 	vector = [] # one particular instance
-	classname = rec.id.split('__')[2]
+	classname = rec['taxinfo'][taxlevel]
 	if classname in chosen_classnames:
 		for k in range(KMER_MIN, KMER_MAX+1):
 			kmer_set = kmer_sets[k - KMER_MIN]
 			hm = dict()
-			for x in range(0, len(rec.seq) - k + 1):
-				kmer = str(rec.seq[x:x+k])
+			for x in range(0, len(rec['fasta']) - k + 1):
+				kmer = str(rec['fasta'][x:x+k])
 				if kmer not in hm:
 					hm[kmer] = 1
 				else:
@@ -113,11 +109,10 @@ for rec in records:
 				if kmer not in hm:
 					vector.append('0')
 				else:
-					prop = float(hm[kmer]) / float( len(rec.seq) - k )
+					prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
 					log_prop = -1 * math.log(prop,10)
 					vector.append( str(log_prop) )
 		vector.append( classname )
 		f_outfile.write( ",".join(vector) + "\n" )
-records.close()
 
 f_outfile.close()
