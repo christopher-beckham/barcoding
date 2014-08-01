@@ -1,0 +1,1 @@
+weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.AttributeSelectedClassifier -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 100" -W weka.classifiers.trees.RandomForest -- -I 100 -K 0 -S 1 -num-slots 3
