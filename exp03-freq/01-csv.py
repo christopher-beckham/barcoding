@@ -32,7 +32,7 @@ There will likely be a lot of classes, so let's put a limit on them,
 defined by MAX_CLASS. Only choose the most common classes, from 0 to
 MAX_CLASS.
 """
-MAX_CLASS = 40
+MAX_CLASS = 300
 class_counts = dict()
 
 """

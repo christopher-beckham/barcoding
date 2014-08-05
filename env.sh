@@ -11,12 +11,9 @@ export EXP_SHARED_WIN=`cygpath -w $EXP_SHARED`
 
 # TODO: clean these up, perhaps have some of these in an exp01-specific env.sh
 
-export EXP01_NUCLIMIT=10000
-export EXP01_FRAGLEN=0 # use 0 if you don't want randomly sampled fragments!
-
 # Because we're using Cygwin, some programs will expect Windows paths and
 # some will expect Unix-like paths. If running these scripts on Unix, make
 # both variables the same.
 
-export OUT_FOLDER_WIN="G:/barcoding/output"
-export OUT_FOLDER="/cygdrive/g/barcoding/output"
+export OUT_FOLDER_WIN=`realpath output`
+export OUT_FOLDER=`realpath output`
