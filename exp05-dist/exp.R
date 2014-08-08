@@ -1,7 +1,7 @@
 # requires caret package!
 library(caret)
 
-df = read.csv("../output/res50k.csv")
+df = read.csv("../output/res50k.csv", na.strings="?")
 
 # remove any attributes that are all zeroes (for speedup)
 #for( i in 1:num.features ) {
