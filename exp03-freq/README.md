@@ -4,8 +4,9 @@ Overview
 These experiments are concerned with seeing what results come out of running Naive Bayes on the data, especially with attribute selection.
 
 The data consists of nearly 40,000 instances, each corresponding to a particular cytochrome oxidase sequence from a particular genus of insect.
-In our case, we have 300 unique genera, so we have a 300-class classification problem. There are nearly 4000 features, which are all normalised
-frequencies of 3-mers, 4-mers, and 5-mers.
+Specifically, each sequence is a 300 bp substring of its original sequence. This was done to test how well we could classify genera without needing
+the full cytochrome oxidase gene sequence. In our case, we have 300 unique genera, so we have a 300-class classification problem. There are nearly 
+4000 attributes, which are all normalised frequencies of 3-mers, 4-mers, and 5-mers in the sequences.
 
 Experiments
 ===
@@ -378,8 +379,7 @@ Total Number of Instances            36683
 Weighted Avg.    0.935    0.001    0.945      0.935    0.938      0.938    0.999     0.963     
 ```
 
-### 3) This time, pre-process the data using the information gain attribute selection, select the 500 highest-ranked attributes, then
-run the resulting data through Naive Bayes with supervised discretisation. (3-fold cross-validation)
+### 3) This time, pre-process the data using the information gain attribute selection, select the 500 highest-ranked attributes, then run the resulting data through Naive Bayes with supervised discretisation. (3-fold cross-validation)
 
 ```
 === Run information ===
@@ -711,8 +711,7 @@ Total Number of Instances            36683
 Weighted Avg.    0.919    0.001    0.931      0.919    0.922      0.922    0.998     0.957     
 ```
 
-### 4) This time, pre-process the data using the information gain attribute selection, select the 100 highest-ranked attributes, then
-run the resulting data through Naive Bayes with supervised discretisation. (3-fold cross-validation)
+### 4) This time, pre-process the data using the information gain attribute selection, select the 100 highest-ranked attributes, then run the resulting data through Naive Bayes with supervised discretisation. (3-fold cross-validation)
 
 ```
 === Run information ===
