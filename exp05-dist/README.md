@@ -358,3 +358,13 @@ Total Number of Instances            18341
                  1.000    0.000    0.929      1.000    0.963      0.964    1.000     0.929     Anathix
 Weighted Avg.    0.826    0.001    0.839      0.826    0.819      0.825    0.912     0.743     
 ```
+
+Conclusion
+===
+
+The accuracy obtained was 82% with an average weighted recall and precision of 84% and 83%, respectively. It did not beat
+the accuracy of any of the Naive Bayes classifiers. This seems to suggest that taking the mean distribution of a class
+results in too much information loss.
+
+A future experiment would be to see how well k-nearest-neighbours does on a small subset of the training set (or the entire
+training set itself assuming it's not too slow).
