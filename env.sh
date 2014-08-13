@@ -15,5 +15,6 @@ export EXP_SHARED_WIN=`cygpath -w $EXP_SHARED`
 # some will expect Unix-like paths. If running these scripts on Unix, make
 # both variables the same.
 
-export OUT_FOLDER_WIN=`realpath output`
+#export OUT_FOLDER_WIN=`realpath output`
 export OUT_FOLDER=`realpath output`
+export OUT_FOLDER_WIN=`cygpath -w $OUT_FOLDER`

@@ -48,13 +48,13 @@ class ComputeMeans {
 		
 		ArrayList< ArrayList<Instance> > classMeansMap = 
 				new ArrayList< ArrayList<Instance> >( fullData.classAttribute().numValues() );
-		for(int x = 0; x < fullData.classAttribute().numValues(); x++) {
+		for(int x = 0; x < trainData.classAttribute().numValues(); x++) {
 			classMeansMap.add( new ArrayList<Instance>() );
 		}
 		
 		// TODO: fix
-		for(int x = 0; x < fullData.numInstances(); x++) {
-			Instance tmp = fullData.get(x);
+		for(int x = 0; x < trainData.numInstances(); x++) {
+			Instance tmp = trainData.get(x);
 			int classIndex = (int) tmp.value( tmp.classAttribute() );
 			
 			//System.out.print(classIndex + " ==> ");
@@ -78,8 +78,8 @@ class ComputeMeans {
 		for(int c = 0; c < classMeansMap.size(); c++) {
 			ArrayList<Instance> classInsts = classMeansMap.get(c);
 			// for each attribute
-			Instance meanInstance = new DenseInstance( fullData.numAttributes() );
-			for(int a = 0; a < fullData.numAttributes(); a++) {
+			Instance meanInstance = new DenseInstance( trainData.numAttributes() );
+			for(int a = 0; a < trainData.numAttributes(); a++) {
 				double attrSum = 0;
 				for(int i = 0; i < classInsts.size(); i++) {
 					attrSum += classInsts.get(i).value(a);
@@ -87,12 +87,17 @@ class ComputeMeans {
 				attrSum = attrSum / classInsts.size();
 				meanInstance.setValue(a, attrSum);
 			}
-			meanInstance.setValue(fullData.classIndex(), c);
+			meanInstance.setValue(trainData.classIndex(), c);
 			classMeans.add(meanInstance);
 		}
 		
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(classMeans);
+		saver.setFile(new File("train.arff"));
+		saver.writeBatch();
+		
+		saver = new ArffSaver();
+		saver.setInstances(testData);
 		saver.setFile(new File("test.arff"));
 		saver.writeBatch();
 	}
