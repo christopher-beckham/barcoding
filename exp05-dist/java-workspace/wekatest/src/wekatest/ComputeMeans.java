@@ -24,13 +24,13 @@ class ComputeMeans {
 		 */
 		
 		String inFile = null;
+		String outDir = null;
 		for(int x = 0; x < args.length; x += 2) {
 			String s = args[x];
 			if (s.equals("-in")){
 				inFile = args[x+1];
-			} else {
-				System.err.println("Error - did not recognize argument");
-				System.exit(1);
+			} else if(s.equals("-out")) {
+				outDir = args[x+1];
 			}
 		}
 		
@@ -93,12 +93,12 @@ class ComputeMeans {
 		
 		ArffSaver saver = new ArffSaver();
 		saver.setInstances(classMeans);
-		saver.setFile(new File("train.arff"));
+		saver.setFile(new File(outDir + File.separator + "knn-train.arff"));
 		saver.writeBatch();
 		
 		saver = new ArffSaver();
 		saver.setInstances(testData);
-		saver.setFile(new File("test.arff"));
+		saver.setFile(new File(outDir + File.separator + "knn-test.arff"));
 		saver.writeBatch();
 	}
 	
