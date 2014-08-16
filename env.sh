@@ -16,5 +16,5 @@ export EXP_SHARED_WIN=`cygpath -w $EXP_SHARED`
 # both variables the same.
 
 #export OUT_FOLDER_WIN=`realpath output`
-export OUT_FOLDER=`realpath output`
+export OUT_FOLDER=`realpath exp-shared/output`
 export OUT_FOLDER_WIN=`cygpath -w $OUT_FOLDER`
