@@ -1,2 +1,2 @@
-train: $(OUT_FOLDER)/res.fasta
+train: $(OUT_FOLDER)/res50k.json
 	./exp.sh
