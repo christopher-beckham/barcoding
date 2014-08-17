@@ -29,7 +29,7 @@ while True:
 		nuc_records = Entrez.read(nuc_handle)
 		nuc_handle.close()
 		break
-	except:
+	except IOError:
 		err("Exception - retrying...")
 		
 nuc_ids = nuc_records['IdList'][0:LIMIT]
@@ -56,7 +56,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 
 					nuc2tax[ nuc_id ] = tax_ids[0]['Id']
 			break
-		except:
+		except IOError:
 			err("Exception - retrying...")
 		
 err("Getting taxonomic information...")		
@@ -80,7 +80,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 					if tax_rank in tax_ranks:
 						tax2genus[ record['TaxId'] ][tax_rank] = taxon['ScientificName']
 			break
-		except:
+		except IOError:
 			err("Exception - retrying...")
 			
 # ok, get the FASTA files from the nuc_ids
@@ -113,7 +113,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 							
 							json_dump.append( {'fasta': elem['TSeq_sequence'], 'nucid': key, 'taxid':key2, 'taxinfo': tax2genus[key2] } )
 			break
-		except:
+		except IOError:
 			err("Exception - retrying...")
 			
 print json.dumps(json_dump)
