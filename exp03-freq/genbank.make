@@ -1,18 +1,39 @@
-.PHONY : all clean
+.PHONY : all clean family genus
 
-RESULTS = results/genkbank
-NAIVE_01 = naived-noig-300class.result
-NAIVE_02 = naived-ig500-300class.result
-NAIVE_03 = naived-ig100-300class.result
+RESULTS = results/genbank
+OUTFILE = res50k
+INFILE = res50k
 
-all: $(RESULTS)/$(NAIVE_01)
+all: family genus
 
-output/res50k.arff:
-	$(MAKE) -C $(EXP_SHARED) -f res50k.make # take care of the res50k.json dep
-	python 01-csv-new.py --kmer="3,5" --taxlevel="genus" --outfile=output/res50k.arff --outlist=null --infile=$(OUT_FOLDER)/res50k.json --maxclass=0
+output/$(OUTFILE).genus.arff:
+	$(MAKE) -C $(EXP_SHARED) -f res50k.make
+	python 01-csv-new.py --kmer="3,5" --taxlevel="genus" --outfile=output/$(OUTFILE).genus.arff --outlist=null --infile=$(OUT_FOLDER)/$(INFILE).json --maxclass="c20"
 
-$(RESULTS)/$(NAIVE_01): output/res50k.arff
-	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -D -t output/res50k.arff -x 3 -v -o > $(RESULTS)/$(NAIVE_01)
+output/$(OUTFILE).family.arff:
+	$(MAKE) -C $(EXP_SHARED) -f res50k.make # duplicate
+	python 01-csv-new.py --kmer="3,5" --taxlevel="family" --outfile=output/$(OUTFILE).family.arff --outlist=null --infile=$(OUT_FOLDER)/$(INFILE).json --maxclass="c20"
+
+family: output/$(OUTFILE).family.arff
+
+	java -Xmx6000M weka.classifiers.rules.ZeroR -t output/$(OUTFILE).family.arff > $(RESULTS)/family-zeror.result
+
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.bayes.NaiveBayes -x 2 -t output/$(OUTFILE).family.arff -v -o -- -D > $(RESULTS)/family-naived-ig0.result
+	
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 500" -W weka.classifiers.bayes.NaiveBayes -x 2 -t output/$(OUTFILE).family.arff -v -o -- -D > $(RESULTS)/family-naived-ig500.result
+		
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 100" -W weka.classifiers.bayes.NaiveBayes -x 2 -t output/$(OUTFILE).family.arff -v -o -- -D > $(RESULTS)/family-naived-ig100.result
+	
+genus: output/$(OUTFILE).genus.arff
+
+	java -Xmx6000M weka.classifiers.rules.ZeroR -t output/$(OUTFILE).genus.arff > $(RESULTS)/genus-zeror.result
+
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.bayes.NaiveBayes -x 2 -t output/$(OUTFILE).genus.arff -v -o -- -D > $(RESULTS)/genus-naived-ig0.result
+	
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 500" -W weka.classifiers.bayes.NaiveBayes -x 2 -t output/$(OUTFILE).genus.arff -v -o -- -D > $(RESULTS)/genus-naived-ig500.result
+		
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 100" -W weka.classifiers.bayes.NaiveBayes -x 2 -t output/$(OUTFILE).genus.arff -v -o -- -D > $(RESULTS)/genus-naived-ig100.result
 
 clean:
 	rm output/res50k.arff
+

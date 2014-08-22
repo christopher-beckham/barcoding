@@ -74,14 +74,12 @@ if CUTOFF:
 	for i in range(0, len(sorted_counts)):
 		if sorted_counts[i][1] < MAX_CLASS:
 			chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:i] ] )
+			err("Number of retained class values: " + str(i) + "/" + str(len(sorted_counts)) )
 			break
-	err("Number of retained class values: " + str(MAX_CLASS) + "/" + str(len(sorted_counts)) )
 else:
 	# in this case, MAX_CLASS is the maximum index and anything before that is retained
 	err("Limiting class values to " + str(MAX_CLASS) + " most common class values")
 	chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:MAX_CLASS] ] )
-
-sys.exit(0)
 
 """
 Write ARFF file. First do the header, then write the instances out
@@ -93,7 +91,7 @@ f_outfile.write("@relation " + OUT_FILE + "\n")
 for kmer_set in kmer_sets:	
 	for kmer in kmer_set:
 		f_outfile.write("@attribute " + kmer + "_f" + " numeric\n")
-class_string = "@attribute class {" + ",".join(chosen_classnames) + "}\n"
+class_string = "@attribute class {" + ",".join( ['"' + x + '"' for x in chosen_classnames] ) + "}\n"
 f_outfile.write(class_string)
 f_outfile.write("@data\n")
 
@@ -117,7 +115,7 @@ for rec in records:
 					prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
 					#log_prop = -1 * math.log(prop,10)
 					vector.append( str(prop) )
-		vector.append( classname )
+		vector.append( '"' + classname + '"' )
 		f_outfile.write( ",".join(vector) + "\n" )
 
 f_outfile.close()
