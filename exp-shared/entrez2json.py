@@ -61,7 +61,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 		
 err("Getting taxonomic information...")		
 
-tax_ranks = ['genus', 'family', 'order']
+tax_ranks = ['genus', 'family', 'order', 'species']
 
 tax2genus = dict()
 for k in range(0, len(nuc_ids), STEP_SIZE):
@@ -73,7 +73,7 @@ for k in range(0, len(nuc_ids), STEP_SIZE):
 			genus_records = Entrez.read(genus_handle)
 			genus_handle.close()
 			for record in genus_records:
-				tax2genus[ record['TaxId'] ] = {'genus': 'NA', 'family': 'NA', 'order': 'NA'} # clean up
+				tax2genus[ record['TaxId'] ] = {'genus': 'NA', 'family': 'NA', 'order': 'NA', 'species': 'NA'} # clean up
 				taxons = record['LineageEx']
 				for taxon in taxons:
 					tax_rank = taxon['Rank'].lower()
