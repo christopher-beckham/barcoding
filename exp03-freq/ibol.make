@@ -1,18 +1,25 @@
-.PHONY : all clean
+.PHONY : all premake clean fullclean
 
 RESULTS = results/ibol
-#NAIVE_01 = naived-noig-300class.result
-#NAIVE_02 = naived-ig500-300class.result
-#NAIVE_03 = naived-ig100-300class.result
 
-#all: $(RESULTS)/$(NAIVE_01)
+all: output/ibol.c40.f1.arff output/ibol.c20.f1.arff
 
-output/ibol.arff:
+premake:
 	$(MAKE) -C $(EXP_SHARED) -f ibol-phase5.make
-	python 01-csv-new.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.arff --outlist=null --infile=$(OUT_FOLDER)/iBOL_phase_5.00_COI.json --maxclass=300
 
-#$(RESULTS)/$(NAIVE_01): output/res50k.arff
-#	java -Xmx6000M weka.classifiers.bayes.NaiveBayes -D -t output/res50k.arff -x 3 -v -o > $(RESULTS)/$(NAIVE_01)
+output/ibol.c40.f1.arff: premake
+	# For genbank.make, --maxclass was set to "c20". For this, we set it to "c40" then take one stratified fold and use that as the training set, which should
+	# reduce any class with 40 values down to half (20).
+	python 01-csv-new.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.c40.arff --outlist=null --infile=$(OUT_FOLDER)/iBOL_phase_5.00_COI.json --maxclass="c40"
+	java -Xmx6000M weka.filters.supervised.instance.StratifiedRemoveFolds -N 2 -F 1 -S 1 -c last -i output/ibol.c40.arff -o output/ibol.c40.f1.arff
+	
+output/ibol.c30.f1.arff: premake
+	# See what sort of accuracy we get when we set the --maxclass to "c30" instead.
+	python 01-csv-new.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.c30.arff --outlist=null --infile=$(OUT_FOLDER)/iBOL_phase_5.00_COI.json --maxclass="m700"
+	java -Xmx6000M weka.filters.supervised.instance.StratifiedRemoveFolds -N 2 -F 1 -S 1 -c last -i output/ibol.c30.arff -o output/ibol.c30.f1.arff
 
 clean:
-	rm output/ibol.arff
+	rm output/ibol*.arff
+
+fullclean: clean
+	rm $(OUT_FOLDER)/iBOL_phase_5.00_COI.json
