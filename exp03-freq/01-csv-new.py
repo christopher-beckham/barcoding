@@ -113,7 +113,7 @@ for rec in records:
 					vector.append('0')
 				else:
 					prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
-					#log_prop = -1 * math.log(prop,10)
+					prop = -1 * math.log(prop,10)
 					vector.append( str(prop) )
 		vector.append( '"' + classname + '"' )
 		f_outfile.write( ",".join(vector) + "\n" )

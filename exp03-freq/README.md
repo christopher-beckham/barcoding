@@ -3,7 +3,7 @@ Overview
 
 These experiments are concerned with seeing what results come out of running Naive Bayes on the data, especially with attribute selection.
 
-The data consists of nearly 40,000 instances, each corresponding to a particular cytochrome oxidase sequence from a particular genus of insect.
+The genus data consists of nearly 40,000 instances, each corresponding to a particular cytochrome oxidase sequence from a particular genus of insect.
 Specifically, each sequence is a 300 bp substring of its original sequence. This was done to test how well we could classify genera without needing
 the full cytochrome oxidase gene sequence. In our case, we have 300 unique genera, so we have a 300-class classification problem. There are nearly 
 4000 attributes, which are all normalised frequencies of 3-mers, 4-mers, and 5-mers in the sequences.
@@ -14,1046 +14,1179 @@ Experiments
 ### 1) Run ZeroR on the dataset to get a baseline measure, i.e. what do we get if we simply predict the majority class for all instances.
 
 ```
-=== Run information ===
+ZeroR predicts class value: Culex
 
-Scheme:       weka.classifiers.rules.ZeroR 
-Relation:     res50k
-Instances:    36683
-Attributes:   3919
-              [list of attributes omitted]
-Test mode:    evaluate on training data
+Time taken to build model: 0.05 seconds
+Time taken to test model on training data: 18.13 seconds
 
-=== Classifier model (full training set) ===
+=== Error on training data ===
 
-ZeroR predicts class value: NA
-
-Time taken to build model: 0.03 seconds
-
-=== Evaluation on training set ===
-
-Time taken to test model on training data: 2.93 seconds
-
-=== Summary ===
-
-Correctly Classified Instances        1763                4.806  %
-Incorrectly Classified Instances     34920               95.194  %
+Correctly Classified Instances        1751                4.5445 %
+Incorrectly Classified Instances     36779               95.4555 %
 Kappa statistic                          0     
-Mean absolute error                      0.0066
-Root mean squared error                  0.0574
+Mean absolute error                      0.0055
+Root mean squared error                  0.0526
 Relative absolute error                100      %
 Root relative squared error            100      %
-Coverage of cases (0.95 level)          95.1749 %
-Mean rel. region size (0.95 level)      79.6667 %
-Total Number of Instances            36683     
+Coverage of cases (0.95 level)          95.1726 %
+Mean rel. region size (0.95 level)      77.3743 %
+Total Number of Instances            38530    
 ```
 
-### 2) Run Naive Bayes on the dataset using supervised discretisation (3-fold cross-validation)
+### 2) Run Naive Bayes on the dataset using supervised discretisation after removing all attributes that have 0 info gain (2-fold cross-validation)
 
 ```
-=== Run information ===
-
-Scheme:       weka.classifiers.bayes.NaiveBayes -D
-Relation:     res50k
-Instances:    36683
-Attributes:   3919
-              [list of attributes omitted]
-Test mode:    3-fold cross-validation
-
 === Stratified cross-validation ===
-=== Summary ===
 
-Correctly Classified Instances       34312               93.5365 %
-Incorrectly Classified Instances      2371                6.4635 %
-Kappa statistic                          0.9346
+Correctly Classified Instances       35657               92.5435 %
+Incorrectly Classified Instances      2873                7.4565 %
+Kappa statistic                          0.9246
 Mean absolute error                      0.0004
-Root mean squared error                  0.0204
-Relative absolute error                  6.5631 %
-Root relative squared error             35.6022 %
-Coverage of cases (0.95 level)          93.91   %
-Mean rel. region size (0.95 level)       0.3378 %
-Total Number of Instances            36683     
+Root mean squared error                  0.02  
+Relative absolute error                  7.5455 %
+Root relative squared error             38.1085 %
+Coverage of cases (0.95 level)          92.9951 %
+Mean rel. region size (0.95 level)       0.2843 %
+Total Number of Instances            38530     
+
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.585    0.000    0.816      0.585    0.681      0.690    0.999     0.818     Pachynematus
-                 0.879    0.001    0.815      0.879    0.846      0.845    0.999     0.897     Cicindela
-                 0.969    0.000    1.000      0.969    0.984      0.984    1.000     0.998     Polypedilum
-                 0.844    0.001    0.829      0.844    0.836      0.836    0.999     0.886     Egira
-                 0.992    0.000    0.996      0.992    0.994      0.994    1.000     1.000     Diarsia
-                 0.942    0.000    0.993      0.942    0.967      0.966    0.997     0.965     Bactrocera
-                 0.958    0.001    0.851      0.958    0.902      0.902    1.000     0.977     Sympistis
-                 0.995    0.000    1.000      0.995    0.998      0.998    1.000     1.000     Machilis
-                 0.653    0.009    0.793      0.653    0.717      0.707    0.980     0.796     NA
-                 0.989    0.000    0.989      0.989    0.989      0.989    1.000     1.000     Euxoa
-                 0.987    0.000    0.993      0.987    0.990      0.990    1.000     1.000     Parabagrotis
-                 0.888    0.000    0.997      0.888    0.939      0.940    0.999     0.985     Aedes
-                 0.909    0.000    1.000      0.909    0.952      0.953    1.000     0.999     Megalodontes
-                 0.937    0.001    0.917      0.937    0.927      0.926    1.000     0.952     Abagrotis
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Anaplectoides
-                 0.957    0.001    0.964      0.957    0.960      0.959    1.000     0.988     Xestia
-                 0.980    0.000    0.993      0.980    0.987      0.987    1.000     1.000     Agrotis
-                 0.971    0.000    1.000      0.971    0.985      0.985    1.000     0.998     Hyles
-                 0.932    0.000    1.000      0.932    0.965      0.965    1.000     0.999     Carabus
-                 0.863    0.001    0.657      0.863    0.746      0.752    1.000     0.875     Sergentomyia
-                 0.952    0.001    0.949      0.952    0.950      0.949    1.000     0.978     Apamea
-                 0.982    0.000    0.931      0.982    0.956      0.956    1.000     0.926     Capnia
-                 0.986    0.000    0.972      0.986    0.979      0.979    1.000     0.996     Schinia
-                 1.000    0.000    0.988      1.000    0.994      0.994    1.000     1.000     Enargia
-                 0.962    0.000    0.962      0.962    0.962      0.962    1.000     0.976     Junonia
-                 0.879    0.000    0.977      0.879    0.925      0.926    1.000     0.978     Orthodes
-                 0.881    0.000    1.000      0.881    0.937      0.939    1.000     0.986     Aphrophora
-                 0.872    0.001    0.899      0.872    0.885      0.885    1.000     0.960     Pristiphora
+                 0.967    0.000    1.000      0.967    0.983      0.983    1.000     1.000     Melissotarsus
+                 0.945    0.000    0.987      0.945    0.966      0.966    1.000     0.994     Feltia
+                 0.900    0.000    0.973      0.900    0.935      0.936    1.000     0.974     Rhopalosiphum
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Pseudeustrotia
+                 0.929    0.000    0.963      0.929    0.945      0.946    1.000     0.994     Furcula
+                 0.625    0.000    0.789      0.625    0.698      0.702    0.999     0.825     Amauronematus
+                 0.577    0.000    0.882      0.577    0.698      0.713    1.000     0.786     Capis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Scaptomyza
+                 0.853    0.000    1.000      0.853    0.921      0.923    0.998     0.885     Hyles
+                 0.850    0.000    1.000      0.850    0.919      0.922    0.999     0.891     Denticollis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Machilis
+                 0.522    0.000    0.800      0.522    0.632      0.646    0.990     0.680     Rhantus
+                 0.939    0.000    0.976      0.939    0.957      0.957    1.000     0.990     Arge
+                 0.828    0.000    1.000      0.828    0.906      0.910    0.999     0.931     Pseudohermonassa
+                 1.000    0.000    0.959      1.000    0.979      0.979    1.000     1.000     Eurytoma
+                 0.942    0.000    0.817      0.942    0.875      0.877    1.000     0.965     Strumigenys
+                 0.979    0.000    0.993      0.979    0.986      0.986    1.000     1.000     Cosmia
+                 0.924    0.000    1.000      0.924    0.961      0.961    1.000     0.998     Xylena
+                 0.964    0.000    0.944      0.964    0.954      0.954    1.000     0.986     Elaphria
+                 0.234    0.001    0.227      0.234    0.231      0.229    0.995     0.185     Microgastrinae gen. mgJanzen01
                  0.993    0.000    1.000      0.993    0.997      0.997    1.000     1.000     Rhynchophorus
-                 0.958    0.000    1.000      0.958    0.978      0.979    1.000     1.000     Cryptocala
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Maruca
-                 0.897    0.000    1.000      0.897    0.945      0.947    0.996     0.965     Pseudohermonassa
-                 0.966    0.000    1.000      0.966    0.983      0.983    1.000     0.998     Empria
-                 0.994    0.000    0.973      0.994    0.983      0.983    1.000     0.993     Dolerus
-                 0.996    0.001    0.876      0.996    0.932      0.934    1.000     0.926     Camponotus
-                 0.961    0.000    1.000      0.961    0.980      0.980    1.000     0.992     Tanytarsus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ochropleura
-                 0.902    0.001    0.829      0.902    0.864      0.864    1.000     0.942     Culicoides
-                 0.929    0.000    0.907      0.929    0.918      0.918    1.000     0.979     Cricotopus
-                 0.995    0.000    0.989      0.995    0.992      0.992    1.000     0.995     Leucania
-                 1.000    0.000    0.952      1.000    0.975      0.975    1.000     0.981     Baetis
-                 0.944    0.000    0.836      0.944    0.887      0.888    1.000     0.961     Spodoptera
-                 0.564    0.001    0.574      0.564    0.569      0.568    0.995     0.568     Oligia
-                 0.920    0.000    0.986      0.920    0.952      0.951    1.000     0.990     Tenthredo
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Microvelia
-                 0.953    0.000    1.000      0.953    0.976      0.976    1.000     0.970     Cinygmula
-                 1.000    0.000    0.991      1.000    0.996      0.996    1.000     1.000     Protodeltote
-                 0.816    0.001    0.745      0.816    0.779      0.779    0.998     0.839     Orthosia
-                 1.000    0.000    0.973      1.000    0.986      0.986    1.000     1.000     Percolestus
-                 0.846    0.000    0.917      0.846    0.880      0.881    1.000     0.923     Megastigmus
-                 0.850    0.000    0.927      0.850    0.887      0.887    1.000     0.945     Homorthodes
-                 1.000    0.001    0.778      1.000    0.875      0.882    1.000     0.951     Exocelina
-                 0.938    0.000    0.957      0.938    0.947      0.947    1.000     0.969     Anicla
-                 0.966    0.000    1.000      0.966    0.983      0.982    0.999     0.999     Culex
-                 0.970    0.000    0.991      0.970    0.981      0.981    1.000     0.999     Lithophane
-                 0.996    0.000    0.999      0.996    0.997      0.997    1.000     1.000     Blepharoneura
-                 0.907    0.000    0.968      0.907    0.937      0.936    0.999     0.971     Simulium
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Syngrapha
-                 0.846    0.000    1.000      0.846    0.917      0.920    1.000     0.953     Tricholita
-                 0.963    0.000    0.951      0.963    0.957      0.957    1.000     0.996     Graphiphora
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Dinocras
-                 0.976    0.000    0.899      0.976    0.936      0.936    1.000     0.972     Terataner
-                 1.000    0.000    0.989      1.000    0.994      0.994    1.000     1.000     Pauropsalta
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Anagrapha
-                 0.970    0.000    1.000      0.970    0.985      0.985    1.000     0.995     Aseptis
-                 0.994    0.000    1.000      0.994    0.997      0.997    1.000     1.000     Hippotion
-                 0.996    0.000    0.993      0.996    0.994      0.994    1.000     1.000     Polia
-                 0.973    0.000    1.000      0.973    0.987      0.987    0.997     0.995     Tetragonula
-                 0.975    0.000    1.000      0.975    0.988      0.988    1.000     1.000     Feltia
-                 0.890    0.000    0.840      0.890    0.864      0.864    1.000     0.960     Phlebotomus
-                 0.901    0.002    0.854      0.901    0.877      0.875    0.994     0.907     Anopheles
-                 0.988    0.000    0.988      0.988    0.988      0.988    1.000     1.000     Papaipema
-                 1.000    0.000    0.984      1.000    0.992      0.992    1.000     1.000     Catocala
-                 0.938    0.000    1.000      0.938    0.968      0.968    1.000     0.997     Monomorium
-                 0.972    0.001    0.968      0.972    0.970      0.970    1.000     0.997     Acronicta
-                 0.956    0.000    1.000      0.956    0.978      0.978    1.000     0.997     Cryptus
-                 0.931    0.000    0.992      0.931    0.961      0.961    1.000     0.993     Hypoponera
-                 0.919    0.000    0.859      0.919    0.888      0.888    1.000     0.955     Allantus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Bellura
-                 0.989    0.000    1.000      0.989    0.994      0.994    1.000     1.000     Panthea
-                 0.919    0.000    0.969      0.919    0.943      0.943    1.000     0.988     Anarta
-                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     1.000     Rhopalosiphum
-                 0.955    0.000    1.000      0.955    0.977      0.977    1.000     1.000     Hyppa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Eulaema
-                 0.963    0.000    0.963      0.963    0.963      0.963    1.000     0.997     Tuberculatus
-                 0.983    0.000    0.975      0.983    0.979      0.979    1.000     0.997     Caradrina
-                 0.981    0.000    0.912      0.981    0.945      0.946    1.000     0.970     Acontia
-                 1.000    0.000    0.986      1.000    0.993      0.993    1.000     1.000     Tamasia
-                 0.930    0.000    0.995      0.930    0.961      0.962    1.000     0.990     Tenthredopsis
-                 0.980    0.000    0.996      0.980    0.988      0.988    1.000     1.000     Theretra
-                 0.948    0.000    0.965      0.948    0.957      0.956    1.000     0.991     Condica
-                 1.000    0.000    0.963      1.000    0.981      0.981    1.000     1.000     Trichordestra
-                 0.947    0.000    0.818      0.947    0.878      0.880    0.995     0.951     Siobla
-                 1.000    0.000    0.965      1.000    0.982      0.982    1.000     0.982     Cinara
-                 0.961    0.000    1.000      0.961    0.980      0.980    0.997     0.962     Philaenus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Draeculacephala
-                 0.998    0.000    1.000      0.998    0.999      0.999    1.000     1.000     Hillia
-                 0.857    0.000    0.960      0.857    0.906      0.907    1.000     0.924     Cephalota
-                 0.906    0.000    0.980      0.906    0.941      0.942    0.996     0.909     Aphis
-                 0.955    0.000    1.000      0.955    0.977      0.977    0.998     0.991     Hemicrepidius
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Aplectoides
-                 0.987    0.000    1.000      0.987    0.993      0.993    1.000     1.000     Agrius
-                 0.883    0.000    0.914      0.883    0.898      0.898    1.000     0.945     Neurostrota
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Nemoura
-                 0.750    0.000    0.724      0.750    0.737      0.737    0.998     0.777     Platypolia
-                 0.980    0.000    0.980      0.980    0.980      0.979    0.997     0.983     Chironomus
-                 0.750    0.000    0.962      0.750    0.843      0.849    0.999     0.909     Spiramater
-                 0.962    0.000    1.000      0.962    0.981      0.981    1.000     0.987     Selatosomus
-                 1.000    0.000    0.996      1.000    0.998      0.998    1.000     1.000     Carnus
-                 0.933    0.001    0.659      0.933    0.772      0.784    1.000     0.848     Nanos
-                 0.944    0.000    0.944      0.944    0.944      0.944    1.000     0.960     Sideridis
-                 0.955    0.000    1.000      0.955    0.977      0.977    1.000     0.994     Ambulyx
-                 0.979    0.002    0.894      0.979    0.935      0.934    1.000     0.976     Lacinipolia
-                 0.939    0.000    1.000      0.939    0.969      0.969    1.000     0.989     Lysiphlebus
-                 0.988    0.000    1.000      0.988    0.994      0.994    1.000     1.000     Eurois
-                 0.885    0.000    1.000      0.885    0.939      0.941    1.000     1.000     Pseudorthodes
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Psilogramma
-                 0.914    0.000    1.000      0.914    0.955      0.956    1.000     0.997     Caenis
-                 0.918    0.000    1.000      0.918    0.957      0.958    1.000     0.998     Proxenus
-                 0.898    0.000    0.923      0.898    0.911      0.910    1.000     0.960     Macrophya
-                 0.968    0.000    0.811      0.968    0.882      0.886    1.000     0.950     Pyrgonota
-                 0.949    0.000    0.956      0.949    0.952      0.952    1.000     0.987     Lasionycta
-                 0.768    0.000    0.935      0.768    0.843      0.847    0.999     0.877     Amphipoea
-                 0.991    0.000    1.000      0.991    0.995      0.995    1.000     1.000     Opius
-                 1.000    0.001    0.869      1.000    0.930      0.932    1.000     0.916     Notiospathius
-                 0.876    0.001    0.664      0.876    0.756      0.762    0.999     0.803     Leucophenga
-                 0.911    0.000    0.976      0.911    0.943      0.943    1.000     0.968     Cryptolestes
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Autographa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Apiomorpha
-                 0.992    0.000    0.988      0.992    0.990      0.990    1.000     0.991     Mythimna
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cyphomyrmex
-                 0.993    0.000    1.000      0.993    0.996      0.996    1.000     1.000     Cosmia
-                 0.250    0.001    0.222      0.250    0.235      0.235    0.996     0.259     Operclipygus
-                 0.981    0.000    0.898      0.981    0.938      0.939    1.000     0.979     Abia
-                 0.731    0.000    0.950      0.731    0.826      0.833    0.998     0.795     Cerastis
-                 0.900    0.000    0.964      0.900    0.931      0.932    1.000     0.997     Epeorus
-                 0.750    0.003    0.302      0.750    0.431      0.475    0.998     0.417     Phelister
-                 0.929    0.000    1.000      0.929    0.963      0.964    1.000     0.991     Orgyia
-                 0.914    0.000    0.902      0.914    0.908      0.908    1.000     0.950     Rhogogaster
-                 0.957    0.001    0.647      0.957    0.772      0.786    1.000     0.817     Copidosoma
-                 0.905    0.000    0.992      0.905    0.947      0.947    1.000     0.980     Pachycondyla
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Agelasa
-                 0.920    0.000    0.958      0.920    0.939      0.939    1.000     0.997     Aphidius
-                 0.979    0.000    0.945      0.979    0.961      0.961    1.000     0.985     Elaphria
-                 0.962    0.000    0.833      0.962    0.893      0.895    1.000     0.940     Strumigenys
-                 0.881    0.000    0.755      0.881    0.813      0.815    1.000     0.869     Leptogenys
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Bulia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Hyposoter
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Altica
-                 0.939    0.000    0.992      0.939    0.965      0.965    1.000     0.990     Arge
-                 0.862    0.000    1.000      0.862    0.926      0.928    0.997     0.878     Xylomoia
-                 0.957    0.000    0.957      0.957    0.957      0.957    1.000     0.962     Ephemerella
-                 1.000    0.000    0.973      1.000    0.986      0.986    1.000     0.986     Rhyacia
-                 0.934    0.000    1.000      0.934    0.966      0.967    1.000     1.000     Gyponana
-                 0.838    0.000    0.816      0.838    0.827      0.827    0.997     0.880     Agrochola
-                 0.971    0.000    1.000      0.971    0.985      0.985    1.000     1.000     Pseudeustrotia
-                 0.778    0.002    0.304      0.778    0.438      0.486    0.993     0.642     Microdon
-                 0.923    0.000    0.973      0.923    0.947      0.948    1.000     0.985     Amphipyra
-                 0.882    0.001    0.707      0.882    0.785      0.789    0.999     0.848     Neoligia
-                 0.956    0.000    0.977      0.956    0.966      0.966    1.000     0.999     Leuconycta
-                 0.854    0.000    1.000      0.854    0.921      0.924    1.000     0.991     Crocigrapha
-                 0.982    0.000    1.000      0.982    0.991      0.991    1.000     1.000     Helicoverpa
-                 0.962    0.000    0.980      0.962    0.971      0.971    0.997     0.963     Protolampra
-                 0.944    0.000    1.000      0.944    0.971      0.972    0.999     0.962     Drosophila
-                 0.942    0.000    0.980      0.942    0.961      0.961    1.000     0.967     Cuerna
-                 0.949    0.000    1.000      0.949    0.974      0.974    1.000     1.000     Liriomyza
-                 1.000    0.000    0.986      1.000    0.993      0.993    1.000     1.000     Eurytoma
-                 0.969    0.001    0.747      0.969    0.844      0.850    1.000     0.961     Glossina
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ephoron
-                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     1.000     Miobantia
-                 0.600    0.001    0.369      0.600    0.457      0.470    0.998     0.463     Cylindera
-                 0.838    0.001    0.608      0.838    0.705      0.713    0.999     0.831     Eucosmophora
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Pimpla
-                 0.821    0.000    0.727      0.821    0.771      0.772    1.000     0.934     Octostruma
-                 0.739    0.000    0.810      0.739    0.773      0.773    0.998     0.841     Ametastegia
-                 0.957    0.000    0.957      0.957    0.957      0.957    1.000     0.976     Melanchra
-                 0.948    0.000    0.885      0.948    0.915      0.916    1.000     0.988     Tetramorium
-                 0.980    0.000    1.000      0.980    0.990      0.990    1.000     0.997     Siphlonurus
-                 0.844    0.000    1.000      0.844    0.916      0.919    1.000     0.992     Pontania
-                 0.879    0.000    1.000      0.879    0.935      0.937    0.996     0.970     Colymbetes
-                 0.957    0.000    0.978      0.957    0.967      0.967    1.000     0.994     Polistes
-                 0.964    0.000    1.000      0.964    0.982      0.982    1.000     0.989     Furcula
-                 0.984    0.000    1.000      0.984    0.992      0.992    1.000     0.994     Raphia
-                 0.879    0.000    1.000      0.879    0.935      0.937    1.000     0.951     Pyramica
-                 0.938    0.000    1.000      0.938    0.968      0.968    0.997     0.965     Aphodius
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Feralia
-                 0.764    0.000    1.000      0.764    0.866      0.874    0.998     0.894     Scirpophaga
-                 0.897    0.000    1.000      0.897    0.945      0.947    1.000     0.971     Maccaffertium
-                 1.000    0.000    0.967      1.000    0.983      0.984    1.000     1.000     Macroglossum
-                 0.949    0.000    0.989      0.949    0.969      0.969    1.000     0.986     Gnamptogenys
-                 0.943    0.000    0.994      0.943    0.968      0.968    0.999     0.971     Bemisia
-                 0.818    0.000    1.000      0.818    0.900      0.904    0.999     0.906     Euproctis
-                 0.946    0.000    1.000      0.946    0.972      0.973    1.000     0.996     Ilybius
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Armigeres
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Trissolcus
-                 0.857    0.000    0.973      0.857    0.911      0.913    1.000     0.978     Hypena
-                 0.980    0.000    0.962      0.980    0.971      0.971    1.000     0.999     Claremontia
-                 0.891    0.001    0.583      0.891    0.705      0.720    1.000     0.893     Phyllonorycter
-                 0.836    0.003    0.329      0.836    0.472      0.523    0.999     0.561     Cladius
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Speolepta
-                 0.912    0.000    0.912      0.912    0.912      0.912    1.000     0.948     Micropeplus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Stereocerus
-                 0.800    0.000    0.941      0.800    0.865      0.867    0.998     0.904     Triatoma
-                 0.880    0.000    1.000      0.880    0.936      0.938    1.000     0.929     Colocasia
-                 0.981    0.000    0.991      0.981    0.986      0.986    1.000     0.999     Protorthodes
-                 0.615    0.000    0.941      0.615    0.744      0.761    0.998     0.809     Photedes
-                 0.794    0.000    0.900      0.794    0.844      0.845    0.996     0.844     Hygrotus
-                 0.989    0.000    1.000      0.989    0.995      0.995    1.000     1.000     Hepialus
-                 1.000    0.000    0.987      1.000    0.993      0.993    1.000     0.987     Hermeuptychia
-                 0.969    0.000    1.000      0.969    0.984      0.984    1.000     0.992     Xyela
-                 1.000    0.000    0.846      1.000    0.917      0.920    1.000     0.975     Colletes
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Daphnis
-                 0.799    0.001    0.743      0.799    0.770      0.769    0.998     0.854     Trigonopterus
-                 0.988    0.000    1.000      0.988    0.994      0.994    1.000     1.000     Euplexia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Lygus
-                 0.893    0.000    0.980      0.893    0.935      0.936    0.997     0.970     Amara
-                 0.933    0.000    0.848      0.933    0.889      0.890    1.000     0.922     Drunella
-                 0.953    0.000    0.845      0.953    0.896      0.898    1.000     0.957     Lacanobia
-                 1.000    0.000    0.862      1.000    0.926      0.928    1.000     0.893     Scolops
-                 0.964    0.000    0.771      0.964    0.857      0.862    1.000     0.948     Pheidole
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Plusia
-                 0.692    0.000    1.000      0.692    0.818      0.832    0.998     0.838     Taxonus
-                 0.784    0.001    0.460      0.784    0.580      0.600    0.996     0.695     Parasa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Nephelodes
-                 0.771    0.000    0.949      0.771    0.851      0.855    1.000     0.935     Amauronematus
-                 0.985    0.000    1.000      0.985    0.992      0.992    1.000     0.997     Cucullia
-                 0.778    0.000    0.875      0.778    0.824      0.825    0.999     0.891     Papestra
-                 0.667    0.000    0.947      0.667    0.783      0.795    0.985     0.714     Caloptilia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ctenocephalides
-                 1.000    0.000    0.857      1.000    0.923      0.926    1.000     0.962     Anochetus
-                 0.915    0.000    1.000      0.915    0.956      0.957    1.000     0.981     Callopistria
-                 1.000    0.000    0.981      1.000    0.990      0.990    1.000     0.980     Adelomyrmex
-                 0.674    0.000    0.967      0.674    0.795      0.807    0.999     0.881     Spaelotis
-                 0.981    0.000    0.964      0.981    0.972      0.972    1.000     0.994     Idia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Mepraia
-                 0.828    0.000    1.000      0.828    0.906      0.910    0.996     0.917     Aglaostigma
-                 0.924    0.000    1.000      0.924    0.961      0.961    1.000     0.987     Xylena
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Stiriodes
-                 0.957    0.000    0.827      0.957    0.887      0.890    1.000     0.942     Caenota
-                 0.926    0.000    1.000      0.926    0.962      0.962    1.000     0.978     Cephonodes
-                 0.968    0.000    1.000      0.968    0.984      0.984    1.000     0.997     Acosmeryx
-                 0.917    0.000    1.000      0.917    0.957      0.958    1.000     0.982     Scirtothrips
-                 0.978    0.000    0.978      0.978    0.978      0.978    1.000     1.000     Limnephilus
-                 0.952    0.000    1.000      0.952    0.976      0.976    1.000     0.997     Agnorisma
-                 0.984    0.000    0.926      0.984    0.955      0.955    1.000     0.998     Phlogophora
-                 0.980    0.000    1.000      0.980    0.990      0.990    1.000     0.999     Polypogon
-                 0.769    0.000    1.000      0.769    0.870      0.877    1.000     0.954     Pachybrachis
-                 1.000    0.000    0.891      1.000    0.942      0.944    1.000     0.999     Nonarthra
-                 0.895    0.000    0.944      0.895    0.919      0.919    1.000     0.987     Noctua
-                 0.786    0.000    1.000      0.786    0.880      0.886    0.998     0.899     Heliothis
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Maliattha
-                 0.862    0.000    1.000      0.862    0.926      0.928    1.000     0.984     Agabus
-                 0.888    0.001    0.730      0.888    0.801      0.804    0.999     0.880     Nematus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cephalcia
-                 0.958    0.000    1.000      0.958    0.979      0.979    1.000     1.000     Lycophotia
-                 0.919    0.000    1.000      0.919    0.958      0.959    1.000     0.993     Balsa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Eupsilia
-                 0.926    0.000    1.000      0.926    0.962      0.962    1.000     0.969     Andropolia
-                 0.907    0.000    1.000      0.907    0.951      0.952    1.000     0.986     Gyrinus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Praon
-                 0.926    0.000    1.000      0.926    0.962      0.962    1.000     0.994     Prognorisma
-                 0.880    0.000    0.917      0.880    0.898      0.898    1.000     0.936     Dichagyris
-                 0.974    0.000    0.949      0.974    0.962      0.962    1.000     0.998     Fishia
-                 0.820    0.001    0.588      0.820    0.685      0.694    0.999     0.774     Morrisonia
-                 0.893    0.000    1.000      0.893    0.943      0.945    1.000     0.996     Telamona
-                 0.933    0.000    0.875      0.933    0.903      0.904    1.000     0.970     Pamphilius
-                 0.963    0.000    0.981      0.963    0.972      0.972    1.000     0.996     Tarachidia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Paradiarsia
-                 0.912    0.000    0.929      0.912    0.920      0.920    1.000     0.987     Colocasiomyia
-                 0.990    0.000    0.981      0.990    0.985      0.985    1.000     0.987     Chrysis
-                 0.956    0.000    0.967      0.956    0.961      0.961    1.000     0.985     Athalia
-                 0.875    0.000    0.824      0.875    0.848      0.849    1.000     0.838     Graphocephala
-                 0.889    0.000    0.889      0.889    0.889      0.889    0.999     0.921     Eutomostethus
-                 1.000    0.000    0.929      1.000    0.963      0.964    1.000     0.960     Myrsidea
-                 0.865    0.000    0.914      0.865    0.889      0.889    1.000     0.984     Phyllocolpa
-                 0.950    0.000    0.974      0.950    0.962      0.962    1.000     0.975     Pterostichus
-                 0.911    0.000    0.976      0.911    0.943      0.943    1.000     0.984     Ameletus
-                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     0.999     Eueretagrotis
-                 0.867    0.000    0.897      0.867    0.881      0.881    1.000     0.898     Euura
-                 1.000    0.000    0.980      1.000    0.990      0.990    1.000     1.000     Ectropis
-                 0.918    0.000    1.000      0.918    0.957      0.958    1.000     0.996     Clostera
-                 0.949    0.000    1.000      0.949    0.974      0.974    1.000     0.999     Errhomus
-                 0.849    0.000    1.000      0.849    0.918      0.921    1.000     0.982     Paraleptophlebia
-                 0.795    0.000    0.969      0.795    0.873      0.877    1.000     0.983     Hoplocampa
-                 0.885    0.000    1.000      0.885    0.939      0.941    1.000     0.987     Pleuroptya
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ipimorpha
-                 0.986    0.003    0.355      0.986    0.522      0.591    0.999     0.681     Schizonycha
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Litholomia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Protexarnis
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Chersotis
-                 0.954    0.000    0.984      0.954    0.969      0.969    0.999     0.958     Solenopsis
-                 0.838    0.000    0.966      0.838    0.898      0.900    1.000     0.951     Strongylogaster
-                 0.949    0.000    1.000      0.949    0.974      0.974    1.000     0.979     Gluphisia
-                 0.923    0.000    1.000      0.923    0.960      0.961    1.000     0.997     Capis
-                 0.692    0.001    0.391      0.692    0.500      0.520    0.994     0.434     Lucilia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Colias
-                 0.607    0.000    0.850      0.607    0.708      0.718    1.000     0.841     Apotolamprus
-                 0.459    0.001    0.354      0.459    0.400      0.403    0.994     0.386     Panorpa
-                 0.643    0.000    0.783      0.643    0.706      0.709    0.990     0.741     Hydroporus
-                 0.880    0.000    0.917      0.880    0.898      0.898    1.000     0.987     Anathix
-Weighted Avg.    0.935    0.001    0.945      0.935    0.938      0.938    0.999     0.963     
-```
-
-### 3) This time, pre-process the data using the information gain attribute selection, select the 500 highest-ranked attributes, then run the resulting data through Naive Bayes with supervised discretisation. (3-fold cross-validation)
-
-```
-=== Run information ===
-
-Scheme:       weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 500" -W weka.classifiers.bayes.NaiveBayes -- -D
-Relation:     res50k
-Instances:    36683
-Attributes:   3919
-              [list of attributes omitted]
-Test mode:    3-fold cross-validation
-
-=== Stratified cross-validation ===
-=== Summary ===
-
-Correctly Classified Instances       33705               91.8818 %
-Incorrectly Classified Instances      2978                8.1182 %
-Kappa statistic                          0.9179
-Mean absolute error                      0.0005
-Root mean squared error                  0.0226
-Relative absolute error                  8.189  %
-Root relative squared error             39.4553 %
-Coverage of cases (0.95 level)          92.6669 %
-Mean rel. region size (0.95 level)       0.3418 %
-Total Number of Instances            36683     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.604    0.000    0.821      0.604    0.696      0.703    0.999     0.777     Pachynematus
-                 0.870    0.001    0.792      0.870    0.829      0.829    0.999     0.914     Cicindela
-                 0.953    0.000    0.992      0.953    0.972      0.972    1.000     0.997     Polypedilum
-                 0.807    0.001    0.800      0.807    0.804      0.803    0.999     0.870     Egira
-                 0.968    0.000    0.988      0.968    0.978      0.978    1.000     0.998     Diarsia
-                 0.929    0.000    0.985      0.929    0.956      0.956    0.996     0.962     Bactrocera
-                 0.929    0.001    0.874      0.929    0.901      0.900    0.999     0.956     Sympistis
-                 0.991    0.000    0.991      0.991    0.991      0.991    1.000     1.000     Machilis
-                 0.584    0.012    0.715      0.584    0.643      0.631    0.972     0.728     NA
-                 0.975    0.000    0.997      0.975    0.986      0.986    1.000     1.000     Euxoa
-                 0.934    0.000    1.000      0.934    0.966      0.966    1.000     0.999     Parabagrotis
-                 0.885    0.000    0.987      0.885    0.933      0.934    0.999     0.977     Aedes
-                 0.909    0.000    1.000      0.909    0.952      0.953    1.000     0.991     Megalodontes
-                 0.897    0.001    0.909      0.897    0.903      0.902    1.000     0.959     Abagrotis
-                 0.971    0.000    1.000      0.971    0.985      0.985    1.000     1.000     Anaplectoides
-                 0.930    0.002    0.938      0.930    0.934      0.933    0.999     0.983     Xestia
-                 0.980    0.001    0.959      0.980    0.970      0.969    1.000     0.997     Agrotis
-                 0.941    0.000    1.000      0.941    0.970      0.970    1.000     0.998     Hyles
-                 0.942    0.000    1.000      0.942    0.970      0.970    1.000     0.995     Carabus
-                 0.843    0.001    0.672      0.843    0.748      0.752    0.999     0.865     Sergentomyia
-                 0.932    0.001    0.941      0.932    0.936      0.935    0.999     0.974     Apamea
-                 0.964    0.000    0.930      0.964    0.946      0.946    1.000     0.916     Capnia
-                 0.972    0.000    0.952      0.972    0.962      0.962    1.000     0.989     Schinia
-                 0.988    0.000    0.988      0.988    0.988      0.988    1.000     1.000     Enargia
-                 0.923    0.000    1.000      0.923    0.960      0.961    1.000     0.991     Junonia
-                 0.863    0.000    0.970      0.863    0.914      0.915    1.000     0.965     Orthodes
-                 0.881    0.000    1.000      0.881    0.937      0.939    1.000     0.974     Aphrophora
-                 0.841    0.001    0.877      0.841    0.859      0.858    0.999     0.945     Pristiphora
-                 0.993    0.000    1.000      0.993    0.997      0.997    1.000     1.000     Rhynchophorus
-                 0.926    0.000    1.000      0.926    0.962      0.962    1.000     1.000     Cryptocala
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Maruca
-                 0.897    0.000    1.000      0.897    0.945      0.947    0.996     0.966     Pseudohermonassa
-                 0.978    0.000    1.000      0.978    0.989      0.989    1.000     0.999     Empria
-                 0.986    0.000    0.967      0.986    0.976      0.976    1.000     0.998     Dolerus
-                 0.996    0.001    0.860      0.996    0.923      0.925    1.000     0.925     Camponotus
-                 0.941    0.000    1.000      0.941    0.970      0.970    1.000     0.986     Tanytarsus
-                 0.991    0.000    1.000      0.991    0.996      0.996    1.000     1.000     Ochropleura
-                 0.869    0.002    0.726      0.869    0.791      0.793    0.999     0.915     Culicoides
-                 0.881    0.000    0.822      0.881    0.851      0.851    1.000     0.935     Cricotopus
-                 0.992    0.000    0.982      0.992    0.987      0.987    1.000     0.997     Leucania
-                 0.994    0.000    0.935      0.994    0.963      0.963    1.000     0.979     Baetis
-                 0.870    0.000    0.922      0.870    0.895      0.895    1.000     0.937     Spodoptera
-                 0.491    0.001    0.500      0.491    0.495      0.495    0.994     0.579     Oligia
-                 0.884    0.000    0.986      0.884    0.933      0.933    1.000     0.990     Tenthredo
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Microvelia
-                 0.907    0.000    1.000      0.907    0.951      0.952    1.000     0.966     Cinygmula
-                 0.996    0.000    0.996      0.996    0.996      0.996    1.000     1.000     Protodeltote
-                 0.808    0.001    0.754      0.808    0.780      0.780    0.998     0.864     Orthosia
-                 1.000    0.000    0.947      1.000    0.973      0.973    1.000     0.999     Percolestus
-                 0.846    0.000    0.846      0.846    0.846      0.846    1.000     0.910     Megastigmus
-                 0.878    0.001    0.849      0.878    0.863      0.863    0.999     0.932     Homorthodes
-                 1.000    0.001    0.755      1.000    0.860      0.869    1.000     0.974     Exocelina
-                 0.896    0.000    0.935      0.896    0.915      0.915    1.000     0.962     Anicla
-                 0.966    0.000    1.000      0.966    0.983      0.982    0.999     0.999     Culex
-                 0.966    0.000    0.978      0.966    0.972      0.972    1.000     0.998     Lithophane
+                 0.846    0.000    1.000      0.846    0.917      0.920    0.998     0.941     Amphipyra
+                 0.977    0.000    1.000      0.977    0.989      0.989    1.000     1.000     Megalodontes
+                 0.828    0.000    0.960      0.828    0.889      0.891    0.995     0.886     Xylomoia
+                 0.973    0.000    0.973      0.973    0.973      0.973    1.000     0.999     Lasius
                  0.996    0.000    1.000      0.996    0.998      0.998    1.000     1.000     Blepharoneura
-                 0.881    0.001    0.939      0.881    0.909      0.908    0.998     0.956     Simulium
-                 1.000    0.000    0.981      1.000    0.991      0.991    1.000     1.000     Syngrapha
-                 0.808    0.000    1.000      0.808    0.894      0.899    1.000     0.949     Tricholita
-                 0.951    0.000    0.906      0.951    0.928      0.928    1.000     0.981     Graphiphora
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Dinocras
-                 0.976    0.000    0.941      0.976    0.958      0.958    1.000     0.985     Terataner
-                 0.989    0.000    0.989      0.989    0.989      0.989    1.000     1.000     Pauropsalta
-                 0.891    0.000    1.000      0.891    0.943      0.944    1.000     1.000     Anagrapha
-                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.992     Aseptis
-                 0.989    0.000    1.000      0.989    0.994      0.994    1.000     1.000     Hippotion
-                 0.996    0.000    0.993      0.996    0.994      0.994    1.000     1.000     Polia
-                 0.973    0.000    1.000      0.973    0.987      0.987    1.000     0.995     Tetragonula
-                 0.951    0.000    1.000      0.951    0.975      0.975    1.000     0.999     Feltia
-                 0.840    0.000    0.933      0.840    0.884      0.885    0.999     0.939     Phlebotomus
-                 0.879    0.002    0.855      0.879    0.867      0.865    0.993     0.913     Anopheles
-                 0.941    0.000    1.000      0.941    0.970      0.970    1.000     0.997     Papaipema
-                 0.983    0.000    0.868      0.983    0.922      0.924    1.000     0.993     Catocala
-                 0.938    0.000    0.991      0.938    0.963      0.964    1.000     0.997     Monomorium
-                 0.948    0.001    0.969      0.948    0.958      0.958    1.000     0.991     Acronicta
-                 0.945    0.000    1.000      0.945    0.972      0.972    1.000     0.997     Cryptus
-                 0.954    0.000    0.977      0.954    0.965      0.965    1.000     0.992     Hypoponera
-                 0.919    0.000    0.868      0.919    0.893      0.893    0.999     0.926     Allantus
-                 0.956    0.000    0.977      0.956    0.966      0.966    1.000     0.999     Bellura
-                 0.995    0.000    1.000      0.995    0.997      0.997    1.000     1.000     Panthea
-                 0.881    0.000    0.960      0.881    0.919      0.919    1.000     0.979     Anarta
-                 0.925    0.000    1.000      0.925    0.961      0.962    1.000     1.000     Rhopalosiphum
-                 0.945    0.000    1.000      0.945    0.972      0.972    1.000     1.000     Hyppa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Eulaema
-                 0.963    0.000    0.963      0.963    0.963      0.963    1.000     0.990     Tuberculatus
-                 0.966    0.000    1.000      0.966    0.983      0.983    1.000     0.988     Caradrina
-                 0.925    0.000    0.961      0.925    0.942      0.942    1.000     0.988     Acontia
-                 1.000    0.000    0.972      1.000    0.986      0.986    1.000     1.000     Tamasia
-                 0.915    0.000    0.995      0.915    0.953      0.954    1.000     0.988     Tenthredopsis
-                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     1.000     Theretra
-                 0.914    0.000    0.914      0.914    0.914      0.914    1.000     0.976     Condica
-                 0.987    0.000    0.987      0.987    0.987      0.987    1.000     1.000     Trichordestra
-                 0.934    0.000    0.835      0.934    0.882      0.883    0.994     0.958     Siobla
-                 1.000    0.000    0.965      1.000    0.982      0.982    1.000     0.986     Cinara
-                 0.961    0.000    1.000      0.961    0.980      0.980    0.996     0.962     Philaenus
-                 0.983    0.000    0.983      0.983    0.983      0.983    1.000     1.000     Draeculacephala
-                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     1.000     Hillia
-                 0.821    0.000    0.767      0.821    0.793      0.793    0.999     0.863     Cephalota
-                 0.906    0.000    1.000      0.906    0.950      0.952    0.994     0.908     Aphis
-                 0.946    0.000    1.000      0.946    0.972      0.973    0.998     0.990     Hemicrepidius
-                 0.949    0.000    1.000      0.949    0.974      0.974    1.000     1.000     Aplectoides
-                 0.966    0.000    1.000      0.966    0.983      0.983    1.000     1.000     Agrius
-                 0.867    0.000    0.945      0.867    0.904      0.905    1.000     0.958     Neurostrota
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Nemoura
-                 0.821    0.001    0.511      0.821    0.630      0.648    0.998     0.813     Platypolia
-                 0.944    0.000    0.969      0.944    0.956      0.956    0.998     0.977     Chironomus
-                 0.750    0.000    0.944      0.750    0.836      0.841    1.000     0.898     Spiramater
-                 0.943    0.000    0.847      0.943    0.893      0.894    1.000     0.977     Selatosomus
-                 0.996    0.000    1.000      0.996    0.998      0.998    1.000     1.000     Carnus
-                 0.933    0.001    0.683      0.933    0.789      0.798    1.000     0.908     Nanos
-                 0.944    0.000    0.962      0.944    0.953      0.953    1.000     0.955     Sideridis
-                 0.932    0.000    1.000      0.932    0.965      0.965    1.000     0.992     Ambulyx
-                 0.952    0.004    0.817      0.952    0.879      0.879    0.999     0.964     Lacinipolia
-                 0.939    0.000    1.000      0.939    0.969      0.969    1.000     0.994     Lysiphlebus
-                 0.934    0.000    0.996      0.934    0.964      0.964    1.000     0.999     Eurois
-                 0.923    0.000    1.000      0.923    0.960      0.961    1.000     1.000     Pseudorthodes
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Psilogramma
-                 0.886    0.000    1.000      0.886    0.939      0.941    1.000     0.981     Caenis
-                 0.894    0.000    1.000      0.894    0.944      0.945    1.000     0.994     Proxenus
-                 0.904    0.000    0.918      0.904    0.911      0.911    1.000     0.954     Macrophya
-                 0.968    0.000    0.822      0.968    0.889      0.892    1.000     0.962     Pyrgonota
-                 0.912    0.000    0.932      0.912    0.922      0.922    1.000     0.969     Lasionycta
-                 0.714    0.000    0.976      0.714    0.825      0.835    0.998     0.838     Amphipoea
-                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     1.000     Opius
-                 1.000    0.001    0.849      1.000    0.918      0.921    1.000     0.911     Notiospathius
-                 0.867    0.001    0.685      0.867    0.766      0.770    0.999     0.850     Leucophenga
-                 0.889    0.000    0.930      0.889    0.909      0.909    0.999     0.931     Cryptolestes
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Autographa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Apiomorpha
-                 0.988    0.000    0.957      0.988    0.972      0.972    1.000     0.995     Mythimna
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cyphomyrmex
-                 0.993    0.000    0.979      0.993    0.986      0.986    1.000     0.997     Cosmia
-                 0.281    0.001    0.237      0.281    0.257      0.257    0.996     0.266     Operclipygus
-                 0.944    0.000    0.879      0.944    0.911      0.911    1.000     0.981     Abia
-                 0.654    0.000    0.708      0.654    0.680      0.680    0.995     0.705     Cerastis
-                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.997     Epeorus
-                 0.767    0.003    0.324      0.767    0.455      0.497    0.998     0.441     Phelister
-                 0.905    0.000    1.000      0.905    0.950      0.951    1.000     0.992     Orgyia
-                 0.901    0.000    0.849      0.901    0.874      0.874    0.999     0.949     Rhogogaster
-                 1.000    0.001    0.523      1.000    0.687      0.723    1.000     0.799     Copidosoma
-                 0.883    0.000    0.992      0.883    0.934      0.936    1.000     0.978     Pachycondyla
-                 1.000    0.000    0.993      1.000    0.996      0.996    1.000     1.000     Agelasa
-                 1.000    0.000    0.962      1.000    0.980      0.981    1.000     0.997     Aphidius
-                 0.921    0.000    0.928      0.921    0.925      0.924    1.000     0.978     Elaphria
-                 0.962    0.000    0.769      0.962    0.855      0.860    1.000     0.935     Strumigenys
-                 0.881    0.000    0.787      0.881    0.831      0.833    1.000     0.876     Leptogenys
-                 0.984    0.000    1.000      0.984    0.992      0.992    1.000     1.000     Bulia
-                 0.964    0.000    0.900      0.964    0.931      0.932    1.000     0.997     Hyposoter
+                 0.906    0.000    0.941      0.906    0.923      0.923    0.997     0.909     Aphis
+                 0.903    0.000    1.000      0.903    0.949      0.950    1.000     0.999     Chersotis
+                 0.577    0.000    1.000      0.577    0.732      0.759    1.000     0.928     Pseudorthodes
+                 0.930    0.004    0.297      0.930    0.451      0.524    0.999     0.659     Schizonycha
+                 0.893    0.001    0.773      0.893    0.829      0.830    1.000     0.933     Macrophya
+                 0.998    0.000    1.000      0.998    0.999      0.999    1.000     0.999     Hillia
+                 0.961    0.000    0.961      0.961    0.961      0.961    1.000     0.974     Adelomyrmex
+                 0.933    0.000    0.933      0.933    0.933      0.933    1.000     0.965     Ameletus
+                 0.918    0.001    0.659      0.918    0.767      0.777    1.000     0.937     Morrisonia
+                 0.860    0.000    0.860      0.860    0.860      0.860    1.000     0.927     Lacanobia
+                 0.800    0.000    0.952      0.800    0.870      0.873    1.000     0.938     Chytonix
+                 0.883    0.000    0.984      0.883    0.931      0.932    1.000     0.975     Pachycondyla
+                 0.727    0.000    0.800      0.727    0.762      0.762    0.998     0.845     Cladius
                  1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Altica
-                 0.939    0.000    1.000      0.939    0.969      0.969    1.000     0.992     Arge
-                 0.793    0.000    1.000      0.793    0.885      0.890    0.998     0.870     Xylomoia
-                 0.957    0.000    0.937      0.957    0.947      0.947    1.000     0.978     Ephemerella
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Rhyacia
-                 0.984    0.000    1.000      0.984    0.992      0.992    1.000     1.000     Gyponana
-                 0.892    0.001    0.611      0.892    0.725      0.738    0.997     0.886     Agrochola
-                 0.971    0.000    1.000      0.971    0.985      0.985    1.000     1.000     Pseudeustrotia
-                 0.778    0.002    0.298      0.778    0.431      0.481    0.994     0.768     Microdon
-                 0.923    0.000    0.947      0.923    0.935      0.935    1.000     0.985     Amphipyra
-                 0.849    0.001    0.622      0.849    0.718      0.726    0.999     0.772     Neoligia
-                 0.956    0.000    1.000      0.956    0.977      0.977    1.000     0.999     Leuconycta
-                 0.780    0.000    1.000      0.780    0.877      0.883    1.000     0.988     Crocigrapha
-                 0.908    0.000    1.000      0.908    0.952      0.953    1.000     1.000     Helicoverpa
-                 0.962    0.000    1.000      0.962    0.980      0.981    0.997     0.962     Protolampra
-                 0.944    0.000    1.000      0.944    0.971      0.972    0.999     0.964     Drosophila
-                 0.942    0.000    0.980      0.942    0.961      0.961    1.000     0.982     Cuerna
-                 0.966    0.000    1.000      0.966    0.983      0.983    1.000     1.000     Liriomyza
-                 0.986    0.000    0.986      0.986    0.986      0.986    1.000     1.000     Eurytoma
-                 0.922    0.001    0.747      0.922    0.825      0.829    1.000     0.968     Glossina
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ephoron
-                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     0.992     Miobantia
-                 0.525    0.001    0.333      0.525    0.408      0.418    0.998     0.439     Cylindera
-                 0.811    0.001    0.588      0.811    0.682      0.690    0.999     0.848     Eucosmophora
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Pimpla
-                 0.821    0.001    0.604      0.821    0.696      0.703    1.000     0.901     Octostruma
-                 0.696    0.000    0.800      0.696    0.744      0.746    0.998     0.810     Ametastegia
-                 0.925    0.000    0.966      0.925    0.945      0.945    1.000     0.986     Melanchra
-                 0.969    0.000    0.862      0.969    0.913      0.914    1.000     0.985     Tetramorium
-                 0.980    0.000    1.000      0.980    0.990      0.990    1.000     0.998     Siphlonurus
-                 0.822    0.000    1.000      0.822    0.902      0.907    1.000     0.988     Pontania
-                 0.879    0.000    1.000      0.879    0.935      0.937    0.992     0.970     Colymbetes
-                 0.957    0.000    0.957      0.957    0.957      0.956    1.000     0.991     Polistes
-                 0.964    0.000    1.000      0.964    0.982      0.982    1.000     1.000     Furcula
-                 0.967    0.000    1.000      0.967    0.983      0.984    1.000     0.995     Raphia
-                 0.848    0.000    1.000      0.848    0.918      0.921    1.000     0.964     Pyramica
-                 0.906    0.000    1.000      0.906    0.951      0.952    0.996     0.960     Aphodius
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Feralia
-                 0.764    0.000    1.000      0.764    0.866      0.874    0.997     0.859     Scirpophaga
-                 0.862    0.000    0.962      0.862    0.909      0.910    1.000     0.970     Maccaffertium
-                 1.000    0.000    0.918      1.000    0.957      0.958    1.000     1.000     Macroglossum
-                 0.929    0.000    0.978      0.929    0.953      0.953    1.000     0.980     Gnamptogenys
-                 0.920    0.000    0.994      0.920    0.955      0.956    0.999     0.968     Bemisia
-                 0.818    0.000    1.000      0.818    0.900      0.904    0.999     0.890     Euproctis
-                 0.946    0.000    1.000      0.946    0.972      0.973    1.000     0.995     Ilybius
+                 0.952    0.000    1.000      0.952    0.976      0.976    1.000     0.994     Aphrophora
+                 0.989    0.000    1.000      0.989    0.995      0.995    1.000     1.000     Acosmeryx
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Yukara
+                 0.929    0.000    0.684      0.929    0.788      0.797    1.000     0.919     Leptogenys
+                 0.926    0.000    0.954      0.926    0.940      0.940    1.000     0.992     Anarta
+                 1.000    0.000    0.983      1.000    0.992      0.992    1.000     1.000     Caradrina
+                 0.947    0.000    1.000      0.947    0.973      0.973    1.000     0.998     Papaipema
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cephonodes
+                 0.947    0.000    0.991      0.947    0.969      0.968    0.997     0.963     Bactrocera
+                 0.976    0.000    1.000      0.976    0.988      0.988    1.000     1.000     Nemoura
+                 0.986    0.000    0.989      0.986    0.987      0.987    1.000     0.999     Dolerus
+                 0.988    0.000    0.996      0.988    0.992      0.992    1.000     0.999     Diarsia
+                 0.973    0.000    1.000      0.973    0.987      0.987    1.000     0.998     Tetragonula
+                 0.817    0.000    0.987      0.817    0.894      0.898    1.000     0.964     Melanchra
+                 0.961    0.000    0.902      0.961    0.931      0.931    1.000     0.973     Fishia
+                 0.829    0.000    0.895      0.829    0.861      0.861    1.000     0.910     Thaumatotibia
                  1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Armigeres
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Trissolcus
-                 0.881    0.000    0.974      0.881    0.925      0.926    1.000     0.974     Hypena
-                 0.980    0.000    0.943      0.980    0.962      0.962    1.000     0.975     Claremontia
-                 0.855    0.002    0.452      0.855    0.591      0.621    0.999     0.813     Phyllonorycter
-                 0.800    0.003    0.268      0.800    0.402      0.462    0.998     0.645     Cladius
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Speolepta
-                 0.912    0.000    0.776      0.912    0.839      0.841    1.000     0.934     Micropeplus
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Stereocerus
-                 0.814    0.000    0.891      0.814    0.851      0.851    0.998     0.883     Triatoma
-                 0.880    0.000    1.000      0.880    0.936      0.938    0.999     0.914     Colocasia
-                 0.944    0.000    1.000      0.944    0.971      0.971    1.000     0.996     Protorthodes
-                 0.462    0.000    0.571      0.462    0.511      0.513    0.997     0.622     Photedes
-                 0.765    0.000    0.963      0.765    0.852      0.858    0.995     0.810     Hygrotus
-                 0.962    0.000    1.000      0.962    0.981      0.981    1.000     1.000     Hepialus
-                 1.000    0.000    0.987      1.000    0.993      0.993    1.000     0.986     Hermeuptychia
-                 0.969    0.000    0.984      0.969    0.976      0.976    1.000     0.999     Xyela
-                 0.977    0.000    0.843      0.977    0.905      0.908    1.000     0.973     Colletes
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Daphnis
-                 0.741    0.002    0.668      0.741    0.703      0.702    0.997     0.817     Trigonopterus
-                 0.975    0.000    1.000      0.975    0.987      0.987    1.000     1.000     Euplexia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Lygus
-                 0.911    0.000    0.981      0.911    0.944      0.945    0.997     0.965     Amara
-                 0.900    0.000    0.871      0.900    0.885      0.885    1.000     0.939     Drunella
-                 0.942    0.000    0.818      0.942    0.876      0.878    1.000     0.941     Lacanobia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Paradiarsia
+                 0.810    0.001    0.723      0.810    0.764      0.764    0.998     0.855     Trigonopterus
+                 0.850    0.000    0.708      0.850    0.773      0.776    1.000     0.790     Asobara
+                 0.938    0.000    1.000      0.938    0.968      0.968    1.000     0.997     Junonia
+                 0.884    0.000    1.000      0.884    0.938      0.940    1.000     0.972     Cinygmula
+                 0.618    0.000    0.840      0.618    0.712      0.720    0.998     0.774     Hygrotus
+                 0.941    0.000    0.988      0.941    0.964      0.964    1.000     0.992     Polia
+                 0.900    0.000    1.000      0.900    0.947      0.949    0.999     0.915     Euura
+                 0.760    0.000    0.905      0.760    0.826      0.829    0.994     0.887     Hydroporus
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ephoron
+                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     0.996     Cephalcia
+                 0.903    0.000    0.913      0.903    0.908      0.908    1.000     0.945     Ephemerella
+                 0.883    0.001    0.616      0.883    0.726      0.737    1.000     0.894     Nanos
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Mepraia
+                 1.000    0.000    0.917      1.000    0.957      0.957    1.000     0.976     Colletes
+                 0.933    0.001    0.809      0.933    0.867      0.868    1.000     0.971     Pristiphora
+                 0.932    0.000    1.000      0.932    0.965      0.965    1.000     0.981     Ambulyx
+                 0.986    0.000    1.000      0.986    0.993      0.993    1.000     1.000     Tamasia
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.950     Ectropis
+                 0.991    0.001    0.873      0.991    0.928      0.930    1.000     0.962     Camponotus
+                 0.947    0.000    1.000      0.947    0.973      0.973    1.000     0.993     Hypoponera
+                 0.911    0.000    0.932      0.911    0.921      0.921    1.000     0.941     Limnephilus
+                 0.762    0.000    0.941      0.762    0.842      0.847    1.000     0.959     Pseudodineura
+                 0.925    0.000    0.949      0.925    0.937      0.937    1.000     0.959     Pterostichus
+                 0.983    0.000    0.843      0.983    0.908      0.910    1.000     0.946     Catocala
+                 0.929    0.000    1.000      0.929    0.963      0.964    1.000     0.982     Orgyia
+                 0.935    0.001    0.667      0.935    0.779      0.789    1.000     0.903     Pyrgonota
+                 0.944    0.000    0.981      0.944    0.962      0.962    1.000     0.983     Tarachidia
+                 0.649    0.000    1.000      0.649    0.787      0.806    0.999     0.926     Bradysia
+                 0.822    0.000    0.712      0.822    0.763      0.765    1.000     0.874     Scoparia
+                 0.618    0.001    0.607      0.618    0.613      0.612    0.998     0.675     Oligia
+                 0.849    0.001    0.664      0.849    0.745      0.750    0.999     0.906     Neoligia
+                 0.833    0.000    1.000      0.833    0.909      0.913    1.000     0.993     Eueretagrotis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Syngrapha
+                 0.928    0.001    0.942      0.928    0.935      0.934    1.000     0.978     Apamea
+                 0.953    0.000    0.931      0.953    0.942      0.942    1.000     0.967     Selatosomus
+                 0.992    0.000    0.988      0.992    0.990      0.990    1.000     0.997     Mythimna
+                 0.954    0.000    0.978      0.954    0.966      0.965    1.000     0.994     Tenthredo
+                 0.931    0.000    0.957      0.931    0.944      0.944    1.000     0.980     Rhyacia
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.993     Morpho
+                 0.889    0.001    0.545      0.889    0.676      0.696    0.999     0.790     Grapholita
+                 0.938    0.000    1.000      0.938    0.968      0.968    1.000     0.983     Aphodius
+                 0.987    0.000    0.978      0.987    0.982      0.982    1.000     0.991     Protodeltote
+                 0.667    0.000    1.000      0.667    0.800      0.816    0.999     0.773     Aneugmenus
+                 0.961    0.000    0.948      0.961    0.954      0.954    1.000     0.998     Noctua
+                 0.935    0.000    1.000      0.935    0.966      0.966    1.000     1.000     Carabus
+                 0.708    0.000    0.739      0.708    0.723      0.723    1.000     0.802     Papilio
+                 0.939    0.000    0.992      0.939    0.965      0.965    1.000     0.995     Scirtothrips
+                 0.882    0.000    0.882      0.882    0.882      0.882    0.999     0.914     Strongylogaster
+                 0.976    0.000    1.000      0.976    0.988      0.988    1.000     1.000     Proxenus
+                 1.000    0.000    0.952      1.000    0.976      0.976    1.000     1.000     Elaphrus
+                 0.956    0.000    0.896      0.956    0.925      0.925    1.000     0.975     Leuconycta
+                 1.000    0.000    0.952      1.000    0.976      0.976    1.000     0.998     Heliocheilus
+                 0.995    0.000    1.000      0.995    0.997      0.997    1.000     0.999     Panthea
+                 0.982    0.000    0.903      0.982    0.941      0.942    1.000     0.987     Colocasiomyia
+                 0.892    0.000    0.917      0.892    0.904      0.904    0.999     0.915     Agrochola
+                 0.788    0.000    1.000      0.788    0.881      0.888    0.999     0.842     Pyramica
+                 1.000    0.000    0.980      1.000    0.990      0.990    1.000     1.000     Lycophotia
+                 0.965    0.000    1.000      0.965    0.982      0.982    1.000     0.991     Ochropleura
+                 0.878    0.001    0.902      0.878    0.889      0.888    0.995     0.924     Anopheles
+                 0.958    0.001    0.697      0.958    0.807      0.817    1.000     0.884     Leucophenga
+                 0.923    0.000    1.000      0.923    0.960      0.961    1.000     0.982     Gluphisia
+                 0.930    0.000    0.989      0.930    0.959      0.959    1.000     0.989     Tenthredopsis
+                 0.892    0.000    0.917      0.892    0.904      0.904    1.000     0.968     Phyllocolpa
+                 0.948    0.000    0.873      0.948    0.909      0.910    1.000     0.986     Glossina
+                 0.811    0.001    0.734      0.811    0.771      0.771    0.999     0.814     Nematus
+                 0.714    0.000    0.750      0.714    0.732      0.732    0.999     0.808     Melipotis
+                 0.990    0.000    0.935      0.990    0.962      0.962    1.000     0.976     Chrysis
+                 0.857    0.000    1.000      0.857    0.923      0.926    1.000     0.946     Parastichtis
+                 0.969    0.000    0.994      0.969    0.981      0.981    1.000     0.995     Chironomus
+                 0.893    0.000    0.962      0.893    0.926      0.926    1.000     0.942     Ilybius
+                 0.925    0.000    0.974      0.925    0.949      0.949    1.000     0.979     Phagomyia
+                 0.911    0.001    0.774      0.911    0.837      0.839    1.000     0.946     Culicoides
+                 1.000    0.000    0.976      1.000    0.988      0.988    1.000     1.000     Euplexia
+                 0.998    0.000    0.991      0.998    0.994      0.994    1.000     1.000     Opius
+                 0.867    0.001    0.557      0.867    0.678      0.694    0.999     0.878     Sergentomyia
+                 0.902    0.000    1.000      0.902    0.948      0.950    1.000     0.997     Polypogon
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Hexagenia
+                 0.750    0.000    0.706      0.750    0.727      0.727    0.999     0.762     Graphocephala
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Apiomorpha
+                 1.000    0.001    0.770      1.000    0.870      0.877    1.000     0.960     Exocelina
+                 0.981    0.000    0.981      0.981    0.981      0.981    1.000     0.999     Acontia
+                 0.878    0.000    0.923      0.878    0.900      0.900    0.998     0.899     Cryptocephalus
+                 0.986    0.000    1.000      0.986    0.993      0.993    1.000     0.999     Helicoverpa
+                 0.978    0.000    1.000      0.978    0.989      0.989    1.000     0.999     Bellura
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Pauropsalta
+                 0.815    0.000    0.803      0.815    0.809      0.809    1.000     0.923     Agabus
+                 0.937    0.001    0.860      0.937    0.897      0.897    1.000     0.944     Abagrotis
+                 0.893    0.000    0.893      0.893    0.893      0.893    0.998     0.911     Heliothis
+                 0.818    0.000    1.000      0.818    0.900      0.904    1.000     0.893     Asynarchus
+                 0.939    0.000    1.000      0.939    0.969      0.969    1.000     0.996     Litholomia
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.960     Callambulyx
+                 0.947    0.000    0.947      0.947    0.947      0.947    1.000     0.981     Phlebotomus
+                 0.811    0.000    0.977      0.811    0.887      0.890    1.000     0.935     Hypnoidus
+                 0.889    0.000    0.944      0.889    0.916      0.916    1.000     0.955     Orthodes
+                 0.828    0.000    1.000      0.828    0.906      0.910    0.999     0.937     Aglaostigma
+                 0.984    0.000    0.940      0.984    0.962      0.962    1.000     0.998     Maliattha
+                 0.848    0.000    0.907      0.848    0.876      0.877    0.999     0.908     Ametastegia
+                 0.843    0.000    1.000      0.843    0.915      0.918    1.000     0.975     Feralia
+                 0.822    0.000    0.925      0.822    0.871      0.872    1.000     0.947     Pontania
+                 0.989    0.000    0.968      0.989    0.978      0.978    1.000     0.990     Athalia
+                 0.868    0.002    0.770      0.868    0.816      0.816    0.999     0.825     Apanteles
+                 0.983    0.000    1.000      0.983    0.991      0.991    1.000     1.000     Errhomus
+                 0.969    0.000    1.000      0.969    0.984      0.984    1.000     0.999     Fergusonina
+                 0.818    0.000    1.000      0.818    0.900      0.904    1.000     0.927     Sutyna
+                 0.957    0.000    0.987      0.957    0.972      0.972    1.000     0.993     Lithophane
+                 0.944    0.000    0.761      0.944    0.843      0.848    0.999     0.931     Abia
+                 0.978    0.000    0.978      0.978    0.978      0.977    1.000     0.999     Macroglossum
+                 0.877    0.000    0.888      0.877    0.882      0.882    0.999     0.914     Rhogogaster
+                 0.969    0.000    0.926      0.969    0.947      0.948    1.000     0.992     Cucullia
+                 1.000    0.000    0.862      1.000    0.926      0.928    1.000     1.000     Aphidius
+                 0.885    0.000    1.000      0.885    0.939      0.941    1.000     0.992     Gyponana
+                 0.848    0.000    1.000      0.848    0.918      0.921    0.998     0.924     Cryptolestes
+                 1.000    0.001    0.519      1.000    0.684      0.720    1.000     0.929     Andropolia
+                 0.972    0.001    0.959      0.972    0.965      0.965    1.000     0.992     Acronicta
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Anoplolepis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Dendrolimus
+                 0.898    0.000    0.964      0.898    0.930      0.930    1.000     0.988     Liriomyza
+                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     1.000     Miobantia
+                 0.919    0.000    0.919      0.919    0.919      0.919    1.000     0.986     Balsa
+                 0.984    0.000    1.000      0.984    0.992      0.992    1.000     0.987     Xyela
+                 1.000    0.000    0.991      1.000    0.995      0.995    1.000     0.997     Bemisia
+                 0.875    0.000    0.994      0.875    0.931      0.932    0.999     0.970     Simulium
+                 0.897    0.000    0.778      0.897    0.833      0.835    1.000     0.936     Octostruma
+                 0.963    0.000    0.985      0.963    0.974      0.974    1.000     0.980     Lasionycta
+                 0.948    0.000    1.000      0.948    0.973      0.974    1.000     1.000     Nephelodes
+                 0.961    0.000    1.000      0.961    0.980      0.980    1.000     0.973     Philaenus
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.998     Luperina
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Hippotion
+                 0.720    0.000    1.000      0.720    0.837      0.848    0.986     0.754     Cobubatha
+                 1.000    0.000    0.965      1.000    0.982      0.982    1.000     1.000     Terataner
+                 0.981    0.000    0.914      0.981    0.946      0.947    1.000     0.995     Idia
+                 0.995    0.000    0.956      0.995    0.976      0.976    1.000     0.973     Cinara
+                 0.994    0.000    1.000      0.994    0.997      0.997    1.000     1.000     Psilogramma
+                 0.796    0.000    0.741      0.796    0.768      0.768    1.000     0.860     Eutomostethus
+                 0.966    0.000    1.000      0.966    0.983      0.983    1.000     0.997     Aplectoides
+                 0.980    0.000    0.980      0.980    0.980      0.980    1.000     0.978     Claremontia
+                 0.905    0.000    0.974      0.905    0.938      0.939    1.000     0.992     Agnorisma
+                 0.762    0.000    1.000      0.762    0.865      0.873    1.000     0.986     Cephus
+                 0.850    0.000    0.607      0.850    0.708      0.718    0.997     0.842     Capsula
+                 0.714    0.000    0.800      0.714    0.755      0.756    1.000     0.822     Cephalota
+                 0.982    0.000    0.931      0.982    0.956      0.956    1.000     0.930     Capnia
+                 0.946    0.000    0.930      0.946    0.938      0.937    1.000     0.978     Sympistis
+                 0.880    0.000    1.000      0.880    0.936      0.938    1.000     0.973     Anathix
+                 0.571    0.000    1.000      0.571    0.727      0.756    0.999     0.818     Periclista
+                 0.870    0.000    0.952      0.870    0.909      0.910    0.999     0.918     Cataglyphis
+                 0.815    0.000    0.957      0.815    0.880      0.883    1.000     0.886     Tuberculatus
+                 0.864    0.000    0.962      0.864    0.911      0.912    0.997     0.937     Callopistria
+                 0.860    0.000    0.851      0.860    0.855      0.855    1.000     0.927     Allantus
+                 0.768    0.000    0.878      0.768    0.819      0.821    0.998     0.818     Amphipoea
+                 0.923    0.000    1.000      0.923    0.960      0.961    0.999     0.955     Tricholita
+                 0.933    0.001    0.955      0.933    0.944      0.942    1.000     0.984     Xestia
+                 0.680    0.000    1.000      0.680    0.810      0.825    0.998     0.767     Dichagyris
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Plauditus
+                 0.783    0.000    1.000      0.783    0.878      0.885    1.000     0.917     Renia
+                 0.985    0.000    0.985      0.985    0.985      0.985    1.000     0.971     Apis
+                 0.960    0.000    0.923      0.960    0.941      0.941    1.000     0.985     Eudryas
+                 0.846    0.000    1.000      0.846    0.917      0.920    1.000     0.970     Hoplocampa
+                 0.714    0.000    0.652      0.714    0.682      0.682    0.997     0.752     Adelphagrotis
+                 0.577    0.000    1.000      0.577    0.732      0.759    0.999     0.785     Cerastis
+                 0.857    0.000    1.000      0.857    0.923      0.926    1.000     1.000     Acentrella
+                 1.000    0.000    0.973      1.000    0.986      0.986    1.000     1.000     Siobla
+                 0.926    0.000    0.909      0.926    0.917      0.917    0.999     0.939     Sideridis
+                 0.955    0.000    1.000      0.955    0.977      0.977    0.999     0.956     Lampides
+                 0.911    0.000    0.804      0.911    0.854      0.856    0.999     0.934     Papestra
+                 0.990    0.001    0.961      0.990    0.976      0.975    1.000     0.985     Houghia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Chromatomyia
+                 0.911    0.000    0.933      0.911    0.922      0.922    0.995     0.931     Limonius
+                 0.984    0.000    1.000      0.984    0.992      0.992    1.000     0.993     Raphia
+                 0.839    0.000    0.940      0.839    0.887      0.888    1.000     0.933     Catops
+                 0.864    0.001    0.667      0.864    0.753      0.758    0.999     0.892     Orthosia
+                 0.929    0.000    1.000      0.929    0.963      0.964    1.000     0.983     Hypena
+                 0.788    0.000    1.000      0.788    0.881      0.888    0.999     0.832     Euproctis
+                 0.955    0.000    0.988      0.955    0.971      0.972    1.000     0.980     Empria
                  1.000    0.000    0.833      1.000    0.909      0.913    1.000     0.888     Scolops
-                 0.964    0.000    0.806      0.964    0.878      0.881    1.000     0.959     Pheidole
-                 0.948    0.000    0.986      0.948    0.967      0.967    1.000     0.998     Plusia
-                 0.692    0.000    1.000      0.692    0.818      0.832    0.997     0.857     Taxonus
-                 0.838    0.001    0.437      0.838    0.574      0.604    0.993     0.827     Parasa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Nephelodes
-                 0.750    0.000    0.923      0.750    0.828      0.832    0.999     0.878     Amauronematus
-                 0.954    0.000    1.000      0.954    0.976      0.977    1.000     0.995     Cucullia
-                 0.800    0.000    0.923      0.800    0.857      0.859    1.000     0.919     Papestra
-                 0.667    0.000    0.947      0.667    0.783      0.795    0.987     0.733     Caloptilia
-                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     1.000     Ctenocephalides
-                 1.000    0.000    0.769      1.000    0.870      0.877    1.000     0.983     Anochetus
-                 0.831    0.000    0.925      0.831    0.875      0.876    1.000     0.949     Callopistria
-                 1.000    0.000    0.944      1.000    0.971      0.972    1.000     0.977     Adelomyrmex
-                 0.744    0.000    0.970      0.744    0.842      0.849    0.999     0.891     Spaelotis
-                 0.944    0.000    0.911      0.944    0.927      0.927    1.000     0.978     Idia
-                 0.970    0.000    1.000      0.970    0.985      0.985    1.000     1.000     Mepraia
-                 0.828    0.000    1.000      0.828    0.906      0.910    0.996     0.913     Aglaostigma
-                 0.909    0.000    1.000      0.909    0.952      0.953    1.000     0.984     Xylena
-                 0.966    0.000    1.000      0.966    0.982      0.983    1.000     1.000     Stiriodes
-                 0.943    0.000    0.815      0.943    0.874      0.876    1.000     0.926     Caenota
-                 0.889    0.000    1.000      0.889    0.941      0.943    1.000     0.985     Cephonodes
-                 0.957    0.000    0.989      0.957    0.973      0.973    1.000     0.995     Acosmeryx
-                 0.893    0.000    0.947      0.893    0.919      0.919    0.999     0.969     Scirtothrips
-                 0.978    0.000    0.978      0.978    0.978      0.978    1.000     0.999     Limnephilus
-                 0.881    0.000    1.000      0.881    0.937      0.939    1.000     0.994     Agnorisma
-                 0.984    0.000    0.863      0.984    0.920      0.922    1.000     0.992     Phlogophora
-                 0.980    0.000    1.000      0.980    0.990      0.990    1.000     1.000     Polypogon
-                 0.654    0.000    0.944      0.654    0.773      0.786    0.999     0.869     Pachybrachis
-                 0.959    0.000    0.839      0.959    0.895      0.897    1.000     0.957     Nonarthra
-                 0.855    0.000    0.903      0.855    0.878      0.878    1.000     0.954     Noctua
-                 0.714    0.000    0.909      0.714    0.800      0.806    0.996     0.847     Heliothis
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Maliattha
-                 0.862    0.000    0.949      0.862    0.903      0.904    1.000     0.974     Agabus
-                 0.881    0.001    0.754      0.881    0.813      0.815    0.999     0.876     Nematus
-                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     1.000     Cephalcia
-                 0.958    0.000    1.000      0.958    0.979      0.979    1.000     1.000     Lycophotia
-                 0.919    0.000    1.000      0.919    0.958      0.959    1.000     0.974     Balsa
-                 0.933    0.000    0.955      0.933    0.944      0.944    1.000     0.985     Eupsilia
-                 0.889    0.000    1.000      0.889    0.941      0.943    1.000     0.962     Andropolia
-                 0.930    0.000    1.000      0.930    0.964      0.964    1.000     0.983     Gyrinus
+                 0.568    0.001    0.429      0.568    0.488      0.493    0.998     0.545     Parasa
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cryptocala
+                 0.987    0.000    0.991      0.987    0.989      0.989    1.000     0.999     Euxoa
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.986     Stenacron
+                 0.967    0.000    0.996      0.967    0.981      0.981    1.000     1.000     Eurois
+                 1.000    0.000    0.913      1.000    0.955      0.956    1.000     0.998     Kosciuscola
+                 0.988    0.000    0.992      0.988    0.990      0.990    1.000     0.995     Theretra
+                 0.970    0.000    1.000      0.970    0.985      0.985    0.996     0.970     Colymbetes
+                 0.548    0.001    0.415      0.548    0.472      0.476    0.998     0.600     Cylindera
+                 0.920    0.000    0.885      0.920    0.902      0.902    0.997     0.895     Megastigmus
+                 1.000    0.000    0.973      1.000    0.986      0.986    1.000     1.000     Percolestus
+                 0.760    0.000    0.950      0.760    0.844      0.850    1.000     0.870     Pseudostegana
+                 0.913    0.001    0.512      0.913    0.656      0.683    0.999     0.890     Spodoptera
+                 0.905    0.000    1.000      0.905    0.950      0.951    1.000     0.998     Pachyprotasis
+                 0.933    0.000    0.778      0.933    0.848      0.852    1.000     0.924     Anochetus
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Stereocerus
+                 0.814    0.000    0.762      0.814    0.787      0.787    0.986     0.740     Cydia
+                 0.989    0.000    1.000      0.989    0.994      0.994    1.000     1.000     Camptomyia
+                 0.962    0.001    0.926      0.962    0.944      0.943    1.000     0.979     Lacinipolia
+                 0.947    0.000    1.000      0.947    0.973      0.973    1.000     0.998     Parabagrotis
+                 0.571    0.000    0.800      0.571    0.667      0.676    0.999     0.721     Apotolamprus
+                 0.959    0.000    0.979      0.959    0.969      0.969    1.000     0.992     Clostera
+                 1.000    0.000    0.944      1.000    0.971      0.971    1.000     0.974     Baetis
+                 0.917    0.000    0.917      0.917    0.917      0.917    1.000     0.981     Anicla
+                 0.860    0.000    0.881      0.860    0.871      0.871    1.000     0.945     Spaelotis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Bulia
+                 0.440    0.000    0.786      0.440    0.564      0.588    0.989     0.639     Colocasia
+                 0.957    0.001    0.500      0.957    0.657      0.691    1.000     0.762     Copidosoma
+                 0.860    0.002    0.514      0.860    0.643      0.664    0.998     0.753     Cicindela
+                 1.000    0.000    0.910      1.000    0.953      0.954    1.000     0.999     Graphiphora
+                 0.982    0.000    1.000      0.982    0.991      0.991    1.000     1.000     Hyppa
+                 0.889    0.000    1.000      0.889    0.941      0.943    1.000     0.999     Prognorisma
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     1.000     Leucrocuta
+                 0.385    0.000    0.588      0.385    0.465      0.475    0.995     0.477     Photedes
+                 0.914    0.000    0.996      0.914    0.953      0.954    0.997     0.984     Aedes
+                 0.931    0.000    1.000      0.931    0.964      0.965    1.000     0.997     Stiriodes
+                 0.760    0.000    0.864      0.760    0.809      0.810    1.000     0.843     Brachylomia
+                 0.958    0.000    1.000      0.958    0.979      0.979    1.000     1.000     Thanatophilus
                  1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Praon
-                 0.926    0.000    1.000      0.926    0.962      0.962    1.000     0.976     Prognorisma
-                 0.880    0.000    0.815      0.880    0.846      0.847    1.000     0.892     Dichagyris
-                 0.974    0.000    0.949      0.974    0.962      0.962    1.000     0.997     Fishia
-                 0.787    0.001    0.593      0.787    0.676      0.682    0.999     0.789     Morrisonia
-                 0.929    0.000    0.963      0.929    0.945      0.946    1.000     0.992     Telamona
-                 0.933    0.000    0.824      0.933    0.875      0.877    1.000     0.970     Pamphilius
-                 1.000    0.000    0.982      1.000    0.991      0.991    1.000     0.999     Tarachidia
-                 0.816    0.000    0.976      0.816    0.889      0.892    1.000     0.981     Paradiarsia
-                 0.930    0.000    0.898      0.930    0.914      0.914    1.000     0.978     Colocasiomyia
-                 0.990    0.000    0.962      0.990    0.976      0.976    1.000     0.984     Chrysis
-                 0.945    0.000    0.956      0.945    0.950      0.950    1.000     0.985     Athalia
-                 0.875    0.000    0.778      0.875    0.824      0.825    1.000     0.913     Graphocephala
-                 0.870    0.000    0.723      0.870    0.790      0.793    0.999     0.877     Eutomostethus
-                 1.000    0.000    0.813      1.000    0.897      0.901    1.000     0.985     Myrsidea
-                 0.919    0.000    0.919      0.919    0.919      0.919    1.000     0.981     Phyllocolpa
-                 0.925    0.000    0.949      0.925    0.937      0.937    1.000     0.972     Pterostichus
-                 0.867    0.000    0.929      0.867    0.897      0.897    1.000     0.958     Ameletus
-                 0.889    0.000    1.000      0.889    0.941      0.943    1.000     0.993     Eueretagrotis
-                 0.867    0.000    0.897      0.867    0.881      0.881    1.000     0.901     Euura
-                 1.000    0.000    0.980      1.000    0.990      0.990    1.000     1.000     Ectropis
-                 0.918    0.000    1.000      0.918    0.957      0.958    1.000     0.981     Clostera
-                 0.983    0.000    0.983      0.983    0.983      0.983    1.000     0.998     Errhomus
-                 0.868    0.000    1.000      0.868    0.929      0.932    1.000     0.971     Paraleptophlebia
-                 0.821    0.000    0.941      0.821    0.877      0.879    1.000     0.947     Hoplocampa
-                 0.846    0.000    1.000      0.846    0.917      0.920    1.000     0.969     Pleuroptya
-                 0.895    0.000    1.000      0.895    0.944      0.946    1.000     0.999     Ipimorpha
-                 0.901    0.003    0.337      0.901    0.490      0.550    0.999     0.673     Schizonycha
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Litholomia
-                 1.000    0.000    0.963      1.000    0.981      0.981    1.000     1.000     Protexarnis
-                 0.968    0.000    1.000      0.968    0.984      0.984    1.000     0.999     Chersotis
-                 0.954    0.000    0.925      0.954    0.939      0.939    0.998     0.957     Solenopsis
-                 0.779    0.000    0.930      0.779    0.848      0.851    1.000     0.918     Strongylogaster
-                 0.949    0.000    1.000      0.949    0.974      0.974    1.000     0.976     Gluphisia
-                 0.962    0.000    0.962      0.962    0.962      0.962    1.000     0.996     Capis
-                 0.731    0.001    0.404      0.731    0.521      0.543    0.993     0.424     Lucilia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Colias
-                 0.679    0.000    0.760      0.679    0.717      0.718    1.000     0.755     Apotolamprus
-                 0.405    0.001    0.250      0.405    0.309      0.317    0.992     0.328     Panorpa
-                 0.679    0.000    0.792      0.679    0.731      0.733    0.988     0.795     Hydroporus
-                 0.840    0.000    0.913      0.840    0.875      0.876    1.000     0.929     Anathix
-Weighted Avg.    0.919    0.001    0.931      0.919    0.922      0.922    0.998     0.957     
+                 0.961    0.000    1.000      0.961    0.980      0.980    1.000     1.000     Tanytarsus
+                 0.987    0.000    1.000      0.987    0.993      0.993    1.000     1.000     Agrius
+                 0.850    0.000    1.000      0.850    0.919      0.922    1.000     0.960     Ulolonche
+                 0.917    0.000    1.000      0.917    0.957      0.957    1.000     0.998     Chrysocharis
+                 0.997    0.000    0.995      0.997    0.996      0.996    1.000     0.995     Leucania
+                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     0.998     Daphnis
+                 0.769    0.000    1.000      0.769    0.870      0.877    1.000     0.984     Protexarnis
+                 0.667    0.000    0.875      0.667    0.757      0.764    0.996     0.747     Epidemas
+                 0.870    0.000    1.000      0.870    0.930      0.932    1.000     0.996     Plusia
+                 0.959    0.000    0.797      0.959    0.870      0.874    1.000     0.965     Nonarthra
+                 0.950    0.000    0.931      0.950    0.941      0.940    1.000     0.978     Aseptis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Caenis
+                 0.930    0.000    1.000      0.930    0.964      0.964    1.000     0.987     Gyrinus
+                 0.845    0.000    0.875      0.845    0.860      0.860    1.000     0.922     Condica
+                 0.960    0.000    0.980      0.960    0.970      0.970    1.000     0.997     Siphlonurus
+                 0.922    0.004    0.344      0.922    0.502      0.562    0.998     0.586     Eupselia
+                 1.000    0.000    0.875      1.000    0.933      0.935    1.000     0.969     Caenota
+                 0.967    0.000    0.967      0.967    0.967      0.967    1.000     0.983     Epeorus
+                 0.750    0.000    0.882      0.750    0.811      0.813    1.000     0.883     Faronta
+                 0.891    0.000    0.817      0.891    0.852      0.853    1.000     0.946     Phyllonorycter
+                 0.826    0.000    1.000      0.826    0.905      0.909    1.000     0.941     Callibaetis
+                 0.981    0.000    1.000      0.981    0.990      0.990    1.000     0.993     Cuerna
+                 0.920    0.000    1.000      0.920    0.958      0.959    0.999     0.958     Leptidea
+                 0.998    0.000    1.000      0.998    0.999      0.999    1.000     1.000     Maruca
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Sitochroa
+                 0.955    0.000    1.000      0.955    0.977      0.977    1.000     1.000     Cisseps
+                 0.981    0.000    1.000      0.981    0.990      0.990    1.000     0.999     Culex
+                 0.792    0.000    0.977      0.792    0.875      0.880    1.000     0.916     Paraleptophlebia
+                 0.375    0.001    0.243      0.375    0.295      0.301    0.991     0.334     Thudaca
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Pamphilius
+                 1.000    0.000    0.975      1.000    0.987      0.987    1.000     1.000     Trichordestra
+                 0.926    0.000    1.000      0.926    0.961      0.962    0.999     0.984     Hemicrepidius
+                 0.806    0.000    0.939      0.806    0.867      0.870    0.999     0.918     Triatoma
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cyphomyrmex
+                 0.972    0.001    0.873      0.972    0.920      0.921    1.000     0.985     Schinia
+                 0.913    0.000    0.977      0.913    0.944      0.944    1.000     0.984     Eupsilia
+                 0.956    0.000    0.887      0.956    0.920      0.920    1.000     0.976     Chimarra
+                 0.764    0.000    1.000      0.764    0.866      0.874    0.996     0.941     Scirpophaga
+                 0.920    0.000    1.000      0.920    0.958      0.959    1.000     0.984     Heterarthrus
+                 0.875    0.000    0.860      0.875    0.867      0.867    1.000     0.946     Pheidole
+                 0.907    0.000    0.852      0.907    0.879      0.879    1.000     0.944     Egira
+                 0.476    0.000    0.455      0.476    0.465      0.465    0.987     0.484     Hypocoena
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.965     Mniotype
+                 0.636    0.000    1.000      0.636    0.778      0.798    0.992     0.775     Caliroa
+                 0.933    0.000    0.737      0.933    0.824      0.829    1.000     0.929     Drunella
+                 0.897    0.000    1.000      0.897    0.945      0.947    1.000     0.998     Maccaffertium
+                 0.964    0.000    1.000      0.964    0.982      0.982    1.000     1.000     Telamona
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Geomydoecus
+                 0.922    0.000    0.983      0.922    0.952      0.952    1.000     0.972     Phlogophora
+                 0.857    0.000    0.947      0.857    0.900      0.901    0.990     0.859     Caloptilia
+                 0.993    0.000    1.000      0.993    0.996      0.996    1.000     1.000     Agelasa
+                 0.750    0.000    1.000      0.750    0.857      0.866    1.000     0.963     Enchenopa
+                 0.967    0.000    1.000      0.967    0.983      0.983    1.000     1.000     Hepialus
+                 0.596    0.009    0.734      0.596    0.658      0.648    0.978     0.726     NA
+                 0.976    0.000    1.000      0.976    0.988      0.988    1.000     1.000     Enargia
+                 0.954    0.000    0.912      0.954    0.932      0.932    0.999     0.956     Solenopsis
+                 0.893    0.000    0.806      0.893    0.847      0.848    0.980     0.887     Platypolia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Microvelia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Draeculacephala
+                 0.600    0.000    1.000      0.600    0.750      0.775    0.999     0.771     Monophadnus
+                 0.929    0.000    1.000      0.929    0.963      0.964    0.997     0.965     Amara
+                 0.833    0.000    0.897      0.833    0.864      0.865    1.000     0.970     Cricotopus
+                 0.979    0.000    0.833      0.979    0.900      0.903    1.000     0.956     Tetramorium
+                 0.623    0.001    0.550      0.623    0.584      0.585    0.994     0.597     Pachynematus
+                 0.970    0.000    0.865      0.970    0.914      0.916    1.000     0.964     Lysiphlebus
+                 0.765    0.000    0.945      0.765    0.846      0.850    0.999     0.866     Spiramater
+                 0.854    0.000    1.000      0.854    0.921      0.924    1.000     0.998     Crocigrapha
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Trissolcus
+                 0.957    0.000    1.000      0.957    0.978      0.978    1.000     0.984     Binodoxys
+                 0.827    0.000    0.694      0.827    0.754      0.757    0.996     0.831     Protolampra
+                 0.856    0.000    0.895      0.856    0.875      0.875    0.999     0.916     Homorthodes
+                 0.993    0.000    0.993      0.993    0.993      0.993    1.000     1.000     Anaplectoides
+                 0.769    0.000    0.952      0.769    0.851      0.856    0.999     0.898     Taxonus
+                 0.885    0.000    1.000      0.885    0.939      0.941    0.999     0.962     Pleuroptya
+                 0.926    0.000    0.926      0.926    0.926      0.926    0.999     0.933     Micropeplus
+                 0.878    0.000    0.989      0.878    0.930      0.931    1.000     0.980     Gnamptogenys
+                 0.977    0.000    1.000      0.977    0.988      0.988    1.000     0.995     Polypedilum
+                 0.987    0.000    0.983      0.987    0.985      0.985    1.000     0.999     Agrotis
+                 0.963    0.000    0.981      0.963    0.972      0.972    1.000     0.993     Protorthodes
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Listronotus
+                 0.969    0.000    0.922      0.969    0.945      0.945    1.000     0.995     Polistes
+                 0.944    0.000    1.000      0.944    0.971      0.972    0.999     0.979     Drosophila
+                 0.816    0.001    0.645      0.816    0.721      0.725    0.999     0.870     Bembidion
+                 0.750    0.000    1.000      0.750    0.857      0.866    0.999     0.926     Haploa
+                 0.654    0.001    0.415      0.654    0.507      0.520    0.998     0.418     Lucilia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ipimorpha
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Heliconius
+Weighted Avg.    0.925    0.001    0.936      0.925    0.928      0.928    0.999     0.956     
 ```
 
-### 4) This time, pre-process the data using the information gain attribute selection, select the 100 highest-ranked attributes, then run the resulting data through Naive Bayes with supervised discretisation. (3-fold cross-validation)
+### 3) Run Naive Bayes on the dataset using supervised discretisation after selecting the best 500 attributes using information gain (2-fold cross-validation)
 
 ```
-=== Run information ===
-
-Scheme:       weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 100" -W weka.classifiers.bayes.NaiveBayes -- -D
-Relation:     res50k
-Instances:    36683
-Attributes:   3919
-              [list of attributes omitted]
-Test mode:    3-fold cross-validation
-
 === Stratified cross-validation ===
-=== Summary ===
 
-Correctly Classified Instances       30865               84.1398 %
-Incorrectly Classified Instances      5818               15.8602 %
-Kappa statistic                          0.8397
-Mean absolute error                      0.0011
-Root mean squared error                  0.0299
-Relative absolute error                 16.4185 %
-Root relative squared error             52.0845 %
-Coverage of cases (0.95 level)          88.1662 %
-Mean rel. region size (0.95 level)       0.4066 %
-Total Number of Instances            36683     
+Correctly Classified Instances       35243               91.469  %
+Incorrectly Classified Instances      3287                8.531  %
+Kappa statistic                          0.9138
+Mean absolute error                      0.0005
+Root mean squared error                  0.0213
+Relative absolute error                  8.6548 %
+Root relative squared error             40.4889 %
+Coverage of cases (0.95 level)          92.1671 %
+Mean rel. region size (0.95 level)       0.2872 %
+Total Number of Instances            38530     
+
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.472    0.001    0.568      0.472    0.515      0.517    0.997     0.600     Pachynematus
-                 0.814    0.003    0.643      0.814    0.719      0.722    0.997     0.851     Cicindela
-                 0.922    0.000    0.922      0.922    0.922      0.922    1.000     0.975     Polypedilum
-                 0.615    0.001    0.705      0.615    0.657      0.657    0.991     0.688     Egira
-                 0.837    0.001    0.811      0.837    0.824      0.822    0.997     0.903     Diarsia
-                 0.886    0.001    0.933      0.886    0.909      0.907    0.996     0.947     Bactrocera
-                 0.770    0.003    0.667      0.770    0.715      0.714    0.995     0.819     Sympistis
-                 0.964    0.000    0.930      0.964    0.947      0.946    1.000     0.992     Machilis
-                 0.386    0.014    0.586      0.386    0.465      0.455    0.943     0.534     NA
-                 0.863    0.002    0.918      0.863    0.889      0.887    0.997     0.951     Euxoa
-                 0.809    0.000    0.969      0.809    0.882      0.885    0.998     0.942     Parabagrotis
-                 0.876    0.001    0.903      0.876    0.890      0.889    0.998     0.949     Aedes
-                 0.773    0.000    0.944      0.773    0.850      0.854    0.999     0.871     Megalodontes
-                 0.794    0.001    0.839      0.794    0.816      0.815    0.998     0.893     Abagrotis
-                 0.833    0.000    0.906      0.833    0.868      0.868    0.998     0.913     Anaplectoides
-                 0.819    0.004    0.841      0.819    0.830      0.825    0.995     0.906     Xestia
-                 0.825    0.002    0.856      0.825    0.840      0.838    0.998     0.928     Agrotis
-                 0.912    0.000    0.969      0.912    0.939      0.940    1.000     0.936     Hyles
-                 0.944    0.000    1.000      0.944    0.971      0.971    1.000     0.989     Carabus
-                 0.765    0.001    0.639      0.765    0.696      0.699    0.998     0.788     Sergentomyia
-                 0.857    0.003    0.863      0.857    0.860      0.856    0.996     0.913     Apamea
-                 0.945    0.000    0.897      0.945    0.920      0.921    0.999     0.933     Capnia
-                 0.873    0.002    0.623      0.873    0.727      0.736    0.998     0.892     Schinia
-                 0.952    0.000    0.988      0.952    0.969      0.969    1.000     0.987     Enargia
-                 0.846    0.000    0.786      0.846    0.815      0.815    0.998     0.884     Junonia
-                 0.732    0.001    0.751      0.732    0.741      0.740    0.996     0.832     Orthodes
-                 0.738    0.000    0.886      0.738    0.805      0.808    0.997     0.853     Aphrophora
-                 0.733    0.001    0.773      0.733    0.753      0.752    0.998     0.838     Pristiphora
+                 0.967    0.000    1.000      0.967    0.983      0.983    1.000     0.999     Melissotarsus
+                 0.933    0.000    0.993      0.933    0.962      0.962    1.000     0.973     Feltia
+                 0.850    0.000    0.971      0.850    0.907      0.909    1.000     0.948     Rhopalosiphum
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Pseudeustrotia
+                 0.929    0.000    0.963      0.929    0.945      0.946    1.000     0.979     Furcula
+                 0.667    0.000    0.762      0.667    0.711      0.712    0.999     0.741     Amauronematus
+                 0.731    0.000    0.905      0.731    0.809      0.813    0.999     0.798     Capis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Scaptomyza
+                 0.853    0.000    1.000      0.853    0.921      0.923    0.999     0.899     Hyles
+                 0.800    0.000    1.000      0.800    0.889      0.894    0.998     0.900     Denticollis
+                 1.000    0.000    0.998      1.000    0.999      0.999    1.000     1.000     Machilis
+                 0.478    0.000    0.647      0.478    0.550      0.556    0.985     0.599     Rhantus
+                 0.916    0.000    1.000      0.916    0.956      0.957    1.000     0.988     Arge
+                 0.828    0.000    1.000      0.828    0.906      0.910    0.999     0.931     Pseudohermonassa
+                 1.000    0.000    0.972      1.000    0.986      0.986    1.000     1.000     Eurytoma
+                 0.923    0.000    0.716      0.923    0.807      0.813    1.000     0.933     Strumigenys
+                 0.972    0.000    0.986      0.972    0.979      0.979    1.000     0.998     Cosmia
+                 0.955    0.000    1.000      0.955    0.977      0.977    1.000     0.990     Xylena
+                 0.943    0.000    0.964      0.943    0.953      0.953    1.000     0.977     Elaphria
+                 0.234    0.002    0.170      0.234    0.197      0.198    0.995     0.192     Microgastrinae gen. mgJanzen01
                  0.993    0.000    1.000      0.993    0.997      0.997    1.000     1.000     Rhynchophorus
-                 0.895    0.000    1.000      0.895    0.944      0.946    1.000     0.987     Cryptocala
-                 0.998    0.000    1.000      0.998    0.999      0.999    1.000     1.000     Maruca
-                 0.759    0.000    0.815      0.759    0.786      0.786    0.992     0.847     Pseudohermonassa
-                 0.921    0.001    0.804      0.921    0.859      0.860    1.000     0.942     Empria
-                 0.933    0.000    0.968      0.933    0.950      0.950    1.000     0.989     Dolerus
-                 0.965    0.002    0.794      0.965    0.871      0.875    1.000     0.962     Camponotus
-                 0.843    0.000    1.000      0.843    0.915      0.918    1.000     0.953     Tanytarsus
-                 0.913    0.000    0.991      0.913    0.950      0.951    1.000     0.991     Ochropleura
-                 0.683    0.004    0.483      0.683    0.566      0.572    0.995     0.690     Culicoides
-                 0.857    0.000    0.837      0.857    0.847      0.847    1.000     0.918     Cricotopus
-                 0.888    0.001    0.903      0.888    0.895      0.894    0.999     0.967     Leucania
-                 0.968    0.000    0.927      0.968    0.947      0.947    1.000     0.994     Baetis
-                 0.759    0.002    0.336      0.759    0.466      0.504    0.995     0.720     Spodoptera
-                 0.418    0.001    0.319      0.418    0.362      0.364    0.975     0.418     Oligia
-                 0.861    0.002    0.922      0.861    0.891      0.889    0.999     0.966     Tenthredo
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Microvelia
-                 0.814    0.000    0.897      0.814    0.854      0.855    0.998     0.904     Cinygmula
-                 0.938    0.000    0.959      0.938    0.948      0.948    1.000     0.992     Protodeltote
-                 0.736    0.001    0.708      0.736    0.722      0.721    0.995     0.793     Orthosia
-                 0.972    0.000    0.946      0.972    0.959      0.959    1.000     0.990     Percolestus
-                 0.846    0.000    0.550      0.846    0.667      0.682    0.999     0.752     Megastigmus
-                 0.700    0.001    0.863      0.700    0.773      0.776    0.989     0.796     Homorthodes
-                 1.000    0.001    0.688      1.000    0.815      0.829    1.000     0.990     Exocelina
-                 0.458    0.000    0.786      0.458    0.579      0.600    0.995     0.636     Anicla
-                 0.957    0.000    1.000      0.957    0.978      0.978    1.000     0.999     Culex
-                 0.864    0.000    0.962      0.864    0.910      0.911    1.000     0.974     Lithophane
-                 0.995    0.000    0.999      0.995    0.997      0.997    1.000     1.000     Blepharoneura
-                 0.826    0.002    0.874      0.826    0.849      0.848    0.998     0.920     Simulium
-                 0.981    0.001    0.915      0.981    0.947      0.947    1.000     0.993     Syngrapha
-                 0.769    0.000    1.000      0.769    0.870      0.877    0.999     0.908     Tricholita
-                 0.889    0.000    0.911      0.889    0.900      0.900    0.997     0.935     Graphiphora
-                 1.000    0.000    0.979      1.000    0.989      0.990    1.000     1.000     Dinocras
-                 0.902    0.001    0.655      0.902    0.759      0.768    0.999     0.904     Terataner
-                 0.977    0.000    0.977      0.977    0.977      0.977    1.000     0.999     Pauropsalta
-                 0.717    0.000    1.000      0.717    0.835      0.847    1.000     0.937     Anagrapha
-                 0.880    0.000    1.000      0.880    0.936      0.938    0.998     0.965     Aseptis
-                 0.972    0.000    1.000      0.972    0.986      0.986    1.000     0.997     Hippotion
-                 0.956    0.004    0.656      0.956    0.778      0.790    0.999     0.958     Polia
-                 0.973    0.000    1.000      0.973    0.987      0.987    0.999     0.994     Tetragonula
-                 0.785    0.001    0.780      0.785    0.783      0.782    0.998     0.876     Feltia
-                 0.730    0.001    0.760      0.730    0.745      0.744    0.997     0.801     Phlebotomus
-                 0.862    0.004    0.779      0.862    0.818      0.816    0.990     0.907     Anopheles
-                 0.840    0.001    0.866      0.840    0.853      0.852    0.999     0.915     Papaipema
-                 0.900    0.000    0.871      0.900    0.885      0.885    1.000     0.949     Catocala
-                 0.946    0.000    0.938      0.946    0.942      0.942    1.000     0.987     Monomorium
-                 0.754    0.002    0.871      0.754    0.808      0.807    0.995     0.875     Acronicta
-                 0.945    0.000    1.000      0.945    0.972      0.972    1.000     0.995     Cryptus
-                 0.885    0.000    0.885      0.885    0.885      0.885    1.000     0.950     Hypoponera
-                 0.802    0.001    0.775      0.802    0.789      0.788    0.997     0.854     Allantus
-                 0.889    0.000    0.930      0.889    0.909      0.909    1.000     0.948     Bellura
-                 0.951    0.000    0.994      0.951    0.972      0.972    1.000     0.999     Panthea
-                 0.763    0.001    0.746      0.763    0.755      0.754    0.995     0.820     Anarta
-                 0.625    0.000    0.893      0.625    0.735      0.747    1.000     0.861     Rhopalosiphum
-                 0.891    0.000    1.000      0.891    0.942      0.944    1.000     0.996     Hyppa
-                 1.000    0.000    0.977      1.000    0.988      0.988    1.000     1.000     Eulaema
-                 0.963    0.000    0.897      0.963    0.929      0.929    1.000     0.956     Tuberculatus
-                 0.872    0.000    0.971      0.872    0.919      0.920    0.999     0.956     Caradrina
-                 0.792    0.000    0.875      0.792    0.832      0.832    0.999     0.881     Acontia
-                 1.000    0.000    0.959      1.000    0.979      0.979    1.000     1.000     Tamasia
-                 0.891    0.001    0.882      0.891    0.886      0.886    1.000     0.959     Tenthredopsis
-                 0.910    0.000    0.991      0.910    0.949      0.949    1.000     0.991     Theretra
-                 0.828    0.000    0.800      0.828    0.814      0.813    0.996     0.843     Condica
-                 0.936    0.000    0.830      0.936    0.880      0.881    1.000     0.971     Trichordestra
-                 0.895    0.001    0.648      0.895    0.751      0.761    0.990     0.909     Siobla
-                 0.991    0.001    0.920      0.991    0.954      0.954    1.000     0.990     Cinara
-                 0.961    0.000    1.000      0.961    0.980      0.980    0.994     0.962     Philaenus
-                 0.950    0.000    0.934      0.950    0.942      0.942    1.000     0.987     Draeculacephala
-                 0.970    0.000    0.997      0.970    0.984      0.984    1.000     1.000     Hillia
-                 0.500    0.001    0.292      0.500    0.368      0.381    0.997     0.416     Cephalota
-                 0.906    0.000    0.814      0.906    0.857      0.858    0.992     0.907     Aphis
-                 0.902    0.000    0.962      0.902    0.931      0.931    0.998     0.969     Hemicrepidius
-                 0.881    0.000    0.963      0.881    0.920      0.921    1.000     0.977     Aplectoides
-                 0.946    0.000    1.000      0.946    0.972      0.973    1.000     0.996     Agrius
-                 0.917    0.000    0.775      0.917    0.840      0.842    1.000     0.951     Neurostrota
-                 1.000    0.000    0.977      1.000    0.988      0.988    1.000     0.999     Nemoura
-                 0.607    0.001    0.395      0.607    0.479      0.489    0.997     0.642     Platypolia
-                 0.883    0.001    0.861      0.883    0.872      0.871    0.998     0.945     Chironomus
-                 0.632    0.000    0.977      0.632    0.768      0.786    0.992     0.735     Spiramater
-                 0.925    0.000    0.891      0.925    0.907      0.907    1.000     0.963     Selatosomus
-                 0.988    0.000    0.988      0.988    0.988      0.988    1.000     1.000     Carnus
-                 0.867    0.001    0.605      0.867    0.712      0.723    0.998     0.825     Nanos
-                 0.833    0.000    0.804      0.833    0.818      0.818    0.999     0.899     Sideridis
-                 0.864    0.000    0.905      0.864    0.884      0.884    0.999     0.905     Ambulyx
-                 0.758    0.006    0.710      0.758    0.733      0.729    0.993     0.838     Lacinipolia
-                 0.970    0.000    0.941      0.970    0.955      0.955    1.000     0.970     Lysiphlebus
-                 0.789    0.000    0.950      0.789    0.862      0.865    0.999     0.925     Eurois
-                 0.692    0.000    1.000      0.692    0.818      0.832    0.999     0.882     Pseudorthodes
-                 0.885    0.001    0.864      0.885    0.874      0.874    0.999     0.942     Psilogramma
-                 0.857    0.000    0.938      0.857    0.896      0.896    0.998     0.873     Caenis
-                 0.859    0.000    0.948      0.859    0.901      0.902    0.999     0.934     Proxenus
-                 0.840    0.001    0.840      0.840    0.840      0.839    0.999     0.904     Macrophya
-                 0.935    0.001    0.624      0.935    0.748      0.763    1.000     0.917     Pyrgonota
-                 0.816    0.001    0.793      0.816    0.804      0.804    0.998     0.870     Lasionycta
-                 0.661    0.000    0.860      0.661    0.747      0.754    0.988     0.713     Amphipoea
-                 0.960    0.000    0.998      0.960    0.978      0.978    1.000     0.999     Opius
-                 0.989    0.002    0.732      0.989    0.841      0.850    1.000     0.982     Notiospathius
-                 0.841    0.001    0.674      0.841    0.748      0.752    0.996     0.841     Leucophenga
-                 0.822    0.000    0.698      0.822    0.755      0.757    0.996     0.802     Cryptolestes
-                 0.923    0.000    0.945      0.923    0.934      0.934    1.000     0.983     Autographa
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Apiomorpha
-                 0.968    0.001    0.883      0.968    0.923      0.924    1.000     0.987     Mythimna
-                 0.978    0.000    0.936      0.978    0.957      0.957    1.000     0.997     Cyphomyrmex
-                 0.902    0.000    0.908      0.902    0.905      0.905    0.998     0.942     Cosmia
-                 0.219    0.001    0.226      0.219    0.222      0.222    0.995     0.160     Operclipygus
-                 0.926    0.000    0.893      0.926    0.909      0.909    1.000     0.955     Abia
-                 0.231    0.000    0.500      0.231    0.316      0.339    0.972     0.292     Cerastis
-                 0.867    0.000    0.813      0.867    0.839      0.839    1.000     0.934     Epeorus
-                 0.617    0.002    0.343      0.617    0.440      0.458    0.998     0.453     Phelister
-                 0.833    0.000    0.972      0.833    0.897      0.900    0.997     0.879     Orgyia
-                 0.827    0.001    0.770      0.827    0.798      0.798    0.999     0.879     Rhogogaster
-                 0.783    0.001    0.424      0.783    0.550      0.575    0.998     0.587     Copidosoma
-                 0.869    0.000    0.975      0.869    0.919      0.920    0.999     0.945     Pachycondyla
-                 0.948    0.000    0.934      0.948    0.941      0.941    1.000     0.990     Agelasa
-                 0.920    0.000    0.885      0.920    0.902      0.902    1.000     0.969     Aphidius
-                 0.686    0.001    0.835      0.686    0.753      0.756    0.994     0.809     Elaphria
-                 0.788    0.001    0.526      0.788    0.631      0.643    0.999     0.770     Strumigenys
-                 0.786    0.000    0.805      0.786    0.795      0.795    0.999     0.846     Leptogenys
-                 0.967    0.000    0.967      0.967    0.967      0.967    1.000     0.989     Bulia
-                 1.000    0.000    0.903      1.000    0.949      0.950    1.000     0.995     Hyposoter
-                 0.981    0.000    1.000      0.981    0.991      0.991    1.000     0.999     Altica
-                 0.902    0.000    0.922      0.902    0.912      0.912    1.000     0.960     Arge
-                 0.759    0.000    1.000      0.759    0.863      0.871    0.994     0.790     Xylomoia
-                 0.849    0.001    0.760      0.849    0.802      0.803    1.000     0.920     Ephemerella
-                 0.917    0.000    1.000      0.917    0.957      0.957    1.000     0.991     Rhyacia
-                 0.984    0.000    0.938      0.984    0.960      0.960    1.000     0.998     Gyponana
-                 0.568    0.000    0.538      0.568    0.553      0.552    0.996     0.594     Agrochola
-                 0.941    0.000    0.970      0.941    0.955      0.955    1.000     0.977     Pseudeustrotia
-                 0.694    0.004    0.143      0.694    0.237      0.314    0.993     0.400     Microdon
-                 0.769    0.000    0.811      0.769    0.789      0.790    0.999     0.840     Amphipyra
-                 0.710    0.002    0.532      0.710    0.608      0.613    0.993     0.682     Neoligia
-                 0.867    0.000    0.929      0.867    0.897      0.897    0.999     0.937     Leuconycta
-                 0.707    0.000    0.906      0.707    0.795      0.800    0.999     0.826     Crocigrapha
-                 0.853    0.000    0.979      0.853    0.912      0.914    0.999     0.940     Helicoverpa
-                 0.885    0.000    0.979      0.885    0.929      0.930    0.994     0.927     Protolampra
-                 0.944    0.000    1.000      0.944    0.971      0.972    0.998     0.961     Drosophila
-                 0.865    0.001    0.592      0.865    0.703      0.715    0.999     0.905     Cuerna
-                 0.949    0.000    0.918      0.949    0.933      0.933    1.000     0.971     Liriomyza
-                 0.986    0.000    1.000      0.986    0.993      0.993    1.000     1.000     Eurytoma
-                 0.938    0.001    0.583      0.938    0.719      0.738    1.000     0.937     Glossina
+                 0.769    0.000    1.000      0.769    0.870      0.877    0.998     0.926     Amphipyra
+                 0.955    0.000    1.000      0.955    0.977      0.977    1.000     1.000     Megalodontes
+                 0.793    0.000    1.000      0.793    0.885      0.890    0.994     0.860     Xylomoia
+                 0.973    0.000    0.973      0.973    0.973      0.973    1.000     0.993     Lasius
+                 0.996    0.000    1.000      0.996    0.998      0.998    1.000     1.000     Blepharoneura
+                 0.906    0.000    0.960      0.906    0.932      0.932    0.995     0.909     Aphis
+                 0.903    0.000    1.000      0.903    0.949      0.950    1.000     0.999     Chersotis
+                 0.731    0.000    1.000      0.731    0.844      0.855    1.000     0.916     Pseudorthodes
+                 0.803    0.004    0.266      0.803    0.400      0.461    0.998     0.661     Schizonycha
+                 0.909    0.001    0.813      0.909    0.859      0.859    1.000     0.947     Macrophya
+                 0.975    0.000    1.000      0.975    0.987      0.987    1.000     0.999     Hillia
+                 0.941    0.000    0.980      0.941    0.960      0.960    1.000     0.986     Adelomyrmex
+                 0.933    0.000    0.840      0.933    0.884      0.885    1.000     0.970     Ameletus
+                 0.918    0.001    0.615      0.918    0.737      0.751    1.000     0.910     Morrisonia
+                 0.802    0.000    0.831      0.802    0.817      0.816    0.999     0.899     Lacanobia
+                 0.840    0.000    0.913      0.840    0.875      0.876    0.999     0.923     Chytonix
+                 0.876    0.000    0.992      0.876    0.930      0.932    1.000     0.978     Pachycondyla
+                 0.727    0.000    0.702      0.727    0.714      0.714    0.998     0.808     Cladius
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Altica
+                 0.905    0.000    1.000      0.905    0.950      0.951    1.000     0.992     Aphrophora
+                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     0.999     Acosmeryx
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.998     Yukara
+                 0.929    0.000    0.684      0.929    0.788      0.797    1.000     0.909     Leptogenys
+                 0.919    0.000    0.912      0.919    0.915      0.915    1.000     0.984     Anarta
+                 0.991    0.000    0.983      0.991    0.987      0.987    1.000     0.999     Caradrina
+                 0.935    0.000    1.000      0.935    0.966      0.967    1.000     0.997     Papaipema
+                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     1.000     Cephonodes
+                 0.942    0.001    0.970      0.942    0.956      0.955    0.996     0.958     Bactrocera
+                 0.976    0.000    1.000      0.976    0.988      0.988    1.000     1.000     Nemoura
+                 0.972    0.000    0.986      0.972    0.979      0.979    1.000     0.998     Dolerus
+                 0.984    0.000    0.992      0.984    0.988      0.988    1.000     0.997     Diarsia
+                 0.973    0.000    1.000      0.973    0.987      0.987    1.000     0.997     Tetragonula
+                 0.796    0.000    0.974      0.796    0.876      0.880    1.000     0.954     Melanchra
+                 0.948    0.000    0.936      0.948    0.942      0.942    1.000     0.978     Fishia
+                 0.805    0.000    0.825      0.805    0.815      0.815    1.000     0.875     Thaumatotibia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Armigeres
+                 0.918    0.000    0.978      0.918    0.947      0.948    1.000     0.983     Paradiarsia
+                 0.787    0.001    0.706      0.787    0.745      0.744    0.998     0.835     Trigonopterus
+                 0.850    0.000    0.708      0.850    0.773      0.776    0.999     0.825     Asobara
+                 0.969    0.000    1.000      0.969    0.984      0.984    1.000     1.000     Junonia
+                 0.884    0.000    1.000      0.884    0.938      0.940    0.999     0.944     Cinygmula
+                 0.618    0.000    0.750      0.618    0.677      0.680    0.998     0.724     Hygrotus
+                 0.941    0.000    0.977      0.941    0.958      0.958    1.000     0.992     Polia
+                 0.833    0.000    0.962      0.833    0.893      0.895    0.999     0.913     Euura
+                 0.720    0.000    1.000      0.720    0.837      0.848    0.992     0.868     Hydroporus
                  1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ephoron
-                 0.947    0.000    0.947      0.947    0.947      0.947    1.000     0.973     Miobantia
-                 0.475    0.001    0.317      0.475    0.380      0.387    0.996     0.287     Cylindera
-                 0.568    0.001    0.339      0.568    0.424      0.438    0.996     0.513     Eucosmophora
-                 0.964    0.000    1.000      0.964    0.982      0.982    1.000     0.999     Pimpla
-                 0.846    0.000    0.702      0.846    0.767      0.771    0.998     0.832     Octostruma
-                 0.565    0.000    0.703      0.565    0.627      0.630    0.996     0.691     Ametastegia
-                 0.849    0.001    0.731      0.849    0.786      0.788    0.999     0.894     Melanchra
-                 0.845    0.001    0.804      0.845    0.824      0.824    1.000     0.911     Tetramorium
-                 0.980    0.000    0.942      0.980    0.961      0.961    1.000     0.997     Siphlonurus
-                 0.756    0.000    0.971      0.756    0.850      0.857    1.000     0.900     Pontania
-                 0.848    0.000    1.000      0.848    0.918      0.921    0.984     0.916     Colymbetes
-                 0.935    0.000    0.905      0.935    0.920      0.920    1.000     0.968     Polistes
-                 0.857    0.000    0.960      0.857    0.906      0.907    1.000     0.946     Furcula
-                 0.935    0.000    0.943      0.935    0.939      0.939    1.000     0.983     Raphia
-                 0.848    0.000    0.903      0.848    0.875      0.875    1.000     0.918     Pyramica
-                 0.844    0.000    1.000      0.844    0.915      0.918    0.998     0.951     Aphodius
-                 0.914    0.000    0.985      0.914    0.948      0.949    1.000     0.993     Feralia
-                 0.764    0.000    0.977      0.764    0.857      0.863    0.987     0.793     Scirpophaga
-                 0.724    0.000    0.913      0.724    0.808      0.813    1.000     0.923     Maccaffertium
-                 0.944    0.002    0.587      0.944    0.724      0.744    1.000     0.922     Macroglossum
-                 0.959    0.000    0.969      0.959    0.964      0.964    1.000     0.975     Gnamptogenys
-                 0.925    0.000    0.931      0.925    0.928      0.928    0.998     0.959     Bemisia
-                 0.788    0.000    0.963      0.788    0.867      0.871    0.998     0.850     Euproctis
-                 0.821    0.000    0.920      0.821    0.868      0.869    1.000     0.926     Ilybius
-                 1.000    0.000    0.981      1.000    0.991      0.991    1.000     1.000     Armigeres
-                 1.000    0.000    0.844      1.000    0.915      0.918    1.000     1.000     Trissolcus
-                 0.619    0.000    0.929      0.619    0.743      0.758    0.997     0.788     Hypena
-                 0.902    0.000    0.836      0.902    0.868      0.868    1.000     0.956     Claremontia
-                 0.764    0.002    0.350      0.764    0.480      0.516    0.998     0.697     Phyllonorycter
-                 0.564    0.002    0.287      0.564    0.380      0.401    0.996     0.522     Cladius
-                 1.000    0.000    0.958      1.000    0.979      0.979    1.000     1.000     Speolepta
-                 0.860    0.000    0.778      0.860    0.817      0.817    0.999     0.902     Micropeplus
+                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     0.988     Cephalcia
+                 0.903    0.000    0.913      0.903    0.908      0.908    1.000     0.950     Ephemerella
+                 0.867    0.001    0.675      0.867    0.759      0.765    1.000     0.906     Nanos
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Mepraia
+                 1.000    0.000    0.863      1.000    0.926      0.929    1.000     0.998     Colletes
+                 0.918    0.001    0.844      0.918    0.880      0.880    1.000     0.963     Pristiphora
+                 0.909    0.000    1.000      0.909    0.952      0.953    1.000     0.980     Ambulyx
+                 0.986    0.000    0.986      0.986    0.986      0.986    1.000     0.999     Tamasia
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.945     Ectropis
+                 0.987    0.001    0.872      0.987    0.926      0.927    1.000     0.958     Camponotus
+                 0.954    0.000    0.962      0.954    0.958      0.958    1.000     0.990     Hypoponera
+                 0.889    0.000    0.952      0.889    0.920      0.920    1.000     0.977     Limnephilus
+                 0.714    0.000    1.000      0.714    0.833      0.845    1.000     0.941     Pseudodineura
+                 0.900    0.000    0.878      0.900    0.889      0.889    1.000     0.953     Pterostichus
+                 0.983    0.000    0.843      0.983    0.908      0.910    1.000     0.993     Catocala
+                 0.929    0.000    1.000      0.929    0.963      0.964    1.000     0.978     Orgyia
+                 0.903    0.001    0.596      0.903    0.718      0.733    1.000     0.934     Pyrgonota
+                 0.981    0.000    0.981      0.981    0.981      0.981    1.000     0.983     Tarachidia
+                 0.662    0.000    0.944      0.662    0.779      0.791    0.999     0.895     Bradysia
+                 0.844    0.001    0.543      0.844    0.661      0.677    0.999     0.841     Scoparia
+                 0.618    0.000    0.654      0.618    0.636      0.635    0.997     0.687     Oligia
+                 0.871    0.001    0.604      0.871    0.714      0.725    0.999     0.838     Neoligia
+                 0.759    0.000    1.000      0.759    0.863      0.871    1.000     0.950     Eueretagrotis
+                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     1.000     Syngrapha
+                 0.918    0.001    0.952      0.918    0.935      0.934    0.999     0.975     Apamea
+                 0.918    0.000    0.929      0.918    0.923      0.923    0.999     0.968     Selatosomus
+                 0.992    0.000    0.984      0.992    0.988      0.988    1.000     0.998     Mythimna
+                 0.939    0.001    0.975      0.939    0.957      0.956    1.000     0.993     Tenthredo
+                 0.903    0.000    0.970      0.903    0.935      0.936    1.000     0.989     Rhyacia
+                 1.000    0.000    0.952      1.000    0.976      0.976    1.000     1.000     Morpho
+                 0.852    0.001    0.451      0.852    0.590      0.619    0.999     0.787     Grapholita
+                 0.938    0.000    1.000      0.938    0.968      0.968    1.000     0.985     Aphodius
+                 0.973    0.000    0.991      0.973    0.982      0.982    1.000     0.999     Protodeltote
+                 0.619    0.000    0.765      0.619    0.684      0.688    0.999     0.775     Aneugmenus
+                 0.961    0.000    0.820      0.961    0.885      0.887    1.000     0.974     Noctua
+                 0.937    0.000    1.000      0.937    0.967      0.968    1.000     0.998     Carabus
+                 0.792    0.000    0.826      0.792    0.809      0.809    0.999     0.801     Papilio
+                 0.916    0.000    0.945      0.916    0.930      0.930    1.000     0.985     Scirtothrips
+                 0.853    0.000    0.892      0.853    0.872      0.872    0.999     0.911     Strongylogaster
+                 0.988    0.000    1.000      0.988    0.994      0.994    1.000     1.000     Proxenus
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     1.000     Elaphrus
+                 0.933    0.000    0.857      0.933    0.894      0.894    1.000     0.958     Leuconycta
+                 0.900    0.000    0.947      0.900    0.923      0.923    1.000     0.995     Heliocheilus
+                 0.995    0.000    1.000      0.995    0.997      0.997    1.000     0.999     Panthea
+                 0.947    0.000    0.844      0.947    0.893      0.894    1.000     0.959     Colocasiomyia
+                 0.892    0.000    0.943      0.892    0.917      0.917    0.999     0.907     Agrochola
+                 0.788    0.000    1.000      0.788    0.881      0.888    0.999     0.844     Pyramica
+                 1.000    0.000    0.980      1.000    0.990      0.990    1.000     1.000     Lycophotia
+                 0.974    0.000    1.000      0.974    0.987      0.987    1.000     0.988     Ochropleura
+                 0.873    0.001    0.891      0.873    0.882      0.881    0.995     0.926     Anopheles
+                 0.927    0.001    0.767      0.927    0.840      0.843    1.000     0.905     Leucophenga
+                 0.949    0.000    1.000      0.949    0.974      0.974    1.000     0.989     Gluphisia
+                 0.915    0.000    0.989      0.915    0.951      0.951    1.000     0.984     Tenthredopsis
+                 0.811    0.000    0.811      0.811    0.811      0.811    1.000     0.922     Phyllocolpa
+                 0.931    0.000    0.857      0.931    0.893      0.893    1.000     0.972     Glossina
+                 0.811    0.001    0.725      0.811    0.766      0.766    0.999     0.789     Nematus
+                 0.762    0.000    0.762      0.762    0.762      0.762    0.998     0.787     Melipotis
+                 0.971    0.000    0.934      0.971    0.952      0.952    1.000     0.979     Chrysis
+                 0.857    0.000    1.000      0.857    0.923      0.926    1.000     0.931     Parastichtis
+                 0.957    0.000    0.975      0.957    0.966      0.966    1.000     0.983     Chironomus
+                 0.911    0.000    0.911      0.911    0.911      0.911    1.000     0.951     Ilybius
+                 0.925    0.000    0.974      0.925    0.949      0.949    1.000     0.976     Phagomyia
+                 0.911    0.001    0.737      0.911    0.815      0.818    1.000     0.947     Culicoides
+                 1.000    0.000    0.976      1.000    0.988      0.988    1.000     1.000     Euplexia
+                 0.995    0.000    0.991      0.995    0.993      0.993    1.000     1.000     Opius
+                 0.867    0.001    0.591      0.867    0.703      0.715    0.998     0.846     Sergentomyia
+                 0.922    0.000    1.000      0.922    0.959      0.960    1.000     0.999     Polypogon
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Hexagenia
+                 0.719    0.000    0.767      0.719    0.742      0.742    0.999     0.785     Graphocephala
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Apiomorpha
+                 1.000    0.001    0.740      1.000    0.851      0.860    1.000     0.997     Exocelina
+                 0.981    0.000    0.981      0.981    0.981      0.981    1.000     0.994     Acontia
+                 0.854    0.000    0.833      0.854    0.843      0.843    0.996     0.882     Cryptocephalus
+                 0.986    0.000    1.000      0.986    0.993      0.993    1.000     1.000     Helicoverpa
+                 0.956    0.000    1.000      0.956    0.977      0.977    1.000     0.996     Bellura
+                 0.989    0.000    0.989      0.989    0.989      0.989    1.000     1.000     Pauropsalta
+                 0.831    0.000    0.806      0.831    0.818      0.818    1.000     0.926     Agabus
+                 0.906    0.001    0.838      0.906    0.871      0.871    0.999     0.936     Abagrotis
+                 0.857    0.000    0.923      0.857    0.889      0.889    1.000     0.926     Heliothis
+                 0.818    0.000    0.947      0.818    0.878      0.880    0.999     0.894     Asynarchus
+                 0.879    0.000    1.000      0.879    0.935      0.937    1.000     0.984     Litholomia
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     0.974     Callambulyx
+                 0.904    0.000    0.944      0.904    0.924      0.924    1.000     0.962     Phlebotomus
+                 0.811    0.000    0.977      0.811    0.887      0.890    0.999     0.906     Hypnoidus
+                 0.879    0.000    0.928      0.879    0.903      0.903    0.999     0.945     Orthodes
+                 0.859    0.000    1.000      0.859    0.924      0.927    0.999     0.942     Aglaostigma
+                 0.953    0.000    0.938      0.953    0.946      0.946    1.000     0.995     Maliattha
+                 0.826    0.000    0.905      0.826    0.864      0.864    0.999     0.904     Ametastegia
+                 0.829    0.000    1.000      0.829    0.906      0.910    1.000     0.967     Feralia
+                 0.844    0.000    0.826      0.844    0.835      0.835    1.000     0.937     Pontania
+                 0.978    0.000    0.957      0.978    0.967      0.967    1.000     0.990     Athalia
+                 0.832    0.002    0.754      0.832    0.791      0.790    0.999     0.837     Apanteles
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Errhomus
+                 0.938    0.000    0.909      0.938    0.923      0.923    1.000     0.989     Fergusonina
+                 0.818    0.000    1.000      0.818    0.900      0.904    0.999     0.912     Sutyna
+                 0.940    0.000    0.978      0.940    0.959      0.959    1.000     0.991     Lithophane
+                 0.926    0.000    0.781      0.926    0.847      0.850    0.998     0.937     Abia
+                 0.966    0.000    0.956      0.966    0.961      0.961    1.000     0.996     Macroglossum
+                 0.877    0.000    0.877      0.877    0.877      0.876    0.999     0.917     Rhogogaster
+                 0.954    0.000    0.969      0.954    0.961      0.961    1.000     0.978     Cucullia
+                 1.000    0.000    0.862      1.000    0.926      0.928    1.000     1.000     Aphidius
+                 0.934    0.000    1.000      0.934    0.966      0.967    1.000     0.997     Gyponana
+                 0.848    0.000    0.951      0.848    0.897      0.898    0.997     0.886     Cryptolestes
+                 1.000    0.001    0.519      1.000    0.684      0.720    1.000     0.930     Andropolia
+                 0.953    0.001    0.941      0.953    0.947      0.946    1.000     0.987     Acronicta
+                 0.955    0.000    1.000      0.955    0.977      0.977    1.000     1.000     Anoplolepis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Dendrolimus
+                 0.915    0.000    0.982      0.915    0.947      0.948    1.000     0.979     Liriomyza
+                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     0.999     Miobantia
+                 0.919    0.000    0.950      0.919    0.934      0.934    1.000     0.964     Balsa
+                 0.969    0.000    1.000      0.969    0.984      0.984    1.000     0.986     Xyela
+                 0.994    0.000    0.994      0.994    0.994      0.994    1.000     0.997     Bemisia
+                 0.831    0.000    0.958      0.831    0.890      0.891    0.999     0.949     Simulium
+                 0.846    0.000    0.688      0.846    0.759      0.762    1.000     0.904     Octostruma
+                 0.926    0.000    0.992      0.926    0.958      0.959    0.999     0.974     Lasionycta
+                 0.914    0.000    1.000      0.914    0.955      0.956    1.000     0.995     Nephelodes
+                 0.961    0.000    1.000      0.961    0.980      0.980    0.999     0.967     Philaenus
+                 0.950    0.000    0.905      0.950    0.927      0.927    1.000     0.995     Luperina
+                 0.994    0.000    1.000      0.994    0.997      0.997    1.000     1.000     Hippotion
+                 0.720    0.000    1.000      0.720    0.837      0.848    0.992     0.807     Cobubatha
+                 0.988    0.000    0.920      0.988    0.953      0.953    1.000     0.997     Terataner
+                 0.963    0.000    0.881      0.963    0.920      0.921    1.000     0.988     Idia
+                 0.995    0.000    0.948      0.995    0.971      0.971    1.000     0.984     Cinara
+                 0.970    0.000    1.000      0.970    0.985      0.985    1.000     0.999     Psilogramma
+                 0.759    0.001    0.594      0.759    0.667      0.671    0.999     0.827     Eutomostethus
+                 0.983    0.000    1.000      0.983    0.991      0.991    1.000     0.998     Aplectoides
+                 0.980    0.000    0.980      0.980    0.980      0.980    1.000     0.997     Claremontia
+                 0.857    0.000    0.973      0.857    0.911      0.913    1.000     0.975     Agnorisma
+                 0.762    0.000    1.000      0.762    0.865      0.873    1.000     0.943     Cephus
+                 0.850    0.000    0.607      0.850    0.708      0.718    0.999     0.851     Capsula
+                 0.643    0.000    0.720      0.643    0.679      0.680    0.999     0.753     Cephalota
+                 0.982    0.000    0.931      0.982    0.956      0.956    1.000     0.926     Capnia
+                 0.904    0.001    0.911      0.904    0.908      0.907    1.000     0.961     Sympistis
+                 0.880    0.000    1.000      0.880    0.936      0.938    1.000     0.949     Anathix
+                 0.667    0.000    0.933      0.667    0.778      0.789    0.999     0.828     Periclista
+                 0.783    0.000    0.900      0.783    0.837      0.839    0.999     0.898     Cataglyphis
+                 0.815    0.000    0.957      0.815    0.880      0.883    0.999     0.888     Tuberculatus
+                 0.814    0.000    0.889      0.814    0.850      0.850    0.997     0.917     Callopistria
+                 0.884    0.000    0.916      0.884    0.899      0.899    1.000     0.928     Allantus
+                 0.750    0.000    0.894      0.750    0.816      0.818    0.997     0.809     Amphipoea
+                 0.885    0.000    1.000      0.885    0.939      0.941    1.000     0.960     Tricholita
+                 0.921    0.001    0.954      0.921    0.938      0.936    0.999     0.981     Xestia
+                 0.640    0.000    0.941      0.640    0.762      0.776    0.997     0.748     Dichagyris
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Plauditus
+                 0.783    0.000    1.000      0.783    0.878      0.885    1.000     0.923     Renia
+                 0.985    0.000    0.985      0.985    0.985      0.985    1.000     0.970     Apis
+                 0.960    0.000    0.960      0.960    0.960      0.960    1.000     0.981     Eudryas
+                 0.846    0.000    0.971      0.846    0.904      0.906    1.000     0.962     Hoplocampa
+                 0.667    0.000    0.583      0.667    0.622      0.623    0.997     0.706     Adelphagrotis
+                 0.654    0.000    0.895      0.654    0.756      0.765    0.999     0.753     Cerastis
+                 0.810    0.000    1.000      0.810    0.895      0.900    1.000     0.996     Acentrella
+                 0.986    0.000    0.986      0.986    0.986      0.986    1.000     1.000     Siobla
+                 0.907    0.000    0.961      0.907    0.933      0.934    0.997     0.952     Sideridis
+                 0.955    0.000    0.913      0.955    0.933      0.934    0.999     0.956     Lampides
+                 0.889    0.000    0.784      0.889    0.833      0.835    0.999     0.930     Papestra
+                 0.984    0.001    0.945      0.984    0.964      0.964    1.000     0.983     Houghia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Chromatomyia
+                 0.902    0.000    0.933      0.902    0.917      0.917    0.995     0.919     Limonius
+                 0.943    0.000    1.000      0.943    0.971      0.971    1.000     0.993     Raphia
+                 0.768    0.000    0.827      0.768    0.796      0.797    1.000     0.905     Catops
+                 0.840    0.001    0.705      0.840    0.766      0.769    0.999     0.878     Orthosia
+                 0.929    0.000    0.975      0.929    0.951      0.951    1.000     0.973     Hypena
+                 0.788    0.000    1.000      0.788    0.881      0.888    0.998     0.841     Euproctis
+                 0.944    0.000    0.966      0.944    0.955      0.955    1.000     0.976     Empria
+                 1.000    0.000    0.833      1.000    0.909      0.913    1.000     0.889     Scolops
+                 0.622    0.001    0.451      0.622    0.523      0.529    0.997     0.585     Parasa
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cryptocala
+                 0.976    0.000    0.991      0.976    0.984      0.983    1.000     0.999     Euxoa
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.979     Stenacron
+                 0.959    0.000    1.000      0.959    0.979      0.979    1.000     0.998     Eurois
+                 0.952    0.000    0.870      0.952    0.909      0.910    1.000     0.992     Kosciuscola
+                 0.971    0.000    0.992      0.971    0.981      0.981    1.000     0.997     Theretra
+                 0.970    0.000    1.000      0.970    0.985      0.985    0.992     0.970     Colymbetes
+                 0.484    0.001    0.405      0.484    0.441      0.442    0.998     0.470     Cylindera
+                 0.920    0.000    0.821      0.920    0.868      0.869    0.998     0.894     Megastigmus
+                 1.000    0.000    0.973      1.000    0.986      0.986    1.000     1.000     Percolestus
+                 0.640    0.000    0.889      0.640    0.744      0.754    0.999     0.799     Pseudostegana
+                 0.913    0.001    0.575      0.913    0.706      0.724    0.999     0.895     Spodoptera
+                 0.952    0.000    1.000      0.952    0.976      0.976    1.000     0.998     Pachyprotasis
+                 0.933    0.000    0.718      0.933    0.812      0.818    1.000     0.934     Anochetus
                  0.966    0.000    1.000      0.966    0.982      0.983    1.000     1.000     Stereocerus
-                 0.786    0.001    0.809      0.786    0.797      0.796    0.998     0.868     Triatoma
-                 0.680    0.000    0.944      0.680    0.791      0.801    0.994     0.757     Colocasia
-                 0.916    0.001    0.766      0.916    0.834      0.837    0.999     0.947     Protorthodes
-                 0.154    0.000    0.400      0.154    0.222      0.248    0.991     0.234     Photedes
-                 0.618    0.000    0.913      0.618    0.737      0.751    0.990     0.733     Hygrotus
-                 0.815    0.000    0.943      0.815    0.875      0.876    1.000     0.959     Hepialus
-                 0.932    0.000    0.972      0.932    0.952      0.952    1.000     0.994     Hermeuptychia
-                 0.875    0.000    0.812      0.875    0.842      0.842    1.000     0.944     Xyela
-                 0.955    0.000    0.894      0.955    0.923      0.923    1.000     0.987     Colletes
-                 0.979    0.001    0.648      0.979    0.780      0.796    1.000     0.971     Daphnis
-                 0.644    0.002    0.583      0.644    0.612      0.611    0.992     0.672     Trigonopterus
-                 0.975    0.000    0.918      0.975    0.945      0.946    1.000     0.991     Euplexia
-                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Lygus
-                 0.804    0.000    0.833      0.804    0.818      0.818    0.994     0.875     Amara
-                 0.733    0.000    0.846      0.733    0.786      0.788    0.999     0.834     Drunella
-                 0.651    0.000    0.778      0.651    0.709      0.711    0.999     0.806     Lacanobia
-                 0.960    0.000    0.889      0.960    0.923      0.924    1.000     0.981     Scolops
-                 0.911    0.000    0.761      0.911    0.829      0.832    0.999     0.922     Pheidole
-                 0.883    0.000    0.883      0.883    0.883      0.883    0.999     0.939     Plusia
-                 0.692    0.000    0.947      0.692    0.800      0.810    0.995     0.831     Taxonus
-                 0.514    0.001    0.279      0.514    0.362      0.378    0.981     0.462     Parasa
-                 0.897    0.000    1.000      0.897    0.945      0.947    1.000     0.995     Nephelodes
-                 0.521    0.000    0.833      0.521    0.641      0.658    0.998     0.681     Amauronematus
-                 0.615    0.000    0.741      0.615    0.672      0.675    0.999     0.783     Cucullia
-                 0.667    0.000    0.714      0.667    0.690      0.690    0.998     0.774     Papestra
-                 0.667    0.000    0.857      0.667    0.750      0.756    0.989     0.708     Caloptilia
-                 0.979    0.000    1.000      0.979    0.989      0.989    1.000     1.000     Ctenocephalides
-                 0.867    0.000    0.684      0.867    0.765      0.770    1.000     0.912     Anochetus
-                 0.712    0.000    0.712      0.712    0.712      0.711    0.993     0.754     Callopistria
-                 0.941    0.000    0.800      0.941    0.865      0.868    1.000     0.958     Adelomyrmex
-                 0.535    0.000    0.821      0.535    0.648      0.663    0.986     0.683     Spaelotis
-                 0.870    0.000    0.855      0.870    0.862      0.862    0.995     0.875     Idia
-                 0.970    0.000    0.970      0.970    0.970      0.970    1.000     0.996     Mepraia
-                 0.750    0.000    0.857      0.750    0.800      0.801    0.998     0.849     Aglaostigma
-                 0.848    0.000    0.966      0.848    0.903      0.905    0.999     0.926     Xylena
-                 0.897    0.000    0.929      0.897    0.912      0.912    1.000     0.963     Stiriodes
-                 0.900    0.000    0.808      0.900    0.851      0.852    0.998     0.932     Caenota
-                 0.889    0.000    0.960      0.889    0.923      0.924    1.000     0.951     Cephonodes
-                 0.926    0.000    0.879      0.926    0.902      0.902    1.000     0.971     Acosmeryx
-                 0.893    0.000    0.893      0.893    0.893      0.892    0.997     0.947     Scirtothrips
-                 0.933    0.000    0.840      0.933    0.884      0.885    1.000     0.975     Limnephilus
-                 0.786    0.000    0.892      0.786    0.835      0.837    0.998     0.908     Agnorisma
-                 0.922    0.001    0.720      0.922    0.808      0.814    1.000     0.926     Phlogophora
-                 0.902    0.000    1.000      0.902    0.948      0.950    1.000     0.994     Polypogon
-                 0.692    0.000    0.750      0.692    0.720      0.720    0.998     0.736     Pachybrachis
-                 0.694    0.000    0.739      0.694    0.716      0.716    0.999     0.782     Nonarthra
-                 0.750    0.001    0.671      0.750    0.708      0.709    0.997     0.816     Noctua
-                 0.357    0.000    0.625      0.357    0.455      0.472    0.988     0.498     Heliothis
-                 0.953    0.000    0.984      0.953    0.968      0.968    1.000     0.990     Maliattha
-                 0.754    0.000    0.817      0.754    0.784      0.784    0.998     0.838     Agabus
-                 0.741    0.002    0.631      0.741    0.682      0.683    0.998     0.703     Nematus
-                 0.889    0.000    0.960      0.889    0.923      0.924    1.000     0.961     Cephalcia
-                 0.833    0.000    1.000      0.833    0.909      0.913    1.000     0.949     Lycophotia
-                 0.806    0.000    0.893      0.806    0.847      0.848    0.995     0.873     Balsa
-                 0.689    0.000    0.838      0.689    0.756      0.759    0.999     0.843     Eupsilia
-                 0.704    0.000    0.950      0.704    0.809      0.818    0.997     0.874     Andropolia
-                 0.791    0.000    0.895      0.791    0.840      0.841    0.999     0.881     Gyrinus
-                 0.977    0.000    0.977      0.977    0.977      0.977    1.000     0.999     Praon
-                 0.741    0.000    0.952      0.741    0.833      0.840    0.989     0.886     Prognorisma
-                 0.280    0.000    1.000      0.280    0.438      0.529    0.993     0.448     Dichagyris
-                 0.909    0.001    0.707      0.909    0.795      0.801    0.999     0.929     Fishia
-                 0.770    0.001    0.627      0.770    0.691      0.694    0.997     0.740     Morrisonia
-                 0.857    0.000    0.960      0.857    0.906      0.907    1.000     0.953     Telamona
-                 0.800    0.000    0.615      0.800    0.696      0.701    0.999     0.802     Pamphilius
-                 0.852    0.000    0.754      0.852    0.800      0.801    0.999     0.906     Tarachidia
-                 0.755    0.000    0.822      0.755    0.787      0.788    0.999     0.839     Paradiarsia
-                 0.912    0.000    0.743      0.912    0.819      0.823    0.999     0.903     Colocasiomyia
-                 0.941    0.000    0.923      0.941    0.932      0.932    1.000     0.969     Chrysis
-                 0.813    0.001    0.763      0.813    0.787      0.787    0.999     0.884     Athalia
-                 0.844    0.000    0.730      0.844    0.783      0.784    0.999     0.823     Graphocephala
-                 0.685    0.000    0.740      0.685    0.712      0.712    0.998     0.782     Eutomostethus
-                 0.808    0.000    0.724      0.808    0.764      0.765    1.000     0.902     Myrsidea
-                 0.811    0.000    0.750      0.811    0.779      0.780    1.000     0.882     Phyllocolpa
-                 0.875    0.000    0.972      0.875    0.921      0.922    1.000     0.958     Pterostichus
-                 0.800    0.000    0.837      0.800    0.818      0.818    0.999     0.887     Ameletus
-                 0.593    0.000    0.970      0.593    0.736      0.758    0.997     0.818     Eueretagrotis
-                 0.867    0.000    0.813      0.867    0.839      0.839    0.999     0.885     Euura
-                 0.760    0.000    0.844      0.760    0.800      0.801    1.000     0.894     Ectropis
-                 0.796    0.000    0.907      0.796    0.848      0.849    0.999     0.894     Clostera
-                 0.983    0.000    0.967      0.983    0.975      0.975    1.000     0.986     Errhomus
-                 0.755    0.000    0.952      0.755    0.842      0.848    1.000     0.926     Paraleptophlebia
-                 0.795    0.000    0.912      0.795    0.849      0.851    0.998     0.877     Hoplocampa
-                 0.808    0.000    0.955      0.808    0.875      0.878    0.999     0.881     Pleuroptya
-                 0.789    0.000    1.000      0.789    0.882      0.888    0.999     0.878     Ipimorpha
-                 0.648    0.002    0.359      0.648    0.462      0.481    0.996     0.543     Schizonycha
-                 0.576    0.000    1.000      0.576    0.731      0.759    0.998     0.783     Litholomia
-                 0.769    0.000    1.000      0.769    0.870      0.877    1.000     0.949     Protexarnis
-                 0.839    0.000    0.929      0.839    0.881      0.882    1.000     0.910     Chersotis
-                 0.954    0.000    0.785      0.954    0.861      0.865    0.996     0.939     Solenopsis
-                 0.765    0.000    0.897      0.765    0.825      0.828    0.997     0.831     Strongylogaster
-                 0.897    0.000    0.761      0.897    0.824      0.826    0.998     0.935     Gluphisia
-                 0.654    0.000    0.895      0.654    0.756      0.765    1.000     0.872     Capis
-                 0.654    0.001    0.436      0.654    0.523      0.533    0.990     0.599     Lucilia
-                 0.981    0.000    1.000      0.981    0.990      0.991    1.000     0.992     Colias
-                 0.286    0.000    0.444      0.286    0.348      0.356    0.999     0.492     Apotolamprus
-                 0.108    0.001    0.073      0.108    0.087      0.088    0.976     0.081     Panorpa
-                 0.429    0.000    0.750      0.429    0.545      0.567    0.967     0.517     Hydroporus
-                 0.800    0.000    0.645      0.800    0.714      0.718    0.998     0.813     Anathix
-Weighted Avg.    0.841    0.002    0.855      0.841    0.843      0.844    0.995     0.899     
+                 0.780    0.000    0.780      0.780    0.780      0.779    0.985     0.785     Cydia
+                 0.966    0.000    1.000      0.966    0.983      0.983    1.000     1.000     Camptomyia
+                 0.935    0.002    0.901      0.935    0.918      0.917    0.999     0.973     Lacinipolia
+                 0.914    0.000    1.000      0.914    0.955      0.956    1.000     0.992     Parabagrotis
+                 0.571    0.000    0.667      0.571    0.615      0.617    0.999     0.733     Apotolamprus
+                 0.959    0.000    1.000      0.959    0.979      0.979    1.000     0.988     Clostera
+                 1.000    0.000    0.916      1.000    0.956      0.957    1.000     0.984     Baetis
+                 0.938    0.000    0.957      0.938    0.947      0.947    1.000     0.984     Anicla
+                 0.860    0.000    0.881      0.860    0.871      0.871    1.000     0.930     Spaelotis
+                 0.984    0.000    1.000      0.984    0.992      0.992    1.000     1.000     Bulia
+                 0.520    0.000    1.000      0.520    0.684      0.721    0.992     0.668     Colocasia
+                 0.913    0.001    0.442      0.913    0.596      0.635    1.000     0.713     Copidosoma
+                 0.841    0.002    0.497      0.841    0.625      0.646    0.997     0.783     Cicindela
+                 0.988    0.000    0.899      0.988    0.941      0.942    1.000     0.995     Graphiphora
+                 0.982    0.000    1.000      0.982    0.991      0.991    1.000     1.000     Hyppa
+                 0.889    0.000    1.000      0.889    0.941      0.943    1.000     0.988     Prognorisma
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.995     Leucrocuta
+                 0.462    0.000    0.706      0.462    0.558      0.571    0.994     0.470     Photedes
+                 0.914    0.000    0.992      0.914    0.951      0.952    0.998     0.981     Aedes
+                 0.931    0.000    1.000      0.931    0.964      0.965    1.000     0.965     Stiriodes
+                 0.880    0.000    0.880      0.880    0.880      0.880    1.000     0.914     Brachylomia
+                 0.875    0.000    1.000      0.875    0.933      0.935    1.000     0.989     Thanatophilus
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Praon
+                 0.941    0.000    1.000      0.941    0.970      0.970    1.000     0.997     Tanytarsus
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Agrius
+                 0.900    0.000    0.947      0.900    0.923      0.923    1.000     0.965     Ulolonche
+                 0.917    0.000    1.000      0.917    0.957      0.957    1.000     0.997     Chrysocharis
+                 0.995    0.000    0.995      0.995    0.995      0.995    1.000     0.999     Leucania
+                 0.979    0.000    0.958      0.979    0.968      0.968    1.000     0.996     Daphnis
+                 0.808    0.000    1.000      0.808    0.894      0.899    1.000     0.993     Protexarnis
+                 0.810    0.000    0.708      0.810    0.756      0.757    0.997     0.825     Epidemas
+                 0.913    0.000    1.000      0.913    0.955      0.956    1.000     0.977     Plusia
+                 0.939    0.000    0.807      0.939    0.868      0.870    1.000     0.955     Nonarthra
+                 0.940    0.000    0.922      0.940    0.931      0.931    1.000     0.973     Aseptis
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Caenis
+                 0.953    0.000    1.000      0.953    0.976      0.976    1.000     0.986     Gyrinus
+                 0.810    0.000    0.839      0.810    0.825      0.824    1.000     0.903     Condica
+                 0.960    0.000    1.000      0.960    0.980      0.980    1.000     0.999     Siphlonurus
+                 0.878    0.004    0.361      0.878    0.511      0.561    0.998     0.655     Eupselia
+                 0.971    0.000    0.850      0.971    0.907      0.909    1.000     0.988     Caenota
+                 0.967    0.000    1.000      0.967    0.983      0.983    1.000     0.981     Epeorus
+                 0.750    0.000    0.682      0.750    0.714      0.715    1.000     0.860     Faronta
+                 0.873    0.000    0.774      0.873    0.821      0.822    0.999     0.922     Phyllonorycter
+                 0.783    0.000    1.000      0.783    0.878      0.885    1.000     0.932     Callibaetis
+                 0.981    0.000    1.000      0.981    0.990      0.990    1.000     0.993     Cuerna
+                 0.920    0.000    1.000      0.920    0.958      0.959    0.999     0.961     Leptidea
+                 0.998    0.000    1.000      0.998    0.999      0.999    1.000     1.000     Maruca
+                 0.950    0.000    1.000      0.950    0.974      0.975    1.000     1.000     Sitochroa
+                 0.909    0.000    1.000      0.909    0.952      0.953    1.000     1.000     Cisseps
+                 0.982    0.000    1.000      0.982    0.991      0.991    1.000     0.999     Culex
+                 0.830    0.000    0.978      0.830    0.898      0.901    0.999     0.918     Paraleptophlebia
+                 0.500    0.001    0.364      0.500    0.421      0.426    0.991     0.414     Thudaca
+                 1.000    0.000    0.909      1.000    0.952      0.953    1.000     0.997     Pamphilius
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Trichordestra
+                 0.926    0.000    0.974      0.926    0.949      0.949    1.000     0.981     Hemicrepidius
+                 0.799    0.000    0.899      0.799    0.846      0.847    0.999     0.904     Triatoma
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Cyphomyrmex
+                 0.972    0.001    0.817      0.972    0.887      0.890    1.000     0.965     Schinia
+                 0.891    0.000    0.891      0.891    0.891      0.891    1.000     0.952     Eupsilia
+                 0.933    0.000    0.824      0.933    0.875      0.876    1.000     0.971     Chimarra
+                 0.764    0.000    1.000      0.764    0.866      0.874    0.994     0.907     Scirpophaga
+                 0.920    0.000    1.000      0.920    0.958      0.959    1.000     0.983     Heterarthrus
+                 0.929    0.000    0.881      0.929    0.904      0.905    1.000     0.971     Pheidole
+                 0.824    0.000    0.824      0.824    0.824      0.824    0.999     0.905     Egira
+                 0.524    0.000    0.458      0.524    0.489      0.490    0.992     0.517     Hypocoena
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.977     Mniotype
+                 0.636    0.000    1.000      0.636    0.778      0.798    0.994     0.773     Caliroa
+                 0.867    0.000    0.703      0.867    0.776      0.780    1.000     0.849     Drunella
+                 0.793    0.000    0.958      0.793    0.868      0.872    1.000     0.989     Maccaffertium
+                 0.929    0.000    1.000      0.929    0.963      0.964    1.000     1.000     Telamona
+                 0.952    0.000    1.000      0.952    0.976      0.976    1.000     1.000     Geomydoecus
+                 0.875    0.000    0.949      0.875    0.911      0.911    1.000     0.969     Phlogophora
+                 0.857    0.000    0.818      0.857    0.837      0.837    0.991     0.859     Caloptilia
+                 0.985    0.000    0.993      0.985    0.989      0.989    1.000     0.999     Agelasa
+                 0.700    0.000    1.000      0.700    0.824      0.837    1.000     0.958     Enchenopa
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     1.000     Hepialus
+                 0.548    0.011    0.682      0.548    0.608      0.596    0.972     0.669     NA
+                 0.952    0.000    0.988      0.952    0.969      0.969    1.000     0.999     Enargia
+                 0.954    0.000    0.899      0.954    0.925      0.926    0.997     0.955     Solenopsis
+                 0.857    0.000    0.750      0.857    0.800      0.802    0.988     0.883     Platypolia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Microvelia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Draeculacephala
+                 0.600    0.000    1.000      0.600    0.750      0.775    1.000     0.838     Monophadnus
+                 0.929    0.000    0.981      0.929    0.954      0.954    0.997     0.956     Amara
+                 0.881    0.000    0.881      0.881    0.881      0.881    1.000     0.947     Cricotopus
+                 0.948    0.001    0.692      0.948    0.800      0.809    1.000     0.960     Tetramorium
+                 0.660    0.001    0.625      0.660    0.642      0.642    0.994     0.654     Pachynematus
+                 0.970    0.000    0.865      0.970    0.914      0.916    1.000     0.995     Lysiphlebus
+                 0.735    0.000    0.926      0.735    0.820      0.825    0.999     0.878     Spiramater
+                 0.878    0.000    1.000      0.878    0.935      0.937    1.000     0.994     Crocigrapha
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Trissolcus
+                 0.957    0.000    0.957      0.957    0.957      0.956    1.000     0.987     Binodoxys
+                 0.846    0.001    0.518      0.846    0.642      0.661    0.994     0.824     Protolampra
+                 0.800    0.001    0.857      0.800    0.828      0.827    0.999     0.896     Homorthodes
+                 0.986    0.000    0.993      0.986    0.989      0.989    1.000     0.998     Anaplectoides
+                 0.769    0.000    1.000      0.769    0.870      0.877    0.999     0.915     Taxonus
+                 0.923    0.000    1.000      0.923    0.960      0.961    0.996     0.962     Pleuroptya
+                 0.912    0.000    0.816      0.912    0.861      0.862    0.999     0.936     Micropeplus
+                 0.847    0.000    0.988      0.847    0.912      0.915    1.000     0.967     Gnamptogenys
+                 0.969    0.000    0.984      0.969    0.977      0.977    1.000     0.997     Polypedilum
+                 0.985    0.000    0.961      0.985    0.973      0.973    1.000     0.992     Agrotis
+                 0.963    0.000    0.954      0.963    0.958      0.958    1.000     0.991     Protorthodes
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Listronotus
+                 0.969    0.000    0.960      0.969    0.964      0.964    1.000     0.996     Polistes
+                 0.950    0.000    1.000      0.950    0.974      0.975    0.999     0.980     Drosophila
+                 0.776    0.001    0.633      0.776    0.697      0.700    0.999     0.846     Bembidion
+                 0.900    0.000    1.000      0.900    0.947      0.949    0.999     0.936     Haploa
+                 0.692    0.001    0.474      0.692    0.563      0.572    0.996     0.527     Lucilia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Ipimorpha
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Heliconius
+Weighted Avg.    0.915    0.001    0.926      0.915    0.917      0.918    0.998     0.951  
+```
+
+### 4) Same thing as 3) but this time get the 100 best attributes using information gain (also 2-fold cross-validation).
+
+```
+=== Stratified cross-validation ===
+
+Correctly Classified Instances       31638               82.1126 %
+Incorrectly Classified Instances      6892               17.8874 %
+Kappa statistic                          0.8192
+Mean absolute error                      0.001 
+Root mean squared error                  0.0289
+Relative absolute error                 18.5295 %
+Root relative squared error             55.0642 %
+Coverage of cases (0.95 level)          86.5378 %
+Mean rel. region size (0.95 level)       0.3564 %
+Total Number of Instances            38530     
+
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.967    0.000    0.879      0.967    0.921      0.922    1.000     0.989     Melissotarsus
+                 0.859    0.001    0.795      0.859    0.826      0.826    0.993     0.907     Feltia
+                 0.650    0.000    0.743      0.650    0.693      0.695    0.999     0.773     Rhopalosiphum
+                 0.912    0.000    0.969      0.912    0.939      0.940    1.000     0.968     Pseudeustrotia
+                 0.821    0.000    0.920      0.821    0.868      0.869    1.000     0.916     Furcula
+                 0.521    0.000    0.625      0.521    0.568      0.570    0.997     0.592     Amauronematus
+                 0.500    0.000    0.650      0.500    0.565      0.570    0.982     0.561     Capis
+                 0.963    0.000    0.963      0.963    0.963      0.963    1.000     0.997     Scaptomyza
+                 0.794    0.000    0.818      0.794    0.806      0.806    0.972     0.839     Hyles
+                 0.650    0.000    0.650      0.650    0.650      0.650    0.993     0.675     Denticollis
+                 0.989    0.001    0.951      0.989    0.970      0.969    1.000     0.997     Machilis
+                 0.348    0.000    0.667      0.348    0.457      0.481    0.945     0.356     Rhantus
+                 0.870    0.000    0.966      0.870    0.916      0.917    1.000     0.951     Arge
+                 0.724    0.000    0.700      0.724    0.712      0.712    0.993     0.799     Pseudohermonassa
+                 0.986    0.000    0.986      0.986    0.986      0.986    1.000     1.000     Eurytoma
+                 0.750    0.001    0.506      0.750    0.605      0.616    0.997     0.733     Strumigenys
+                 0.853    0.000    0.884      0.853    0.868      0.868    0.994     0.906     Cosmia
+                 0.818    0.000    0.915      0.818    0.864      0.865    0.999     0.925     Xylena
+                 0.693    0.000    0.882      0.693    0.776      0.781    0.994     0.812     Elaphria
+                 0.188    0.002    0.167      0.188    0.176      0.175    0.990     0.139     Microgastrinae gen. mgJanzen01
+                 0.997    0.000    1.000      0.997    0.998      0.998    1.000     1.000     Rhynchophorus
+                 0.615    0.000    0.727      0.615    0.667      0.669    0.997     0.676     Amphipyra
+                 0.932    0.000    0.872      0.932    0.901      0.901    1.000     0.968     Megalodontes
+                 0.690    0.000    0.800      0.690    0.741      0.743    0.989     0.739     Xylomoia
+                 0.919    0.000    0.756      0.919    0.829      0.833    1.000     0.934     Lasius
+                 0.995    0.000    1.000      0.995    0.997      0.997    1.000     1.000     Blepharoneura
+                 0.887    0.000    0.887      0.887    0.887      0.887    0.994     0.905     Aphis
+                 0.742    0.000    1.000      0.742    0.852      0.861    0.997     0.887     Chersotis
+                 0.269    0.000    0.333      0.269    0.298      0.299    0.994     0.280     Pseudorthodes
+                 0.563    0.002    0.310      0.563    0.400      0.417    0.992     0.413     Schizonycha
+                 0.695    0.002    0.631      0.695    0.662      0.661    0.997     0.778     Macrophya
+                 0.940    0.000    0.997      0.940    0.968      0.968    1.000     0.995     Hillia
+                 0.804    0.001    0.641      0.804    0.713      0.717    0.997     0.805     Adelomyrmex
+                 0.822    0.000    0.740      0.822    0.779      0.780    0.999     0.859     Ameletus
+                 0.689    0.000    0.712      0.689    0.700      0.700    0.996     0.725     Morrisonia
+                 0.581    0.001    0.667      0.581    0.621      0.622    0.995     0.698     Lacanobia
+                 0.720    0.000    0.900      0.720    0.800      0.805    0.998     0.788     Chytonix
+                 0.839    0.000    0.975      0.839    0.902      0.904    0.998     0.922     Pachycondyla
+                 0.545    0.000    0.714      0.545    0.619      0.624    0.995     0.639     Cladius
+                 0.963    0.000    1.000      0.963    0.981      0.981    1.000     0.999     Altica
+                 0.762    0.000    0.914      0.762    0.831      0.834    0.999     0.885     Aphrophora
+                 0.957    0.000    0.849      0.957    0.900      0.901    1.000     0.975     Acosmeryx
+                 0.950    0.000    0.905      0.950    0.927      0.927    1.000     0.960     Yukara
+                 0.762    0.000    0.627      0.762    0.688      0.691    0.999     0.798     Leptogenys
+                 0.778    0.001    0.695      0.778    0.734      0.734    0.992     0.801     Anarta
+                 0.915    0.000    0.892      0.915    0.903      0.903    1.000     0.964     Caradrina
+                 0.822    0.000    0.908      0.822    0.863      0.864    0.996     0.892     Papaipema
+                 0.778    0.000    0.913      0.778    0.840      0.843    0.999     0.925     Cephonodes
+                 0.904    0.001    0.921      0.904    0.912      0.911    0.996     0.948     Bactrocera
+                 1.000    0.000    0.977      1.000    0.988      0.988    1.000     0.999     Nemoura
+                 0.922    0.000    0.956      0.922    0.939      0.938    1.000     0.975     Dolerus
+                 0.801    0.001    0.838      0.801    0.819      0.818    0.992     0.865     Diarsia
+                 0.973    0.000    1.000      0.973    0.987      0.987    0.999     0.992     Tetragonula
+                 0.763    0.000    0.826      0.763    0.793      0.793    0.996     0.818     Melanchra
+                 0.883    0.001    0.773      0.883    0.824      0.826    0.999     0.902     Fishia
+                 0.634    0.000    0.619      0.634    0.627      0.626    0.997     0.703     Thaumatotibia
+                 1.000    0.000    0.964      1.000    0.981      0.982    1.000     1.000     Armigeres
+                 0.612    0.000    0.682      0.612    0.645      0.646    0.998     0.707     Paradiarsia
+                 0.615    0.002    0.585      0.615    0.599      0.598    0.993     0.672     Trigonopterus
+                 0.750    0.000    0.750      0.750    0.750      0.750    0.999     0.777     Asobara
+                 0.656    0.000    0.750      0.656    0.700      0.701    0.999     0.813     Junonia
+                 0.814    0.000    0.946      0.814    0.875      0.877    0.998     0.906     Cinygmula
+                 0.235    0.000    0.400      0.235    0.296      0.306    0.989     0.293     Hygrotus
+                 0.900    0.002    0.799      0.900    0.847      0.847    0.998     0.928     Polia
+                 0.733    0.000    0.759      0.733    0.746      0.746    0.999     0.830     Euura
+                 0.480    0.000    0.706      0.480    0.571      0.582    0.989     0.672     Hydroporus
+                 1.000    0.000    0.988      1.000    0.994      0.994    1.000     1.000     Ephoron
+                 0.889    0.000    0.923      0.889    0.906      0.906    0.999     0.951     Cephalcia
+                 0.871    0.001    0.757      0.871    0.810      0.812    0.999     0.924     Ephemerella
+                 0.767    0.001    0.517      0.767    0.617      0.629    0.998     0.736     Nanos
+                 0.970    0.000    0.941      0.970    0.955      0.955    1.000     0.998     Mepraia
+                 0.864    0.001    0.594      0.864    0.704      0.716    1.000     0.896     Colletes
+                 0.785    0.002    0.662      0.785    0.718      0.719    0.998     0.802     Pristiphora
+                 0.886    0.000    0.907      0.886    0.897      0.896    0.999     0.928     Ambulyx
+                 0.943    0.000    0.943      0.943    0.943      0.943    1.000     0.983     Tamasia
+                 0.860    0.000    0.843      0.860    0.851      0.851    0.999     0.916     Ectropis
+                 0.952    0.002    0.789      0.952    0.863      0.866    1.000     0.965     Camponotus
+                 0.878    0.001    0.816      0.878    0.846      0.846    0.999     0.929     Hypoponera
+                 0.889    0.000    0.851      0.889    0.870      0.870    1.000     0.911     Limnephilus
+                 0.667    0.000    0.824      0.667    0.737      0.741    0.999     0.765     Pseudodineura
+                 0.850    0.000    0.791      0.850    0.819      0.820    1.000     0.915     Pterostichus
+                 0.867    0.001    0.712      0.867    0.782      0.785    0.999     0.900     Catocala
+                 0.857    0.000    0.973      0.857    0.911      0.913    1.000     0.934     Orgyia
+                 0.774    0.001    0.608      0.774    0.681      0.685    0.998     0.833     Pyrgonota
+                 0.759    0.000    0.804      0.759    0.781      0.781    0.998     0.872     Tarachidia
+                 0.649    0.000    0.781      0.649    0.709      0.712    0.991     0.747     Bradysia
+                 0.778    0.001    0.449      0.778    0.569      0.590    0.998     0.739     Scoparia
+                 0.436    0.000    0.706      0.436    0.539      0.555    0.982     0.500     Oligia
+                 0.763    0.003    0.397      0.763    0.522      0.549    0.995     0.658     Neoligia
+                 0.259    0.001    0.318      0.259    0.286      0.286    0.994     0.266     Eueretagrotis
+                 0.936    0.000    0.917      0.936    0.926      0.926    0.999     0.971     Syngrapha
+                 0.765    0.002    0.887      0.765    0.822      0.820    0.994     0.883     Apamea
+                 0.824    0.000    0.933      0.824    0.875      0.876    0.999     0.932     Selatosomus
+                 0.924    0.001    0.801      0.924    0.858      0.859    1.000     0.962     Mythimna
+                 0.861    0.002    0.903      0.861    0.882      0.879    0.999     0.954     Tenthredo
+                 0.889    0.000    1.000      0.889    0.941      0.943    1.000     0.944     Rhyacia
+                 1.000    0.000    0.800      1.000    0.889      0.894    1.000     0.993     Morpho
+                 0.481    0.001    0.283      0.481    0.356      0.368    0.988     0.487     Grapholita
+                 0.906    0.000    0.935      0.906    0.921      0.921    0.999     0.933     Aphodius
+                 0.879    0.000    0.975      0.879    0.925      0.926    1.000     0.978     Protodeltote
+                 0.667    0.000    0.875      0.667    0.757      0.764    0.999     0.791     Aneugmenus
+                 0.868    0.003    0.400      0.868    0.548      0.588    0.998     0.807     Noctua
+                 0.942    0.000    1.000      0.942    0.970      0.970    1.000     0.990     Carabus
+                 0.417    0.000    0.455      0.417    0.435      0.435    0.996     0.503     Papilio
+                 0.924    0.000    0.896      0.924    0.910      0.910    0.999     0.950     Scirtothrips
+                 0.765    0.000    0.825      0.765    0.794      0.794    0.998     0.836     Strongylogaster
+                 0.918    0.000    0.951      0.918    0.934      0.934    1.000     0.951     Proxenus
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.998     Elaphrus
+                 0.778    0.000    0.673      0.778    0.722      0.723    0.993     0.808     Leuconycta
+                 0.650    0.000    1.000      0.650    0.788      0.806    1.000     0.808     Heliocheilus
+                 0.929    0.000    0.960      0.929    0.944      0.944    1.000     0.993     Panthea
+                 0.860    0.001    0.636      0.860    0.731      0.739    0.999     0.883     Colocasiomyia
+                 0.595    0.000    0.595      0.595    0.595      0.594    0.992     0.613     Agrochola
+                 0.848    0.000    0.718      0.848    0.778      0.780    0.999     0.843     Pyramica
+                 0.875    0.000    0.977      0.875    0.923      0.924    1.000     0.987     Lycophotia
+                 0.948    0.000    0.956      0.948    0.952      0.952    1.000     0.970     Ochropleura
+                 0.844    0.003    0.769      0.844    0.805      0.803    0.991     0.890     Anopheles
+                 0.792    0.001    0.731      0.792    0.760      0.760    0.999     0.852     Leucophenga
+                 0.821    0.000    0.727      0.821    0.771      0.772    0.998     0.858     Gluphisia
+                 0.876    0.001    0.880      0.876    0.878      0.877    0.999     0.945     Tenthredopsis
+                 0.324    0.000    0.429      0.324    0.369      0.372    0.999     0.547     Phyllocolpa
+                 0.879    0.001    0.638      0.879    0.739      0.748    0.999     0.889     Glossina
+                 0.650    0.002    0.557      0.650    0.600      0.600    0.997     0.650     Nematus
+                 0.476    0.000    0.588      0.476    0.526      0.529    0.985     0.476     Melipotis
+                 0.853    0.000    0.829      0.853    0.841      0.840    0.999     0.910     Chrysis
+                 0.762    0.000    0.941      0.762    0.842      0.847    0.999     0.831     Parastichtis
+                 0.920    0.000    0.925      0.920    0.923      0.922    1.000     0.964     Chironomus
+                 0.857    0.000    0.889      0.857    0.873      0.873    1.000     0.925     Ilybius
+                 0.950    0.000    0.884      0.950    0.916      0.916    1.000     0.964     Phagomyia
+                 0.748    0.002    0.598      0.748    0.664      0.667    0.997     0.796     Culicoides
+                 0.925    0.000    0.925      0.925    0.925      0.925    1.000     0.980     Euplexia
+                 0.991    0.000    0.984      0.991    0.987      0.987    1.000     0.999     Opius
+                 0.689    0.001    0.443      0.689    0.539      0.552    0.991     0.557     Sergentomyia
+                 0.804    0.000    0.932      0.804    0.863      0.865    0.999     0.908     Polypogon
+                 0.950    0.000    0.905      0.950    0.927      0.927    1.000     0.995     Hexagenia
+                 0.656    0.000    0.778      0.656    0.712      0.714    0.997     0.724     Graphocephala
+                 1.000    0.000    0.995      1.000    0.998      0.998    1.000     1.000     Apiomorpha
+                 0.961    0.001    0.632      0.961    0.763      0.779    1.000     0.951     Exocelina
+                 0.811    0.000    0.796      0.811    0.804      0.804    0.999     0.883     Acontia
+                 0.829    0.000    0.791      0.829    0.810      0.810    0.995     0.829     Cryptocephalus
+                 0.845    0.000    1.000      0.845    0.916      0.919    1.000     0.959     Helicoverpa
+                 0.889    0.000    0.930      0.889    0.909      0.909    0.999     0.932     Bellura
+                 0.920    0.000    0.942      0.920    0.931      0.931    1.000     0.990     Pauropsalta
+                 0.815    0.001    0.688      0.815    0.746      0.749    0.996     0.825     Agabus
+                 0.691    0.002    0.647      0.691    0.668      0.666    0.990     0.747     Abagrotis
+                 0.607    0.000    0.548      0.607    0.576      0.577    0.991     0.635     Heliothis
+                 0.727    0.000    1.000      0.727    0.842      0.853    0.998     0.797     Asynarchus
+                 0.758    0.000    0.962      0.758    0.847      0.853    0.997     0.802     Litholomia
+                 0.850    0.000    1.000      0.850    0.919      0.922    1.000     0.926     Callambulyx
+                 0.777    0.000    0.811      0.777    0.793      0.793    0.996     0.836     Phlebotomus
+                 0.717    0.000    0.974      0.717    0.826      0.836    0.998     0.874     Hypnoidus
+                 0.721    0.002    0.703      0.721    0.712      0.710    0.994     0.789     Orthodes
+                 0.828    0.000    0.869      0.828    0.848      0.848    0.998     0.885     Aglaostigma
+                 0.875    0.000    0.949      0.875    0.911      0.911    1.000     0.955     Maliattha
+                 0.761    0.000    0.854      0.761    0.805      0.806    0.998     0.819     Ametastegia
+                 0.757    0.000    0.930      0.757    0.835      0.839    0.997     0.848     Feralia
+                 0.711    0.000    0.821      0.711    0.762      0.764    0.999     0.861     Pontania
+                 0.791    0.000    0.837      0.791    0.814      0.813    0.998     0.855     Athalia
+                 0.848    0.006    0.469      0.848    0.604      0.628    0.997     0.718     Apanteles
+                 0.864    0.000    0.981      0.864    0.919      0.921    1.000     0.974     Errhomus
+                 0.813    0.000    0.650      0.813    0.722      0.726    0.999     0.834     Fergusonina
+                 0.773    0.000    0.773      0.773    0.773      0.773    0.991     0.802     Sutyna
+                 0.826    0.000    0.911      0.826    0.866      0.866    0.998     0.920     Lithophane
+                 0.778    0.000    0.712      0.778    0.743      0.744    0.999     0.865     Abia
+                 0.843    0.001    0.765      0.843    0.802      0.803    0.999     0.919     Macroglossum
+                 0.728    0.001    0.702      0.728    0.715      0.715    0.998     0.820     Rhogogaster
+                 0.646    0.000    0.764      0.646    0.700      0.702    0.995     0.769     Cucullia
+                 0.920    0.000    0.852      0.920    0.885      0.885    1.000     0.977     Aphidius
+                 1.000    0.000    0.836      1.000    0.910      0.914    1.000     0.998     Gyponana
+                 0.652    0.000    0.714      0.652    0.682      0.682    0.987     0.695     Cryptolestes
+                 0.630    0.000    0.630      0.630    0.630      0.629    0.998     0.629     Andropolia
+                 0.746    0.002    0.838      0.746    0.789      0.788    0.994     0.874     Acronicta
+                 0.909    0.000    0.952      0.909    0.930      0.930    1.000     0.958     Anoplolepis
+                 1.000    0.000    0.988      1.000    0.994      0.994    1.000     1.000     Dendrolimus
+                 0.746    0.000    0.772      0.746    0.759      0.758    0.999     0.865     Liriomyza
+                 0.968    0.000    0.958      0.968    0.963      0.963    1.000     0.983     Miobantia
+                 0.839    0.001    0.712      0.839    0.770      0.773    0.995     0.833     Balsa
+                 0.922    0.000    0.819      0.922    0.868      0.869    0.999     0.944     Xyela
+                 0.967    0.001    0.889      0.967    0.926      0.926    1.000     0.984     Bemisia
+                 0.781    0.001    0.852      0.781    0.815      0.814    0.998     0.898     Simulium
+                 0.769    0.000    0.638      0.769    0.698      0.700    0.996     0.794     Octostruma
+                 0.728    0.001    0.780      0.728    0.753      0.752    0.995     0.841     Lasionycta
+                 0.897    0.000    1.000      0.897    0.945      0.947    0.999     0.955     Nephelodes
+                 0.961    0.000    1.000      0.961    0.980      0.980    0.998     0.963     Philaenus
+                 0.700    0.000    0.778      0.700    0.737      0.738    0.999     0.832     Luperina
+                 0.901    0.000    1.000      0.901    0.948      0.949    1.000     0.989     Hippotion
+                 0.680    0.000    0.850      0.680    0.756      0.760    0.997     0.708     Cobubatha
+                 0.878    0.002    0.526      0.878    0.658      0.678    0.999     0.856     Terataner
+                 0.759    0.000    0.683      0.759    0.719      0.720    0.997     0.830     Idia
+                 0.973    0.001    0.911      0.973    0.941      0.941    1.000     0.984     Cinara
+                 0.916    0.000    0.968      0.916    0.942      0.942    1.000     0.967     Psilogramma
+                 0.537    0.000    0.604      0.537    0.569      0.569    0.998     0.634     Eutomostethus
+                 0.932    0.000    0.932      0.932    0.932      0.932    1.000     0.956     Aplectoides
+                 0.922    0.000    0.746      0.922    0.825      0.829    1.000     0.941     Claremontia
+                 0.690    0.000    0.879      0.690    0.773      0.779    0.998     0.846     Agnorisma
+                 0.714    0.000    0.938      0.714    0.811      0.818    0.999     0.822     Cephus
+                 0.250    0.001    0.128      0.250    0.169      0.178    0.994     0.168     Capsula
+                 0.464    0.001    0.232      0.464    0.310      0.328    0.997     0.428     Cephalota
+                 0.982    0.000    0.931      0.982    0.956      0.956    1.000     0.917     Capnia
+                 0.791    0.001    0.801      0.791    0.796      0.795    0.994     0.830     Sympistis
+                 0.840    0.000    0.955      0.840    0.894      0.895    0.993     0.877     Anathix
+                 0.238    0.000    0.833      0.238    0.370      0.445    0.996     0.546     Periclista
+                 0.783    0.000    0.900      0.783    0.837      0.839    0.995     0.803     Cataglyphis
+                 0.778    0.000    0.913      0.778    0.840      0.843    0.993     0.815     Tuberculatus
+                 0.729    0.000    0.694      0.729    0.711      0.711    0.989     0.756     Callopistria
+                 0.779    0.001    0.736      0.779    0.757      0.757    0.998     0.821     Allantus
+                 0.679    0.000    0.950      0.679    0.792      0.803    0.990     0.726     Amphipoea
+                 0.846    0.000    1.000      0.846    0.917      0.920    1.000     0.934     Tricholita
+                 0.726    0.002    0.910      0.726    0.808      0.809    0.992     0.891     Xestia
+                 0.200    0.000    0.385      0.200    0.263      0.277    0.970     0.217     Dichagyris
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Plauditus
+                 0.739    0.000    0.850      0.739    0.791      0.793    0.998     0.822     Renia
+                 0.985    0.001    0.762      0.985    0.859      0.866    0.998     0.980     Apis
+                 0.520    0.000    0.867      0.520    0.650      0.671    0.997     0.673     Eudryas
+                 0.718    0.000    0.903      0.718    0.800      0.805    1.000     0.872     Hoplocampa
+                 0.524    0.000    0.688      0.524    0.595      0.600    0.986     0.588     Adelphagrotis
+                 0.231    0.000    1.000      0.231    0.375      0.480    0.987     0.504     Cerastis
+                 0.762    0.000    0.941      0.762    0.842      0.847    1.000     0.914     Acentrella
+                 0.917    0.000    0.957      0.917    0.936      0.936    1.000     0.973     Siobla
+                 0.796    0.000    0.896      0.796    0.843      0.844    0.992     0.854     Sideridis
+                 0.955    0.000    0.778      0.955    0.857      0.862    0.999     0.956     Lampides
+                 0.867    0.000    0.750      0.867    0.804      0.806    0.997     0.882     Papestra
+                 0.954    0.002    0.866      0.954    0.908      0.908    0.999     0.976     Houghia
+                 0.979    0.000    0.979      0.979    0.979      0.979    1.000     0.998     Chromatomyia
+                 0.902    0.001    0.799      0.902    0.847      0.848    0.996     0.922     Limonius
+                 0.870    0.000    0.973      0.870    0.918      0.920    0.999     0.943     Raphia
+                 0.732    0.000    0.707      0.732    0.719      0.719    0.997     0.772     Catops
+                 0.632    0.002    0.568      0.632    0.598      0.598    0.995     0.673     Orthosia
+                 0.714    0.000    0.909      0.714    0.800      0.806    0.998     0.812     Hypena
+                 0.788    0.000    0.897      0.788    0.839      0.840    0.993     0.794     Euproctis
+                 0.876    0.000    0.876      0.876    0.876      0.876    1.000     0.929     Empria
+                 0.920    0.000    0.719      0.920    0.807      0.813    1.000     0.961     Scolops
+                 0.405    0.001    0.395      0.405    0.400      0.399    0.986     0.471     Parasa
+                 0.895    0.000    0.977      0.895    0.934      0.935    1.000     0.961     Cryptocala
+                 0.793    0.002    0.931      0.793    0.857      0.856    0.994     0.913     Euxoa
+                 0.800    0.000    0.889      0.800    0.842      0.843    1.000     0.954     Stenacron
+                 0.798    0.000    0.919      0.798    0.854      0.855    0.997     0.895     Eurois
+                 0.810    0.000    0.810      0.810    0.810      0.809    1.000     0.882     Kosciuscola
+                 0.918    0.000    0.987      0.918    0.951      0.951    1.000     0.987     Theretra
+                 0.848    0.000    0.933      0.848    0.889      0.890    0.993     0.944     Colymbetes
+                 0.323    0.000    0.385      0.323    0.351      0.352    0.992     0.345     Cylindera
+                 0.760    0.000    0.613      0.760    0.679      0.682    0.994     0.808     Megastigmus
+                 0.889    0.000    0.914      0.889    0.901      0.901    1.000     0.955     Percolestus
+                 0.320    0.000    0.444      0.320    0.372      0.377    0.987     0.327     Pseudostegana
+                 0.543    0.001    0.424      0.543    0.476      0.479    0.994     0.558     Spodoptera
+                 0.810    0.000    0.944      0.810    0.872      0.874    1.000     0.964     Pachyprotasis
+                 0.833    0.000    0.833      0.833    0.833      0.833    1.000     0.894     Anochetus
+                 0.828    0.000    1.000      0.828    0.906      0.910    1.000     0.971     Stereocerus
+                 0.763    0.000    0.776      0.763    0.769      0.769    0.977     0.784     Cydia
+                 0.944    0.000    0.988      0.944    0.966      0.966    1.000     0.996     Camptomyia
+                 0.712    0.003    0.827      0.712    0.765      0.764    0.993     0.848     Lacinipolia
+                 0.789    0.000    0.930      0.789    0.854      0.856    0.995     0.877     Parabagrotis
+                 0.250    0.000    0.350      0.250    0.292      0.295    0.995     0.279     Apotolamprus
+                 0.939    0.000    0.868      0.939    0.902      0.903    0.997     0.933     Clostera
+                 0.989    0.001    0.888      0.989    0.936      0.937    1.000     0.991     Baetis
+                 0.646    0.000    0.861      0.646    0.738      0.745    0.998     0.802     Anicla
+                 0.558    0.000    0.615      0.558    0.585      0.586    0.989     0.658     Spaelotis
+                 0.869    0.000    1.000      0.869    0.930      0.932    1.000     0.948     Bulia
+                 0.280    0.000    0.438      0.280    0.341      0.350    0.975     0.407     Colocasia
+                 0.630    0.002    0.322      0.630    0.426      0.450    0.995     0.497     Copidosoma
+                 0.748    0.004    0.356      0.748    0.482      0.514    0.994     0.652     Cicindela
+                 0.877    0.000    0.826      0.877    0.850      0.850    0.999     0.914     Graphiphora
+                 0.900    0.000    1.000      0.900    0.947      0.949    1.000     0.979     Hyppa
+                 0.704    0.000    0.905      0.704    0.792      0.798    1.000     0.832     Prognorisma
+                 0.900    0.000    0.857      0.900    0.878      0.878    1.000     0.955     Leucrocuta
+                 0.269    0.000    0.875      0.269    0.412      0.485    0.984     0.338     Photedes
+                 0.902    0.000    0.939      0.902    0.920      0.920    0.999     0.966     Aedes
+                 0.828    0.000    0.889      0.828    0.857      0.858    0.997     0.895     Stiriodes
+                 0.640    0.000    1.000      0.640    0.780      0.800    0.995     0.746     Brachylomia
+                 0.792    0.000    0.950      0.792    0.864      0.867    1.000     0.915     Thanatophilus
+                 1.000    0.000    0.957      1.000    0.978      0.978    1.000     0.999     Praon
+                 0.941    0.000    1.000      0.941    0.970      0.970    0.999     0.949     Tanytarsus
+                 0.919    0.000    0.986      0.919    0.951      0.952    1.000     0.997     Agrius
+                 0.700    0.000    0.933      0.700    0.800      0.808    0.997     0.785     Ulolonche
+                 0.875    0.000    1.000      0.875    0.933      0.935    1.000     0.945     Chrysocharis
+                 0.878    0.000    0.957      0.878    0.915      0.915    0.999     0.964     Leucania
+                 1.000    0.002    0.356      1.000    0.525      0.596    1.000     0.955     Daphnis
+                 0.577    0.000    0.938      0.577    0.714      0.735    0.999     0.757     Protexarnis
+                 0.381    0.001    0.195      0.381    0.258      0.272    0.991     0.320     Epidemas
+                 0.870    0.000    0.870      0.870    0.870      0.869    1.000     0.923     Plusia
+                 0.714    0.000    0.673      0.714    0.693      0.693    0.998     0.792     Nonarthra
+                 0.890    0.001    0.695      0.890    0.781      0.786    0.998     0.898     Aseptis
+                 0.743    0.000    0.839      0.743    0.788      0.789    0.999     0.860     Caenis
+                 0.837    0.000    0.800      0.837    0.818      0.818    0.999     0.891     Gyrinus
+                 0.638    0.001    0.578      0.638    0.607      0.607    0.996     0.676     Condica
+                 1.000    0.000    0.862      1.000    0.926      0.928    1.000     0.990     Siphlonurus
+                 0.611    0.002    0.407      0.611    0.489      0.498    0.989     0.505     Eupselia
+                 0.786    0.000    0.859      0.786    0.821      0.821    1.000     0.905     Caenota
+                 0.900    0.000    1.000      0.900    0.947      0.949    0.999     0.965     Epeorus
+                 0.750    0.000    0.682      0.750    0.714      0.715    0.999     0.794     Faronta
+                 0.727    0.001    0.588      0.727    0.650      0.654    0.995     0.770     Phyllonorycter
+                 0.826    0.000    0.950      0.826    0.884      0.886    0.999     0.870     Callibaetis
+                 0.962    0.000    0.758      0.962    0.847      0.853    1.000     0.980     Cuerna
+                 0.880    0.000    0.957      0.880    0.917      0.917    0.983     0.908     Leptidea
+                 0.987    0.000    1.000      0.987    0.994      0.993    1.000     1.000     Maruca
+                 0.850    0.000    0.944      0.850    0.895      0.896    1.000     0.925     Sitochroa
+                 0.909    0.000    1.000      0.909    0.952      0.953    1.000     0.956     Cisseps
+                 0.977    0.000    1.000      0.977    0.988      0.988    1.000     0.999     Culex
+                 0.792    0.000    0.913      0.792    0.848      0.850    0.999     0.894     Paraleptophlebia
+                 0.417    0.001    0.313      0.417    0.357      0.360    0.984     0.399     Thudaca
+                 0.867    0.000    0.722      0.867    0.788      0.791    0.999     0.893     Pamphilius
+                 0.821    0.000    0.889      0.821    0.853      0.854    1.000     0.945     Trichordestra
+                 0.917    0.000    0.965      0.917    0.941      0.941    0.999     0.969     Hemicrepidius
+                 0.746    0.000    0.870      0.746    0.803      0.805    0.997     0.833     Triatoma
+                 0.978    0.000    0.957      0.978    0.967      0.967    1.000     0.999     Cyphomyrmex
+                 0.831    0.003    0.518      0.831    0.638      0.654    0.995     0.791     Schinia
+                 0.587    0.000    0.628      0.587    0.607      0.607    0.991     0.661     Eupsilia
+                 0.867    0.003    0.446      0.867    0.589      0.620    0.999     0.807     Chimarra
+                 0.764    0.000    0.933      0.764    0.840      0.844    0.980     0.801     Scirpophaga
+                 0.800    0.000    0.909      0.800    0.851      0.853    1.000     0.938     Heterarthrus
+                 0.893    0.001    0.556      0.893    0.685      0.704    1.000     0.891     Pheidole
+                 0.639    0.001    0.676      0.639    0.657      0.656    0.989     0.695     Egira
+                 0.429    0.000    0.692      0.429    0.529      0.545    0.982     0.507     Hypocoena
+                 0.750    0.000    0.938      0.750    0.833      0.838    1.000     0.917     Mniotype
+                 0.545    0.000    0.706      0.545    0.615      0.620    0.996     0.585     Caliroa
+                 0.767    0.000    0.821      0.767    0.793      0.793    0.999     0.811     Drunella
+                 0.621    0.000    0.750      0.621    0.679      0.682    0.999     0.782     Maccaffertium
+                 0.929    0.000    1.000      0.929    0.963      0.964    1.000     0.958     Telamona
+                 0.619    0.000    1.000      0.619    0.765      0.787    1.000     0.877     Geomydoecus
+                 0.766    0.000    0.907      0.766    0.831      0.833    0.998     0.891     Phlogophora
+                 0.857    0.000    0.621      0.857    0.720      0.729    0.969     0.858     Caloptilia
+                 0.963    0.000    0.977      0.963    0.970      0.970    1.000     0.996     Agelasa
+                 0.750    0.000    0.682      0.750    0.714      0.715    0.998     0.798     Enchenopa
+                 0.833    0.000    1.000      0.833    0.909      0.913    1.000     0.973     Hepialus
+                 0.373    0.017    0.493      0.373    0.425      0.408    0.937     0.470     NA
+                 0.843    0.000    0.921      0.843    0.881      0.881    0.998     0.910     Enargia
+                 0.908    0.001    0.615      0.908    0.733      0.746    0.994     0.893     Solenopsis
+                 0.821    0.000    0.575      0.821    0.676      0.687    0.993     0.801     Platypolia
+                 1.000    0.000    1.000      1.000    1.000      1.000    1.000     1.000     Microvelia
+                 0.950    0.000    0.905      0.950    0.927      0.927    1.000     0.984     Draeculacephala
+                 0.450    0.000    0.750      0.450    0.563      0.581    0.995     0.508     Monophadnus
+                 0.929    0.000    0.852      0.929    0.889      0.890    0.999     0.947     Amara
+                 0.714    0.000    0.789      0.714    0.750      0.751    1.000     0.868     Cricotopus
+                 0.835    0.001    0.648      0.835    0.730      0.735    0.998     0.840     Tetramorium
+                 0.528    0.001    0.583      0.528    0.554      0.555    0.993     0.583     Pachynematus
+                 0.788    0.000    0.867      0.788    0.825      0.826    0.999     0.874     Lysiphlebus
+                 0.618    0.000    1.000      0.618    0.764      0.786    0.992     0.682     Spiramater
+                 0.707    0.000    0.879      0.707    0.784      0.788    0.999     0.788     Crocigrapha
+                 1.000    0.000    0.931      1.000    0.964      0.965    1.000     1.000     Trissolcus
+                 0.957    0.000    0.957      0.957    0.957      0.956    0.998     0.957     Binodoxys
+                 0.692    0.003    0.238      0.692    0.355      0.405    0.985     0.464     Protolampra
+                 0.683    0.001    0.809      0.683    0.741      0.743    0.994     0.787     Homorthodes
+                 0.819    0.001    0.825      0.819    0.822      0.821    0.996     0.876     Anaplectoides
+                 0.731    0.000    0.950      0.731    0.826      0.833    0.999     0.837     Taxonus
+                 0.769    0.000    0.833      0.769    0.800      0.801    0.976     0.878     Pleuroptya
+                 0.794    0.001    0.593      0.794    0.679      0.686    0.998     0.830     Micropeplus
+                 0.806    0.000    0.952      0.806    0.873      0.876    0.999     0.926     Gnamptogenys
+                 0.907    0.000    0.975      0.907    0.940      0.940    1.000     0.970     Polypedilum
+                 0.868    0.002    0.848      0.868    0.858      0.856    0.998     0.931     Agrotis
+                 0.897    0.001    0.662      0.897    0.762      0.770    0.999     0.920     Protorthodes
+                 0.958    0.000    1.000      0.958    0.979      0.979    1.000     0.997     Listronotus
+                 0.949    0.001    0.809      0.949    0.873      0.876    1.000     0.964     Polistes
+                 0.956    0.000    1.000      0.956    0.977      0.977    0.999     0.976     Drosophila
+                 0.571    0.001    0.483      0.571    0.523      0.525    0.994     0.618     Bembidion
+                 0.800    0.000    1.000      0.800    0.889      0.894    0.994     0.837     Haploa
+                 0.462    0.000    0.500      0.462    0.480      0.480    0.992     0.583     Lucilia
+                 0.974    0.000    0.881      0.974    0.925      0.926    1.000     0.988     Ipimorpha
+                 0.961    0.000    1.000      0.961    0.980      0.980    1.000     1.000     Heliconius
+Weighted Avg.    0.821    0.001    0.838      0.821    0.824      0.825    0.995     0.877     
 ```
 
 Conclusion
 ===
 
 All three Naive Bayes experiments produced good accuracy measures. Naive Bayes without attribute selection produced
-an accuracy of 93.5%, Naive Bayes with the 500 "best" attributes produced an accuracy of 91.6%, and Naive Bayes
-with the 100 "best" attributes produced 84.1%. The ZeroR baseline and average recall/precision measures show that our
+an accuracy of 92.5435%, Naive Bayes with the 500 "best" attributes produced an accuracy of 91.469%, and Naive Bayes
+with the 100 "best" attributes produced 82.1126%. The ZeroR baseline and average recall/precision measures show that our
 high accuracy isn't simply due to there being a major bias in the dataset toward one particular genus.
 
 Surprisingly, the "500 best" Naive Bayes classifier only had an accuracy 2% less than that of the "full" Naive Bayes
 classifier (the one that used all the attributes). So it was able to classify instances nearly just as well with only
-~ 13% of the 4000 attributes. Possible benefits from this include faster training time and a lower likelihood of
+a very small subset of the 4000 attributes. Possible benefits from this include faster training time and a lower likelihood of
 overfitting.
 
 One thing to note is that in these experiments, supervised discretisation was done on the attributes by the Naive Bayes classifier.
@@ -1061,4 +1194,9 @@ There are many different ways to discretise attributes, both in supervised and u
 "forces" values to be in particular bins, no discretisation at all could possibly make the classifier more precise in
 discriminating between classes and therefore more accurate. Naive Bayes can deal with continuous attributes but it
 assumes the data comes from the normal distribution, which may not be true for a lot of the attributes. So it would be
-interesting to classify an instance based on how "similar" it is to the distributions of each of the 300 genera. 
+interesting to classify an instance based on how "similar" it is to the distributions of each of the 300 genera.
+
+Another note: remember how the sequences in this dataset are just random 300 bp substrings of their original sequences.
+What I really should have done was generate many of the "same" datasets but using different 300 bp substrings, and
+repeat the experiment and get an average of the accuracy. I have done this just to make sure that our dataset wasn't
+a lucky fluke but it would be nice to incorporate in future reports.
