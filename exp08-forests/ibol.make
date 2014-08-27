@@ -30,6 +30,18 @@ rf-cv:
 		done; \
 	done
 
+rf-model:
+	touch results/ibol.s1.training.time
+	for i in {1..5}; do \
+		{ time java -server -Xmx6000M weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.AttributeSelectedClassifier -t output/ibol.s1.arff -no-predictions -c last -d output/rf.model -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.trees.RandomForest -- -I 10 -K 0 -S 1 -num-slots 4 > /dev/null; } 2>> results/ibol.s1.training.time; \
+	done
+	
+rf-test:
+	touch results/ibol.s1.testing.time
+	for i in {1..5}; do \
+		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -l output/rf.model -T output/ibol.s1.arff ; } 2>> results/ibol.s1.testing.time; \
+	done
+	
 clean:
 	rm output/*.json
 
