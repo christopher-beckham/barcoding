@@ -1,21 +1,21 @@
 .PHONY : all premake json arff clean fullclean
 
 RESULTS = results/ibol
+SEED_MIN = 1
+SEED_MAX = 5
 
 premake:
 	$(MAKE) -C $(EXP_SHARED) -f ibol-phase5.make
 
 json: premake
-	for seed in 1 2 3 4 5 ; do \
-		python $(EXP_SHARED)/chop-json-fasta.py --seed=$$seed --fraglen=300 < $(OUT_FOLDER)/iBOL_phase_5.00_COI.json.pre > output/ibol.s$$seed.json; \
-	done
+	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json-fasta.py --fraglen=300 --seed={} < $(OUT_FOLDER)/iBOL_phase_5.00_COI.json.pre > output/ibol.s{}.json'
 	
 arff:
-	# todo: parallelise this?
-	for seed in 1 2 3 4 5 ; do \
-		python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.s$$seed.arff --outlist=null --infile=output/ibol.s$$seed.json --maxclass="c20"; \
-	done
+	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.s{}.arff --outlist=null --infile=output/ibol.s{}.json --maxclass="c20"'
 
+test:
+	java -server -Xmx6000M weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.AttributeSelectedClassifier -t output/ibol.s1.arff -x 2 -v -o -no-predictions -c last -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.trees.RandomForest -- -I 10 -K 0 -S 1 -num-slots 4 
+	
 #output/ibol.c40.f1.arff: premake
 	# For genbank.make, --maxclass was set to "c20". For this, we set it to "c40" then take one stratified fold and use that as the training set, which should
 	# reduce any class with 40 values down to half (20).
