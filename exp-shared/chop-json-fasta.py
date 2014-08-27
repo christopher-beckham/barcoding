@@ -10,13 +10,15 @@ parser.add_argument('--seed', dest='seed', required=True, type=int, help="Seed f
 args = parser.parse_args()
 FRAGLEN = args.fraglen
 SEED = args.seed
-
 random.seed(SEED)
 
 records = json.loads( sys.stdin.read() )
-nc = 0
+
+n_count = 0
+dupe_count = 0
 
 new_records = []
+strings_seen = set()
 
 for rec in records:
 
@@ -24,15 +26,24 @@ for rec in records:
 		continue
 		
 	if 'N' in rec['fasta'] or 'n' in rec['fasta']:
-		nc += 1
+		n_count += 1
 		continue
+		
+	if rec['fasta'] in strings_seen:
+		dupe_count += 1
+		continue
+	else:
+		strings_seen.add( rec['fasta'] )
 
 	if FRAGLEN > 0:
 		idx = random.randint(0, len(rec['fasta']) - FRAGLEN)
 		rec['fasta'] = rec['fasta'][ idx : idx + FRAGLEN ]
-		
+			
 	new_records.append(rec)
 		
-sys.stderr.write("Number of sequences with N's: " + str(nc) + "\n")
+sys.stderr.write("Number of sequences with N's: " + str(n_count) + "\n")
+sys.stderr.write("Sequences ignored due to a previous duplicate: " + str(dupe_count) + "\n")
+
+#print strings_seen
 
 print json.dumps(new_records)
