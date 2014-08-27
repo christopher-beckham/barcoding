@@ -8,11 +8,11 @@ all: family genus
 
 output/$(OUTFILE).genus.arff:
 	$(MAKE) -C $(EXP_SHARED) -f res50k.make
-	python 01-csv-new.py --kmer="3,5" --taxlevel="genus" --outfile=output/$(OUTFILE).genus.arff --outlist=null --infile=$(OUT_FOLDER)/$(INFILE).json --maxclass="c20"
+	$(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="genus" --outfile=output/$(OUTFILE).genus.arff --outlist=null --infile=$(OUT_FOLDER)/$(INFILE).json --maxclass="c20"
 
 output/$(OUTFILE).family.arff:
 	$(MAKE) -C $(EXP_SHARED) -f res50k.make # duplicate
-	python 01-csv-new.py --kmer="3,5" --taxlevel="family" --outfile=output/$(OUTFILE).family.arff --outlist=null --infile=$(OUT_FOLDER)/$(INFILE).json --maxclass="c20"
+	$(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --outfile=output/$(OUTFILE).family.arff --outlist=null --infile=$(OUT_FOLDER)/$(INFILE).json --maxclass="c20"
 
 family: output/$(OUTFILE).family.arff
 
