@@ -30,13 +30,17 @@ rf-cv:
 rf-model:
 	echo > results/ibol.rf.s1.training.time
 	for i in {1..5}; do \
-		{ time java -server -Xmx6000M $(RF_PREFIX) -c last -d output/rf.model $(RF_PREFIX) > /dev/null; } 2>> results/ibol.rf.s1.training.time; \
+		echo "Progress: "$$i; \
+		{ time java -Xmx6000M $(RF_PREFIX) -t output/ibol.s1.arff -no-predictions -c last -d output/rf.model -no-cv -o -v $(RF_POSTFIX) > /dev/null; } 2>> results/ibol.rf.s1.training.time; \
+		if [ $$i != 5 ]; then \
+			rm output/rf.model; \
+		fi; \
 	done
 	
 rf-test:
 	echo > results/ibol.rf.s1.testing.time
 	for i in {1..5}; do \
-		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -l output/rf.model -T output/ibol.s1.arff ; } 2>> results/ibol.rf.s1.testing.time; \
+		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -l output/rf.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.rf.s1.testing.time; \
 	done
 	
 ###############
@@ -52,19 +56,29 @@ nb-cv:
 	done
 	
 nb-model:
-	echo > results/ibol.nb.s1.training time
+	echo > results/ibol.nb.s1.training.time
 	for i in {1..5}; do \
-		{ time java -server -Xmx6000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -d output/nb.model $(NB_POSTFIX) > results/ibol.nb.s$$i.result; } 2>> results/ibol.nb.s1.training.time; \
+		echo "Progress: "$$i; \
+		{ time java -Xmx6000M $(NB_PREFIX) -t output/ibol.s1.arff -c last -d output/nb.model -no-cv -o -v $(NB_POSTFIX) > /dev/null; } 2>> results/ibol.nb.s1.training.time; \
+		if [ $$i != 5 ]; then \
+			rm output/nb.model; \
+		fi; \
 	done
 
 nb-test:
 	echo > results/ibol.nb.s1.testing.time
 	for i in {1..5}; do \
-		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -l output/nb.model -T output/ibol.s1.arff ; } 2>> results/ibol.nb.s1.testing.time; \
+		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -l output/nb.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.nb.s1.testing.time; \
 	done
+
+###########
+# CLEANUP #
+###########
 	
 clean:
-	rm output/*.json
+	rm output/*.*
+	rm results/*.*
 
 fullclean: clean
 	rm $(OUT_FOLDER)/iBOL_phase_5.00_COI.json
+	rm $(OUT_FOLDER)/res50k.json
