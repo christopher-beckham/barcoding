@@ -35,6 +35,10 @@ Total Number of Instances            38530
 
 ### 2) Run Naive Bayes on the dataset using supervised discretisation after removing all attributes that have 0 info gain (2-fold cross-validation)
 
+** UPDATE: This particular experiment is no longer necessary. The reason why a lot of attributes ended up having the same value
+(i.e. they all had 0 or whatever for every instance) was because of a bug in the script that generated the ARFF files.
+So if I were to re-run this experiment, it would simply be Naive Bayes with supervised discretisation with 2-fold x-validation. **
+
 ```
 === Stratified cross-validation ===
 
@@ -1195,6 +1199,10 @@ There are many different ways to discretise attributes, both in supervised and u
 discriminating between classes and therefore more accurate. Naive Bayes can deal with continuous attributes but it
 assumes the data comes from the normal distribution, which may not be true for a lot of the attributes. So it would be
 interesting to classify an instance based on how "similar" it is to the distributions of each of the 300 genera.
+
+** UPDATE: Naive Bayes has a kernel density estimator option, which seems to nullify the argument that we're discretising
+simply due to NB assuming normal distributions. In fact, the kernel density estimator probably gives really good accuracy as well.
+A better argument would be to say that we're discretising the attributes because Naive Bayes classifies instances a lot faster (I have tested this many times). **
 
 Another note: remember how the sequences in this dataset are just random 300 bp substrings of their original sequences.
 What I really should have done was generate many of the "same" datasets but using different 300 bp substrings, and
