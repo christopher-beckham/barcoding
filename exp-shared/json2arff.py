@@ -41,30 +41,22 @@ KMER_MIN = int(KMER_RANGE[0])
 KMER_MAX = int(KMER_RANGE[1])
 
 contents = open(args.infile).read()
-kmer_sets = [ set() for x in range(0, KMER_MAX + 1) ]
-class_counts = dict()
-
-"""
-Building list of kmers and class values
-"""
-
 records = json.loads(contents)
+
+"""
+Class counts
+"""
+
+class_counts = dict()
 err("Building list of class values")
-for k in range(KMER_MIN, KMER_MAX+1):
-	err("Building list of kmers for k = " + str(k))
-	for rec in records:
-		for x in range(0, len(rec['fasta']) - k + 1):
-			kmer = str(rec['fasta'][x:x+k])
-			if kmer not in kmer_sets[k] and kmer.count('N') != k:
-				kmer_sets[k].add(kmer)				
-		# only do this step once, since it's not related to kmer counting
-		if k == KMER_MIN:
-			classname = rec['taxinfo'][TAX_LEVEL]
-			if classname not in class_counts:
-				class_counts[classname] = 1
-			else:
-				class_counts[classname] += 1			
-				
+
+for rec in records:
+	classname = rec['taxinfo'][TAX_LEVEL]
+	if classname not in class_counts:
+		class_counts[classname] = 1
+	else:
+		class_counts[classname] += 1
+
 sorted_counts = sorted(class_counts.iteritems(), key=operator.itemgetter(1), reverse=True)
 chosen_classnames = None
 if CUTOFF:
@@ -80,6 +72,21 @@ else:
 	# in this case, MAX_CLASS is the maximum index and anything before that is retained
 	err("Limiting class values to " + str(MAX_CLASS) + " most common class values")
 	chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:MAX_CLASS] ] )
+		
+"""
+Building list of kmers and class values
+"""
+
+kmer_sets = [ set() for x in range(0, KMER_MAX + 1) ]
+for k in range(KMER_MIN, KMER_MAX+1):
+	err("Building list of kmers for k = " + str(k))
+	for rec in records:
+		classname = rec['taxinfo'][TAX_LEVEL]
+		if classname in chosen_classnames:
+			for x in range(0, len(rec['fasta']) - k + 1):
+				kmer = str(rec['fasta'][x:x+k])
+				if kmer not in kmer_sets[k] and kmer.count('N') != k:
+					kmer_sets[k].add(kmer)
 
 """
 Write ARFF file. First do the header, then write the instances out
@@ -113,7 +120,7 @@ for rec in records:
 					vector.append('0')
 				else:
 					prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
-					prop = -1 * math.log(prop,10)
+					#prop = -1 * math.log(prop,10)
 					vector.append( str(prop) )
 		vector.append( '"' + classname + '"' )
 		f_outfile.write( ",".join(vector) + "\n" )
