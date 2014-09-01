@@ -12,7 +12,7 @@ json: premake
 arff:
 	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.s{}.arff --outlist=null --infile=output/ibol.s{}.json --maxclass="c20"'
 
-timeall: rf-model rf-test nb-model nb-test
+timeall: rf-test nb-test
 	echo "done!"
 	
 ##################
@@ -23,6 +23,7 @@ timeall: rf-model rf-test nb-model nb-test
 #RF_POSTFIX = -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.trees.RandomForest -- -I 10 -K 0 -S 1 -num-slots 4
 
 RF_PREFIX = weka.classifiers.trees.RandomForest -I 10 -K 0 -S 1 -num-slots 4
+RF = weka.classifiers.trees.RandomForest
 
 rf-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
@@ -42,7 +43,7 @@ rf-model:
 rf-test:
 	echo > results/ibol.rf.s1.testing.time
 	for i in {1..5}; do \
-		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -no-predictions -l output/rf.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.rf.s1.testing.time; \
+		{ time java -Xmx6000M $(RF) -no-predictions -l output/rf.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.rf.s1.testing.time; \
 	done
 	
 ###############
@@ -53,6 +54,7 @@ rf-test:
 #NB_POSTFIX = -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.bayes.NaiveBayes
 
 NB_PREFIX = weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -F -B 10 -M -1.0 -R first-last" -W weka.classifiers.bayes.NaiveBayes
+NB = weka.classifiers.meta.FilteredClassifier
 
 nb-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
@@ -72,7 +74,7 @@ nb-model:
 nb-test:
 	echo > results/ibol.nb.s1.testing.time
 	for i in {1..5}; do \
-		{ time java -Xmx6000M weka.classifiers.meta.FilteredClassifier -no-predictions -l output/nb.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.nb.s1.testing.time; \
+		{ time java -Xmx6000M $(NB) -no-predictions -l output/nb.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.nb.s1.testing.time; \
 	done
 
 ###########
