@@ -3,5 +3,5 @@ files = ibol.nb.s1 ibol.rf.s1 res50k.genus.nb.s1 res50k.genus.rf.s1 res50k.famil
 
 f-measure: files
 	for file in $(files); do \
-		python parse-measures.py < results/$$file.result; \
+		python parse-measures.py < results/$$file.result > R/f-measures/$$file.fmeasure; \
 	done
