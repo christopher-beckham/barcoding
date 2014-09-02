@@ -14,7 +14,7 @@ arff:
 		seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel=$$rank --outfile=output/res50k.$$rank.s{}.arff --outlist=null --infile=output/res50k.s{}.json --maxclass="c20"'; \
 	done
 
-timeall: rf-test nb-test
+timeall: rf-cv rf-model rf-test
 	echo "done!"
 	
 RESULTS = results/res50k
@@ -23,7 +23,7 @@ RESULTS = results/res50k
 # RANDOM FORESTS #
 ##################	
 
-RF_PREFIX = weka.classifiers.trees.RandomForest -I 10 -K 0 -S 1 -num-slots 4
+RF_PREFIX = weka.classifiers.trees.RandomForest -I 60 -K 0 -S 1 -num-slots 4
 RF = weka.classifiers.trees.RandomForest
 
 rf-cv:
@@ -55,7 +55,7 @@ rf-test:
 	for rank in family genus; do \
 		echo > $(RESULTS)/res50k.$$rank.rf.s1.testing.time; \
 		for i in {1..5}; do \
-			{ time java -Xmx6000M $(RF) -no-predictions -l output/rf.$$rank.model -T output/res50k.$$rank.s1.arff > /dev/null; } 2>> $(RESULTS)/res50k.$$rank.rf.s1.testing.time; \
+			{ time java -Xmx7000M $(RF) -no-predictions -l output/rf.$$rank.model -T output/res50k.$$rank.s1.arff > /dev/null; } 2>> $(RESULTS)/res50k.$$rank.rf.s1.testing.time; \
 		done; \
 	done
 	
