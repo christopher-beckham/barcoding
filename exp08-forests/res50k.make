@@ -10,12 +10,20 @@ json: premake
 	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json-fasta.py --fraglen=300 --seed={} < $(OUT_FOLDER)/res50k.json.pre > output/res50k.s{}.json'
 	
 arff:
-	for rank in family genus; do \
-		seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel=$$rank --outfile=output/res50k.$$rank.s{}.arff --outlist=null --infile=output/res50k.s{}.json --maxclass="c20"'; \
-	done
+	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --outfile=output/res50k.family.s{}.arff --outlist=null --infile=output/res50k.s{}.json --maxclass="c20"'; \
+	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="genus" --outfile=output/res50k.rank.s{}.arff --outlist=null --infile=output/res50k.s{}.json --maxclass="c20"'; \
 
-timeall: rf-cv rf-model rf-test
-	echo "done!"
+rf-all: rf-cv rf-model rf-test
+	echo "Done all for RF!"
+	
+rf-time: rf-model rf-test
+	echo "Done time for RF!"
+	
+nb-all: nb-cv nb-model nb-test
+	echo "Done all for NB!"
+	
+nb-time: nb-model nb-test
+	echo "Done time for NB!"
 	
 RESULTS = results/res50k
 	
