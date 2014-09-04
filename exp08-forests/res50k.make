@@ -26,6 +26,15 @@ nb-time: nb-model nb-test
 	echo "Done time for NB!"
 	
 RESULTS = results/res50k
+
+###################
+# INFO GAIN GRAPH #
+###################
+
+info-gain:
+	for num in 50 100 200 400 800 1600; do \
+		java -server -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N $$num" -W weka.classifiers.trees.RandomForest -t output/res50k.genus.s1.arff -no-predictions -c last -x 2 -v -o -- -I 10 -K 0 -S 1 -num-slots 4 > results/res50k.genus.ig$$num.s1.result; \
+	done
 	
 ##################
 # RANDOM FORESTS #

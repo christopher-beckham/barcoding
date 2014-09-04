@@ -12,7 +12,7 @@ json: premake
 arff:
 	seq $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="species" --outfile=output/ibol.s{}.arff --outlist=null --infile=output/ibol.s{}.json --maxclass="c20"'
 
-timeall: rf-test nb-test
+timeall: rf-cv rf-model rf-test
 	echo "done!"
 	
 ##################

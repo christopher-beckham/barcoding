@@ -13,8 +13,6 @@ for filename in filenames:
 		else:
 			if "Correctly Classified Instances" in line and stratified:
 				accuracy = line.split()[4]
-				print filename,
-				print "==>",
-				print accuracy
+				print filename + "," + accuracy
 				break
 	f.close()
