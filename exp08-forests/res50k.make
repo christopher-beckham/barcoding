@@ -28,23 +28,32 @@ nb-all: nb-cv nb-model nb-test
 nb-time: nb-model nb-test
 	echo "Done time for NB!"
 	
-RESULTS = results/res50k
+RESULTS = results
+
+	
+##################
+# RANDOM FORESTS #
+##################
+
+NUM_TREES = 60
+RF_PREFIX = weka.classifiers.trees.RandomForest -I $(NUM_TREES) -K 0 -S 1 -num-slots 4
+RF = weka.classifiers.trees.RandomForest
 
 ###################
 # INFO GAIN GRAPH #
 ###################
 
 info-gain:
-	for num in 50 100 200 400 800 1600; do \
-		java -server -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T -1.7976931348623157E308 -N $$num" -W weka.classifiers.trees.RandomForest -t output/res50k.genus.s1.arff -no-predictions -c last -x 2 -v -o -- -I 10 -K 0 -S 1 -num-slots 4 > results/res50k.genus.ig$$num.s1.result; \
+	for num in 1000 500 250; do \
+		if [ -e output/nb.ig$$num.model ]; then \
+			rm output/nb.ig$$num.model; \
+		fi; \
+		java -server -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x 2 -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
+		echo > $(RESULTS)/res50k.family.nb.s1.ig$$num.time; \
+		for i in {1..5}; do \
+			{ time java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -no-predictions -l output/nb.ig$$num.model -T output/res50k.family.s1.arff > /dev/null; } 2>> $(RESULTS)/res50k.family.nb.s1.ig$$num.time; \
+		done; \
 	done
-	
-##################
-# RANDOM FORESTS #
-##################	
-
-RF_PREFIX = weka.classifiers.trees.RandomForest -I 60 -K 0 -S 1 -num-slots 4
-RF = weka.classifiers.trees.RandomForest
 
 rf-cv:
 
