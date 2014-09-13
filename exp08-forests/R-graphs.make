@@ -1,9 +1,9 @@
-.PHONY: f-measure summary-arff test
+.PHONY: f-measure summary-arff info-gain files arffs
 
 files = ibol.nb.s1 ibol.rf.s1 res50k.genus.nb.s1 res50k.genus.rf.s1 res50k.family.nb.s1 res50k.family.rf.s1
 arffs = ibol.s1.arff res50k.family.s1.arff res50k.genus.s1.arff
 
-f-measure: files
+f-measure:
 	for file in $(files); do \
 		if [ ! -e results/$$file.result ]; then \
 			echo "Cannot find file "results/$$file.result; \
