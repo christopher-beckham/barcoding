@@ -7,3 +7,6 @@ bin/
 *.*#
 .Rhistory
 deleteme.*
+*.arff
+*.model
+*.json

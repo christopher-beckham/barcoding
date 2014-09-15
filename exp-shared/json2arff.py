@@ -26,16 +26,25 @@ Argument parsing
 """
 	
 parser = argparse.ArgumentParser(description='Takes as input a JSON FASTA, derives kmer features from the data and outputs a Weka ARFF.')
-parser.add_argument('--outfile', dest='outfile', required=True, help='Output file for CSV file')
-parser.add_argument('--infile', dest='infile', required=True, help='Input file in JSON FASTA')
+parser.add_argument('--outtrain', dest='outtrain', required=True, help='Output training ARFF file')
+parser.add_argument('--intrain', dest='intrain', required=True, help='Input training JSON file')
 #parser.add_argument('--outlist', dest='outlist', required=True, help='No longer in use.')
 parser.add_argument('--kmerrange', dest='kmerrange', required=True, help='Values of k to derive kmer features from e.g "3,5" for k = 3,4,5')
 parser.add_argument('--taxlevel', dest='taxlevel', required=True, help='The taxonomic level to be used (either "genus", "order", or "family").')
 parser.add_argument('--maxclass', dest='maxclass', required=True, help='The maximum number (M) of class values. Prefix with "c" for cutoff and "m" for max.')
+
 parser.add_argument('--noambig', dest='noambig', action='store_true', help='Ignore ambiguous nucleotides when extracting features?')
+parser.add_argument('--intest', dest='intest', help='Input testing JSON file')
+parser.add_argument('--outtest', dest='outtest', help='Output testing ARFF file')
+
+
 args = parser.parse_args()
 
-OUT_FILE = args.outfile
+
+
+
+
+
 CUTOFF = False
 if args.maxclass[0] == 'c':
 	CUTOFF = True
@@ -45,13 +54,13 @@ elif args.maxclass[0] != 'm':
 	
 MAX_CLASS = int(args.maxclass[1::])
 KMER_RANGE = args.kmerrange.split(',')
-TAX_LEVEL = args.taxlevel
 KMER_MIN = int(KMER_RANGE[0])
 KMER_MAX = int(KMER_RANGE[1])
-NO_AMBIG = args.noambig
 
-contents = open(args.infile).read()
-records = json.loads(contents)
+training_records = json.loads( open(args.intrain).read() )
+testing_records = None
+if args.intest != None:
+	testing_records = json.loads( open(args.intest).read() )
 
 """
 Class counts
@@ -60,8 +69,8 @@ Class counts
 class_counts = dict()
 err("Building list of class values")
 
-for rec in records:
-	classname = rec['taxinfo'][TAX_LEVEL]
+for rec in training_records:
+	classname = rec['taxinfo'][args.taxlevel]
 	if classname == "NA" or classname == "":
 		continue
 		
@@ -93,12 +102,12 @@ Building list of kmers and class values
 kmer_sets = [ set() for x in range(0, KMER_MAX + 1) ]
 for k in range(KMER_MIN, KMER_MAX+1):
 	err("Building list of kmers for k = " + str(k))
-	for rec in records:
-		classname = rec['taxinfo'][TAX_LEVEL]
+	for rec in training_records:
+		classname = rec['taxinfo'][args.taxlevel]
 		if classname in chosen_classnames:
 			for x in range(0, len(rec['fasta']) - k + 1):
 				kmer = str(rec['fasta'][x:x+k])
-				if NO_AMBIG:
+				if args.noambig:
 					if ambig(kmer):
 						continue
 				if kmer not in kmer_sets[k]:
@@ -108,37 +117,45 @@ for k in range(KMER_MIN, KMER_MAX+1):
 Write ARFF file. First do the header, then write the instances out
 """
 
-err("Writing training file to " + OUT_FILE)
-f_outfile = open(OUT_FILE, 'wb')
-f_outfile.write("@relation " + OUT_FILE + "\n") 
-for kmer_set in kmer_sets:	
-	for kmer in kmer_set:
-		f_outfile.write("@attribute " + kmer + "_f" + " numeric\n")
-class_string = "@attribute class {" + ",".join( ['"' + x + '"' for x in chosen_classnames] ) + "}\n"
-f_outfile.write(class_string)
-f_outfile.write("@data\n")
+def write_arff(records, kmer_sets, classname_set, outtrain_name):
 
-for rec in records:
-	vector = [] # one particular instance
-	classname = rec['taxinfo'][TAX_LEVEL]
-	if classname in chosen_classnames:
-		for k in range(KMER_MIN, KMER_MAX+1):
-			kmer_set = kmer_sets[k]
-			hm = dict()
-			for x in range(0, len(rec['fasta']) - k + 1):
-				kmer = str(rec['fasta'][x:x+k])
-				if kmer not in hm:
-					hm[kmer] = 1
-				else:
-					hm[kmer] += 1
-			for kmer in kmer_set:
-				if kmer not in hm:
-					vector.append('0')
-				else:
-					prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
-					#prop = -1 * math.log(prop,10)
-					vector.append( str(prop) )
-		vector.append( '"' + classname + '"' )
-		f_outfile.write( ",".join(vector) + "\n" )
+	f_outtrain = open(outtrain_name, 'wb')
+	f_outtrain.write("@relation " + outtrain_name + "\n") 
+	for kmer_set in kmer_sets:	
+		for kmer in kmer_set:
+			f_outtrain.write("@attribute " + kmer + "_f" + " numeric\n")
+	class_string = "@attribute class {" + ",".join( ['"' + x + '"' for x in classname_set] ) + "}\n"
+	f_outtrain.write(class_string)
+	f_outtrain.write("@data\n")
 
-f_outfile.close()
+	for rec in records:
+		vector = [] # one particular instance
+		classname = rec['taxinfo'][args.taxlevel]
+		if classname in classname_set:
+			for k in range(KMER_MIN, KMER_MAX+1):
+				kmer_set = kmer_sets[k]
+				hm = dict()
+				for x in range(0, len(rec['fasta']) - k + 1):
+					kmer = str(rec['fasta'][x:x+k])
+					if kmer not in hm:
+						hm[kmer] = 1
+					else:
+						hm[kmer] += 1
+				for kmer in kmer_set:
+					if kmer not in hm:
+						vector.append('0')
+					else:
+						prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
+						#prop = -1 * math.log(prop,10)
+						vector.append( str(prop) )
+			vector.append( '"' + classname + '"' )
+			f_outtrain.write( ",".join(vector) + "\n" )
+
+	f_outtrain.close()
+	
+err("Writing training file to " + args.outtrain)
+write_arff(training_records, kmer_sets, chosen_classnames, args.outtrain)
+
+if testing_records != None:
+	err("Writing testing file to " + args.outtest)
+	write_arff(testing_records, kmer_sets, chosen_classnames, args.outtest)

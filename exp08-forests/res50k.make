@@ -13,8 +13,8 @@ json: premake
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json-fasta.py --fraglen=300 --seed={} < $(OUT_FOLDER)/res50k.json.pre > output/res50k.s{}.json'
 	
 arff:
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --outfile=output/res50k.family.s{}.arff --infile=output/res50k.s{}.json --maxclass="c20"'; \
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="genus" --outfile=output/res50k.genus.s{}.arff --infile=output/res50k.s{}.json --maxclass="c20"'; \
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --outtrain=output/res50k.family.s{}.arff --intrain=output/res50k.s{}.json --maxclass="c20"'; \
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="genus" --outtrain=output/res50k.genus.s{}.arff --intrain=output/res50k.s{}.json --maxclass="c20"'; \
 
 rf-all: rf-cv rf-model rf-test
 	echo "Done all for RF!"
