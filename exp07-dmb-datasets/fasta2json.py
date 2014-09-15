@@ -12,7 +12,7 @@ f = open(args.infile)
 for record in SeqIO.parse(f, "fasta"):
 	seq = str(record.seq).replace('-','')
 	classname = str(record.id).split('|')[1]
-	json_arr.append( {"nucid": seq, "taxinfo": {"genus": classname}, "fasta": seq } )
+	json_arr.append( {"nucid": seq, "taxinfo": {"species": classname}, "fasta": seq } )
 f.close()
 
 print json.dumps(json_arr)

@@ -12,6 +12,14 @@ Helper functions
 def err(st):
 	sys.stderr.write( str(st) )
 	sys.stderr.write("\n")
+	
+def ambig(kmer):
+	for k in kmer:
+		if k in ambigs:
+			return True
+	return False
+	
+ambigs = ['R', 'Y', 'S', 'W', 'K', 'M', 'B', 'D', 'H', 'V', 'N']
 
 """
 Argument parsing
@@ -20,10 +28,11 @@ Argument parsing
 parser = argparse.ArgumentParser(description='Takes as input a JSON FASTA, derives kmer features from the data and outputs a Weka ARFF.')
 parser.add_argument('--outfile', dest='outfile', required=True, help='Output file for CSV file')
 parser.add_argument('--infile', dest='infile', required=True, help='Input file in JSON FASTA')
-parser.add_argument('--outlist', dest='outlist', required=True, help='No longer in use.')
+#parser.add_argument('--outlist', dest='outlist', required=True, help='No longer in use.')
 parser.add_argument('--kmerrange', dest='kmerrange', required=True, help='Values of k to derive kmer features from e.g "3,5" for k = 3,4,5')
 parser.add_argument('--taxlevel', dest='taxlevel', required=True, help='The taxonomic level to be used (either "genus", "order", or "family").')
 parser.add_argument('--maxclass', dest='maxclass', required=True, help='The maximum number (M) of class values. Prefix with "c" for cutoff and "m" for max.')
+parser.add_argument('--noambig', dest='noambig', action='store_true', help='Ignore ambiguous nucleotides when extracting features?')
 args = parser.parse_args()
 
 OUT_FILE = args.outfile
@@ -39,6 +48,7 @@ KMER_RANGE = args.kmerrange.split(',')
 TAX_LEVEL = args.taxlevel
 KMER_MIN = int(KMER_RANGE[0])
 KMER_MAX = int(KMER_RANGE[1])
+NO_AMBIG = args.noambig
 
 contents = open(args.infile).read()
 records = json.loads(contents)
@@ -52,6 +62,9 @@ err("Building list of class values")
 
 for rec in records:
 	classname = rec['taxinfo'][TAX_LEVEL]
+	if classname == "NA" or classname == "":
+		continue
+		
 	if classname not in class_counts:
 		class_counts[classname] = 1
 	else:
@@ -85,7 +98,10 @@ for k in range(KMER_MIN, KMER_MAX+1):
 		if classname in chosen_classnames:
 			for x in range(0, len(rec['fasta']) - k + 1):
 				kmer = str(rec['fasta'][x:x+k])
-				if kmer not in kmer_sets[k] and kmer.count('N') != k:
+				if NO_AMBIG:
+					if ambig(kmer):
+						continue
+				if kmer not in kmer_sets[k]:
 					kmer_sets[k].add(kmer)
 
 """
