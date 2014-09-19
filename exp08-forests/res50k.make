@@ -10,7 +10,7 @@ premake:
 	$(MAKE) -C $(EXP_SHARED) -f res50k.make
 
 json: premake
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json-fasta.py --fraglen=300 --seed={} < $(OUT_FOLDER)/res50k.json.pre > output/res50k.s{}.json'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/process-json.py --fraglen=300 --seed={} < $(OUT_FOLDER)/res50k.json.pre > output/res50k.s{}.json'
 	
 arff:
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --outtrain=output/res50k.family.s{}.arff --intrain=output/res50k.s{}.json --maxclass="c20"'; \
@@ -59,11 +59,14 @@ info-gain:
 # --NOAMBIG #
 #############
 
-#no-ambig:
-#	python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --noambig --outfile=output/res50k.family.noambig.arff --outlist=null --infile=output/res50k.s{}.json --maxclass="c20"
+no-ambig:
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --noambig --outtrain=output/res50k.family.s{}.noambig.arff --intrain=output/res50k.s{}.json --maxclass="c20"'
 
+########
+# MAIN #
+########
+	
 rf-cv:
-
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
 			java -server -Xmx6000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > $(RESULTS)/res50k.$$rank.rf.s$$i.result; \
