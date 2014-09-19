@@ -1,17 +1,24 @@
 library(foreign)
 
 summary.arff = function(df, name) {
-  print(paste("Summary for data frame:", name))
-  print(paste("Number of unique classes:", length(unique(df$class))))
-  print(paste("Number of instances:", nrow(df)))
-  print(paste("Number of features:", ncol(df)))
+  return( c(name, length(unique(df$class)), nrow(df), ncol(df)) )
 }
 
-df = read.arff("../output/ibol.s1.arff")
-summary.arff(df, "ibol")
+tb = data.frame(name=character(), classes=character(), instances=character(),
+                features=character(), stringsAsFactors=FALSE)
+tb[1,] = c(NA,NA,NA,NA)
 
-df = read.arff("../output/res50k.family.s1.arff")
-summary.arff(df, "res50k.family")
+for(i in 1:5) {
+  df = read.arff(paste("../output/ibol.s",i,".arff",sep=""))
+  tb = rbind( tb, summary.arff(df, paste("ibol",i)) )
+}
 
-df = read.arff("../output/res50k.genus.s1.arff")
-summary.arff(df, "res50k.genus")
+for(i in 1:5) {
+  df = read.arff(paste("../output/res50k.family.s",i,".arff",sep=""))
+  tb = rbind( tb, summary.arff(df, paste("res50k.family",i)) )
+}
+
+for(i in 1:5) {
+  df = read.arff(paste("../output/res50k.genus.s",i,".arff",sep=""))
+  tb = rbind( tb, summary.arff(df, paste("res50k.genus",i)) )
+}

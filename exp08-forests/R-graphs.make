@@ -1,17 +1,22 @@
 .PHONY: f-measure summary-arff info-gain files arffs
 
-files = ibol.nb.s1 ibol.rf.s1 res50k.genus.nb.s1 res50k.genus.rf.s1 res50k.family.nb.s1 res50k.family.rf.s1
+files = ibol.nb ibol.rf res50k.genus.nb res50k.genus.rf res50k.family.nb res50k.family.rf
 arffs = ibol.s1.arff res50k.family.s1.arff res50k.genus.s1.arff
+
+SEED_MIN = 1
+SEED_MAX = 5
 
 f-measure:
 	for file in $(files); do \
-		if [ ! -e results/$$file.result ]; then \
-			echo "Cannot find file "results/$$file.result; \
-			exit 1; \
-		fi; \
-		python parse-measures.py < results/$$file.result > R/f-measures/$$file.fmeasure; \
+		for seed in {$(SEED_MIN)..$(SEED_MAX)}; do \
+			if [ ! -e results/$$file.s$$seed.result ]; then \
+				echo "Cannot find file "results/$$file.s$$seed.result; \
+				exit 1; \
+			fi; \
+			python parse-measures.py < results/$$file.s$$seed.result > R/f-measures/$$file.s$$seed.fmeasure; \
+		done; \
 	done; \
-	cd R; RScript f-measures.R
+	#cd R; RScript f-measures.R
 	
 summary-arff:
 	for file in $(arffs); do \
