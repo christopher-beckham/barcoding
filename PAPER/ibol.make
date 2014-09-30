@@ -3,9 +3,6 @@
 SEED_MIN = 1
 SEED_MAX = 5
 
-# MAC OS X USERS - you may have to change seq to gseq
-SEQ = seq
-
 premake:
 	$(MAKE) -C $(EXP_SHARED) -f ibol-phase5.make
 
