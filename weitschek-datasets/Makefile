@@ -3,9 +3,6 @@
 SEED_MIN = 1
 SEED_MAX = 5
 
-# MAC OS X USERS - you may have to change seq to gseq
-SEQ = seq
-
 cyp-arff:
 	python fasta2json.py --infile=data/cypraeidae/CypAll.fasta > output/CypAll.json.pre
 	#python $EXP_SHARED/json2arff.py --infile=output/CypAll.json --outfile=output/CypAll.arff --kmerrange=3,5 --maxclass=m100000
