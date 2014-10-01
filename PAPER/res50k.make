@@ -3,9 +3,6 @@
 SEED_MIN = 1
 SEED_MAX = 5
 
-# MAC OS X USERS - you may have to change seq to gseq
-SEQ = seq
-
 premake:
 	$(MAKE) -C $(EXP_SHARED) -f res50k.make
 
@@ -27,8 +24,6 @@ nb-all: nb-cv nb-model nb-test
 	
 nb-time: nb-model nb-test
 	echo "Done time for NB!"
-	
-RESULTS = results
 
 	
 ##################
@@ -49,9 +44,9 @@ info-gain:
 			rm output/nb.ig$$num.model; \
 		fi; \
 		java -server -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x 2 -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
-		echo > $(RESULTS)/res50k.family.nb.s1.ig$$num.time; \
+		echo > results/res50k.family.nb.s1.ig$$num.time; \
 		for i in {1..5}; do \
-			{ time java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -no-predictions -l output/nb.ig$$num.model -T output/res50k.family.s1.arff > /dev/null; } 2>> $(RESULTS)/res50k.family.nb.s1.ig$$num.time; \
+			{ time java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -no-predictions -l output/nb.ig$$num.model -T output/res50k.family.s1.arff > /dev/null; } 2>> results/res50k.family.nb.s1.ig$$num.time; \
 		done; \
 	done
 	
@@ -69,7 +64,7 @@ no-ambig:
 rf-cv:
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -server -Xmx6000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > $(RESULTS)/res50k.$$rank.rf.s$$i.result; \
+			java -server -Xmx6000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
 		done; \
 	done
 
@@ -80,10 +75,10 @@ rf-model:
 		fi; \
 	done; \
 	for rank in family genus; do \
-		echo > $(RESULTS)/res50k.$$rank.rf.s1.training.time; \
+		echo > results/res50k.$$rank.rf.s1.training.time; \
 		for i in {1..5}; do \
 			echo "Progress: "$$i; \
-			{ time java -Xmx6000M $(RF_PREFIX) -t output/res50k.$$rank.s1.arff -no-predictions -c last -d output/rf.$$rank.model -no-cv -o -v $(RF_POSTFIX) > /dev/null; } 2>> $(RESULTS)/res50k.$$rank.rf.s1.training.time; \
+			{ time java -Xmx6000M $(RF_PREFIX) -t output/res50k.$$rank.s1.arff -no-predictions -c last -d output/rf.$$rank.model -no-cv -o -v $(RF_POSTFIX) > /dev/null; } 2>> results/res50k.$$rank.rf.s1.training.time; \
 			if [ $$i != 5 ]; then \
 				rm output/rf.$$rank.model; \
 			fi; \
@@ -92,9 +87,9 @@ rf-model:
 	
 rf-test:
 	for rank in family genus; do \
-		echo > $(RESULTS)/res50k.$$rank.rf.s1.testing.time; \
+		echo > results/res50k.$$rank.rf.s1.testing.time; \
 		for i in {1..5}; do \
-			{ time java -Xmx7000M $(RF) -no-predictions -l output/rf.$$rank.model -T output/res50k.$$rank.s1.arff > /dev/null; } 2>> $(RESULTS)/res50k.$$rank.rf.s1.testing.time; \
+			{ time java -Xmx7000M $(RF) -no-predictions -l output/rf.$$rank.model -T output/res50k.$$rank.s1.arff > /dev/null; } 2>> results/res50k.$$rank.rf.s1.testing.time; \
 		done; \
 	done
 	
@@ -109,7 +104,7 @@ NB = weka.classifiers.bayes.NaiveBayes
 nb-cv:
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -server -Xmx6000M $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(NB_POSTFIX) > $(RESULTS)/res50k.$$rank.nb.s$$i.result; \
+			java -server -Xmx6000M $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(NB_POSTFIX) > results/res50k.$$rank.nb.s$$i.result; \
 		done; \
 	done
 	
@@ -120,10 +115,10 @@ nb-model:
 		fi; \
 	done; \
 	for rank in family genus; do \
-		echo > $(RESULTS)/res50k.$$rank.nb.s1.training.time; \
+		echo > results/res50k.$$rank.nb.s1.training.time; \
 		for i in {1..5}; do \
 			echo "Progress: "$$i; \
-			{ time java -Xmx6000M $(NB_PREFIX) -t output/res50k.$$rank.s1.arff -no-predictions -c last -d output/nb.$$rank.model -no-cv -o -v $(NB_POSTFIX) > /dev/null; } 2>> $(RESULTS)/res50k.$$rank.nb.s1.training.time; \
+			{ time java -Xmx6000M $(NB_PREFIX) -t output/res50k.$$rank.s1.arff -no-predictions -c last -d output/nb.$$rank.model -no-cv -o -v $(NB_POSTFIX) > /dev/null; } 2>> results/res50k.$$rank.nb.s1.training.time; \
 			if [ $$i != 5 ]; then \
 				rm output/nb.$$rank.model; \
 			fi; \
@@ -132,9 +127,9 @@ nb-model:
 
 nb-test:
 	for rank in family genus; do \
-		echo > $(RESULTS)/res50k.$$rank.nb.s1.testing.time; \
+		echo > results/res50k.$$rank.nb.s1.testing.time; \
 		for i in {1..5}; do \
-			{ time java -Xmx6000M $(NB) -no-predictions -l output/nb.$$rank.model -T output/res50k.$$rank.s1.arff > /dev/null; } 2>> $(RESULTS)/res50k.$$rank.nb.s1.testing.time; \
+			{ time java -Xmx6000M $(NB) -no-predictions -l output/nb.$$rank.model -T output/res50k.$$rank.s1.arff > /dev/null; } 2>> results/res50k.$$rank.nb.s1.testing.time; \
 		done; \
 	done
 

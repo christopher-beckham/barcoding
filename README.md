@@ -1,24 +1,12 @@
 DNA Barcoding (COMP390)
 ===
 
-### deps
+First step is to do:
 
-Not used much at the moment (storing dependencies)
+```
+cp env.sh.in env.sh
+```
 
-### exp-shared
+Then open `env.sh` and modify the environment variables accordingly.
 
-Usually scripts that are shared between experiments.
-
-### exp01-create-arff
-
-Ignore this, it was an old experiment based around computing alignments for sequences
-and extracting features from the alignments. But this was cumbersome and has been
-succeeded by `exp03-freq`.
-
-### exp03-freq
-
-Experiments with Weka's Naive Bayes classifier on a "kmer frequency" dataset.
-
-### output
-
-Output files from the different experiments.
+Then go into the directory `PAPER` and follow the `README.md` there.
