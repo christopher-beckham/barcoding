@@ -25,15 +25,14 @@ err("Querying nuccore...")
 
 while True:
 	try:
-		nuc_handle = Entrez.esearch(db="nuccore", term="Insecta[ORGN] AND (cox1[GENE] OR coxI[GENE] OR CO1[GENE] OR COI[GENE]) NOT genome[title]", retmax=100000)
+		nuc_handle = Entrez.esearch(db="nuccore", term="Insecta[ORGN] AND (cox1[GENE] OR coxI[GENE] OR CO1[GENE] OR COI[GENE]) NOT genome[title]", retmax=LIMIT)
 		nuc_records = Entrez.read(nuc_handle)
 		nuc_handle.close()
 		break
 	except IOError:
 		err("Exception - retrying...")
 		
-nuc_ids = nuc_records['IdList'][0:LIMIT]
-random.shuffle(nuc_ids)
+nuc_ids = nuc_records['IdList']
 
 err("Converting from nuccore to taxonomy...")
 
