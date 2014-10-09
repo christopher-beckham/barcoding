@@ -30,14 +30,14 @@ RF = weka.classifiers.trees.RandomForest
 
 rf-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-		java -server -Xmx6000M $(RF_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > results/ibol.rf.s$$i.result; \
+		java -server -Xmx7000M $(RF_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > results/ibol.rf.s$$i.result; \
 	done
 
 rf-model:
 	echo > results/ibol.rf.s1.training.time
 	for i in {1..5}; do \
 		echo "Progress: "$$i; \
-		{ time java -Xmx6000M $(RF_PREFIX) -t output/ibol.s1.arff -no-predictions -c last -d output/rf.model -no-cv -o -v $(RF_POSTFIX) > /dev/null; } 2>> results/ibol.rf.s1.training.time; \
+		{ time java -Xmx7000M $(RF_PREFIX) -t output/ibol.s1.arff -no-predictions -c last -d output/rf.model -no-cv -o -v $(RF_POSTFIX) > /dev/null; } 2>> results/ibol.rf.s1.training.time; \
 		if [ $$i != 5 ]; then \
 			rm output/rf.model; \
 		fi; \
@@ -46,7 +46,7 @@ rf-model:
 rf-test:
 	echo > results/ibol.rf.s1.testing.time
 	for i in {1..5}; do \
-		{ time java -Xmx6000M $(RF) -no-predictions -l output/rf.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.rf.s1.testing.time; \
+		{ time java -Xmx7000M $(RF) -no-predictions -l output/rf.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.rf.s1.testing.time; \
 	done
 	
 ###############
@@ -61,14 +61,14 @@ NB = weka.classifiers.meta.FilteredClassifier
 
 nb-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-		java -server -Xmx6000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x 2 -v -o $(NB_POSTFIX) > results/ibol.nb.s$$i.result; \
+		java -server -Xmx7000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x 2 -v -o $(NB_POSTFIX) > results/ibol.nb.s$$i.result; \
 	done
 	
 nb-model:
 	echo > results/ibol.nb.s1.training.time
 	for i in {1..5}; do \
 		echo "Progress: "$$i; \
-		{ time java -Xmx6000M $(NB_PREFIX) -t output/ibol.s1.arff -no-predictions -c last -d output/nb.model -no-cv -o -v $(NB_POSTFIX) > /dev/null; } 2>> results/ibol.nb.s1.training.time; \
+		{ time java -Xmx7000M $(NB_PREFIX) -t output/ibol.s1.arff -no-predictions -c last -d output/nb.model -no-cv -o -v $(NB_POSTFIX) > /dev/null; } 2>> results/ibol.nb.s1.training.time; \
 		if [ $$i != 5 ]; then \
 			rm output/nb.model; \
 		fi; \
@@ -77,7 +77,7 @@ nb-model:
 nb-test:
 	echo > results/ibol.nb.s1.testing.time
 	for i in {1..5}; do \
-		{ time java -Xmx6000M $(NB) -no-predictions -l output/nb.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.nb.s1.testing.time; \
+		{ time java -Xmx7000M $(NB) -no-predictions -l output/nb.model -T output/ibol.s1.arff > /dev/null; } 2>> results/ibol.nb.s1.testing.time; \
 	done
 
 ###########
