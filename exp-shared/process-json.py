@@ -25,9 +25,9 @@ for rec in records:
 	if len(rec['fasta']) < FRAGLEN:
 		continue
 		
-	if 'N' in rec['fasta'] or 'n' in rec['fasta']:
-		n_count += 1
-		continue
+	#if 'N' in rec['fasta'] or 'n' in rec['fasta']:
+	#	n_count += 1
+	#	continue
 		
 	if rec['fasta'] in strings_seen:
 		dupe_count += 1
@@ -41,9 +41,9 @@ for rec in records:
 			
 	new_records.append(rec)
 		
-sys.stderr.write("Number of sequences with N's: " + str(n_count) + "\n")
+#sys.stderr.write("Number of sequences with N's: " + str(n_count) + "\n")
 sys.stderr.write("Sequences ignored due to a previous duplicate: " + str(dupe_count) + "\n")
 
 #print strings_seen
 
-print json.dumps(new_records)
+print json.dumps(new_records, sort_keys=True, indent=4, separators=(',', ': '))

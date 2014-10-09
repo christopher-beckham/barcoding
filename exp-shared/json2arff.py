@@ -33,17 +33,11 @@ parser.add_argument('--kmerrange', dest='kmerrange', required=True, help='Values
 parser.add_argument('--taxlevel', dest='taxlevel', required=True, help='The taxonomic level to be used (either "genus", "order", or "family").')
 parser.add_argument('--maxclass', dest='maxclass', required=True, help='The maximum number (M) of class values. Prefix with "c" for cutoff and "m" for max.')
 
-parser.add_argument('--noambig', dest='noambig', action='store_true', help='Ignore ambiguous nucleotides when extracting features?')
+#parser.add_argument('--noambig', dest='noambig', action='store_true', help='Ignore ambiguous nucleotides when extracting features?')
 parser.add_argument('--intest', dest='intest', help='Input testing JSON file')
 parser.add_argument('--outtest', dest='outtest', help='Output testing ARFF file')
 
-
 args = parser.parse_args()
-
-
-
-
-
 
 CUTOFF = False
 if args.maxclass[0] == 'c':
@@ -107,9 +101,9 @@ for k in range(KMER_MIN, KMER_MAX+1):
 		if classname in chosen_classnames:
 			for x in range(0, len(rec['fasta']) - k + 1):
 				kmer = str(rec['fasta'][x:x+k])
-				if args.noambig:
-					if ambig(kmer):
-						continue
+				#if args.noambig:
+				if ambig(kmer):
+					continue
 				if kmer not in kmer_sets[k]:
 					kmer_sets[k].add(kmer)
 
