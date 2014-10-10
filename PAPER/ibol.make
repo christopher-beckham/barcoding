@@ -12,11 +12,15 @@ json: premake
 arff:
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="species" --outtrain=output/ibol.s{}.arff --intrain=output/ibol.s{}.json --maxclass="c20"'
 
-timeall: rf-cv rf-model rf-test
+doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
 	echo "done!"
-	
-deleteme:
-	python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="species" --outtrain=deleteme.arff --intrain=output/ibol.s1.json --maxclass="c20"
+
+
+###########
+# GLOBALS #
+###########
+
+NUM_FOLDS = 3
 	
 ##################
 # RANDOM FORESTS #
@@ -30,7 +34,7 @@ RF = weka.classifiers.trees.RandomForest
 
 rf-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-		java -server -Xmx7000M $(RF_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > results/ibol.rf.s$$i.result; \
+		java -server -Xmx7000M $(RF_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/ibol.rf.s$$i.result; \
 	done
 
 rf-model:
@@ -61,7 +65,7 @@ NB = weka.classifiers.meta.FilteredClassifier
 
 nb-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-		java -server -Xmx7000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x 2 -v -o $(NB_POSTFIX) > results/ibol.nb.s$$i.result; \
+		java -server -Xmx7000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/ibol.nb.s$$i.result; \
 	done
 	
 nb-model:

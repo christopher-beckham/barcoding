@@ -1,21 +1,21 @@
 
 
-real	0m50.295s
+real	0m26.801s
 user	0m0.000s
 sys	0m0.000s
 
-real	0m21.564s
+real	0m26.348s
+user	0m0.000s
+sys	0m0.016s
+
+real	0m26.411s
 user	0m0.000s
 sys	0m0.000s
 
-real	0m21.359s
+real	0m26.270s
 user	0m0.000s
 sys	0m0.015s
 
-real	0m21.513s
+real	0m26.489s
 user	0m0.000s
-sys	0m0.015s
-
-real	0m21.381s
-user	0m0.015s
 sys	0m0.000s

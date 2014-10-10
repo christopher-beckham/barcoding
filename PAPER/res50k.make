@@ -24,13 +24,21 @@ nb-all: nb-cv nb-model nb-test
 	
 nb-time: nb-model nb-test
 	echo "Done time for NB!"
+	
+doall: rf-cv rf-model rf-test nb-cv nb-model nb-test info-gain
+	echo "done!"
+	
+###########
+# GLOBALS #
+###########
 
+NUM_FOLDS = 3	
 	
 ##################
 # RANDOM FORESTS #
 ##################
 
-NUM_TREES = 60
+NUM_TREES = 30
 RF_PREFIX = weka.classifiers.trees.RandomForest -I $(NUM_TREES) -K 0 -S 1 -num-slots 4
 RF = weka.classifiers.trees.RandomForest
 
@@ -43,7 +51,7 @@ info-gain:
 		if [ -e output/nb.ig$$num.model ]; then \
 			rm output/nb.ig$$num.model; \
 		fi; \
-		java -server -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x 2 -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
+		java -server -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x $(NUM_FOLDS) -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
 		echo > results/res50k.family.nb.s1.ig$$num.time; \
 		for i in {1..5}; do \
 			{ time java -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -no-predictions -l output/nb.ig$$num.model -T output/res50k.family.s1.arff > /dev/null; } 2>> results/res50k.family.nb.s1.ig$$num.time; \
@@ -64,7 +72,7 @@ no-ambig:
 rf-cv:
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -server -Xmx7000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
+			java -server -Xmx7000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
 		done; \
 	done
 
@@ -104,7 +112,7 @@ NB = weka.classifiers.bayes.NaiveBayes
 nb-cv:
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -server -Xmx7000M $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x 2 -v -o $(NB_POSTFIX) > results/res50k.$$rank.nb.s$$i.result; \
+			java -server -Xmx7000M $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/res50k.$$rank.nb.s$$i.result; \
 		done; \
 	done
 	
