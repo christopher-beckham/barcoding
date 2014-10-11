@@ -12,6 +12,7 @@ for filename in filenames:
 		if line == "@data":
 			break
 	first_time = True
+	num_instances = 0
 	for line in f:
 		line = line.rstrip().split(',')
 		if first_time:
@@ -19,6 +20,8 @@ for filename in filenames:
 			first_time = False
 		else:
 			classnames.add( line[ len(line) - 1] )
+		num_instances += 1
 	vec['classes'] = len(classnames)
+	vec['instances'] = num_instances
 	f.close()
 	print vec
