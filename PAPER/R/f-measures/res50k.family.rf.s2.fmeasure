@@ -166,3 +166,4 @@ f_measure,class,count
 0.684,"Tettigoniidae",119
 0.800,"Glossinidae",36
 0.353,"Ulidiidae",28
+0.736,"WEIGHTED F-MEASURE",0

@@ -861,3 +861,4 @@ f_measure,class,count
 0.979,"Diptera sp. BOLD:ACL4638",47
 1.000,"Diptera sp. BOLD:AAL9076",20
 1.000,"Thysanoptera sp. BOLD:AAM7854",81
+0.995,"WEIGHTED F-MEASURE",0

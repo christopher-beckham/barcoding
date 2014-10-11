@@ -316,3 +316,4 @@ f_measure,class,count
 1.000,"Dinocras",24
 0.837,"Protorthodes",25
 0.976,"Hyppa",21
+0.820,"WEIGHTED F-MEASURE",0
