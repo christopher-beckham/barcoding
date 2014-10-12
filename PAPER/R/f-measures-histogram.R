@@ -1,5 +1,5 @@
 #png(filename="f-measures-classsize.png", width=672, height=574, pointsize=16)
-pdf(file="f-measures-classsize.pdf")
+pdf(file="f-measures-histogram.pdf")
 
 par(mfrow=c(2,3))
 
@@ -9,13 +9,9 @@ titles = c("iBOL Species NB (seed 1)", "iBOL Species RF (seed 1)", "Nucleotide G
 
 for(i in 1:length(files)) {
   df = read.csv(paste("f-measures/",files[i],".fmeasure",sep=""))
-  plot(x=df$count[1:nrow(df)-1], y=df$f_measure[1:nrow(df)-1], pch=19, xlim=c(0,400),
-       xlab="Class size", ylab=paste("F-measure"),
-       main=titles[i],
-       ylim=c(0,1),
-       cex=0.5)
-  text(x=300, y=0.1, paste("Avg. weighted\n F-measure = \n", df$f_measure[nrow(df)] ), col="red" )
-  abline(h=df$f_measure[nrow(df)], lty="dotted", lwd=c(2,1), col="red")
+  hist(df$f_measure[1:nrow(df)-1],breaks=20,main=titles[i],xlab="F-Measure")
+  abline(v=0.5, lty="dashed")
+  print(length(which(df$f_measure < 0.5)) / (nrow(df)-1))
 }
 
 dev.off()

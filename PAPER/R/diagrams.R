@@ -8,7 +8,8 @@ filenames = c("../output/ibol.s1.arff",
 
 names = c("iBOL Species", "Nucleotide Family", "Nucleotide Genus")
 
-png(filename="figure-classdist.png", width=672, height=574, pointsize=16)
+#png(filename="figure-classdist.png", width=672, height=574, pointsize=16)
+pdf(file="figure-classdist.pdf")
 
 par(mfrow=c(2,2))
 
