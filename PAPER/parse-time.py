@@ -1,19 +1,16 @@
 import sys
 import glob
 
-def mean(arr):
-	c = 0.0
-	for elem in arr:
-		c += elem
-	c = c / len(arr)
-	return c
-
 filenames = glob.glob( sys.argv[1] )
+num_instances = sys.argv[2]
+
+
+print "filename, avg_time, time_per_query"
 
 for filename in filenames:
 	f = open(filename)
-	print filename,
-	print "==>",
+	print filename + ",",
+	#print "==>",
 	times = []
 	for line in f:
 		line = line.rstrip().split()
@@ -23,9 +20,11 @@ for filename in filenames:
 			secs = float(tm[1].replace('s',''))
 			
 			times.append((mins*60) + secs)
-			print ((mins*60) + secs),
+			#print ((mins*60) + secs),
 			
-	print "==>",
-	print mean(times)
+	#print "==>",
+	avg = sum(times) / len(times)
+	print ("%.4f" % avg) + ",",
+	print ("%.4f" % (avg / num_instances))
 		
 	f.close()
