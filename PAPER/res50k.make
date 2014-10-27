@@ -1,5 +1,13 @@
 .PHONY : all premake json arff rf-cv rf-model rf-test nb-cv nb-model nb-test clean fullclean
 
+###########
+# GLOBALS #
+###########
+
+NUM_FOLDS = 3
+TMP_OUTPUT = /cygdrive/e/tmp
+SAMPLE_SIZE = 30000
+
 SEED_MIN = 1
 SEED_MAX = 5
 
@@ -7,11 +15,18 @@ premake:
 	$(MAKE) -C $(EXP_SHARED) -f res50k.make
 
 json: premake
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/process-json.py --fraglen=300 --seed={} < $(OUT_FOLDER)/res50k.json.pre > output/res50k.s{}.json'
+	for rank in family genus; do \
+		python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=$$rank --minlen=300 < $(OUT_FOLDER)/res50k.json.pre > output/res50k.$$rank.json; \
+	done; \
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.family.json > output/res50k.family.s{}.json
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.genus.json > output/res50k.genus.s{}.json
 	
 arff:
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --outtrain=output/res50k.family.s{}.arff --intrain=output/res50k.s{}.json --maxclass="c20"'; \
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="genus" --outtrain=output/res50k.genus.s{}.arff --intrain=output/res50k.s{}.json --maxclass="c20"'; \
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.arff --intrain=output/res50k.family.s{}.json'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.arff --intrain=output/res50k.genus.s{}.json'
+	
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.arff > output/res50k.family.s{}.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.arff > output/res50k.genus.s{}.arff'
 
 rf-all: rf-cv rf-model rf-test
 	echo "Done all for RF!"
@@ -27,12 +42,6 @@ nb-time: nb-model nb-test
 	
 doall: rf-cv rf-model rf-test nb-cv nb-model nb-test info-gain
 	echo "done!"
-	
-###########
-# GLOBALS #
-###########
-
-NUM_FOLDS = 3	
 	
 ##################
 # RANDOM FORESTS #
