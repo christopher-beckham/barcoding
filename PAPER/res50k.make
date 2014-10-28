@@ -22,11 +22,11 @@ json: premake
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.genus.json > output/res50k.genus.s{}.json
 	
 arff:
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.arff --intrain=output/res50k.family.s{}.json'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.arff --intrain=output/res50k.genus.s{}.json'
+	#$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.arff --intrain=output/res50k.family.s{}.json'
+	#$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.arff --intrain=output/res50k.genus.s{}.json'
 	
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.arff > output/res50k.family.s{}.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.arff > output/res50k.genus.s{}.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.arff > output/res50k.family.s{}.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.arff > output/res50k.genus.s{}.arff'
 
 rf-all: rf-cv rf-model rf-test
 	echo "Done all for RF!"
@@ -40,8 +40,10 @@ nb-all: nb-cv nb-model nb-test
 nb-time: nb-model nb-test
 	echo "Done time for NB!"
 	
-doall: rf-cv rf-model rf-test nb-cv nb-model nb-test info-gain
+doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
 	echo "done!"
+	
+custom: rf-model rf-test
 	
 ##################
 # RANDOM FORESTS #
@@ -60,28 +62,28 @@ info-gain:
 		if [ -e output/nb.ig$$num.model ]; then \
 			rm output/nb.ig$$num.model; \
 		fi; \
-		java -server -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x $(NUM_FOLDS) -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
+		java -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x $(NUM_FOLDS) -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
 		echo > results/res50k.family.nb.s1.ig$$num.time; \
 		for i in {1..5}; do \
 			{ time java -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -no-predictions -l output/nb.ig$$num.model -T output/res50k.family.s1.arff > /dev/null; } 2>> results/res50k.family.nb.s1.ig$$num.time; \
 		done; \
 	done
-	
-#############
-# --NOAMBIG #
-#############
-
-no-ambig:
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=2 'python $(EXP_SHARED)/json2arff.py --kmer="3,5" --taxlevel="family" --noambig --outtrain=output/res50k.family.s{}.noambig.arff --intrain=output/res50k.s{}.json --maxclass="c20"'
 
 ########
 # MAIN #
 ########
+
+deleteme:
+	for rank in genus; do \
+		for i in {3..$(SEED_MAX)}; do \
+			java -Xmx7000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
+		done; \
+	done
 	
 rf-cv:
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -server -Xmx7000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
+			java -Xmx7000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
 		done; \
 	done
 
@@ -114,14 +116,13 @@ rf-test:
 # NAIVE BAYES #
 ###############
 
-#NB_PREFIX = weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -F -B 10 -M -1.0 -R first-last" -W weka.classifiers.bayes.NaiveBayes
-NB_PREFIX = weka.classifiers.bayes.NaiveBayes -D
+NB_PREFIX = weka.classifiers.bayes.NaiveBayes
 NB = weka.classifiers.bayes.NaiveBayes
 
 nb-cv:
 	for rank in family genus; do \
 		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -server -Xmx7000M $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/res50k.$$rank.nb.s$$i.result; \
+			java -Xmx7000M $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/res50k.$$rank.nb.s$$i.result; \
 		done; \
 	done
 	

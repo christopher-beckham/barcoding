@@ -19,32 +19,25 @@ json: premake
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/ibol.json > output/ibol.s{}.json'
 	
 arff:
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.s{}.big.arff --intrain=output/ibol.s{}.json'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.s{}.big.arff > output/ibol.s{}.arff'
+	#$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.s{}.big.arff --intrain=output/ibol.s{}.json'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.s{}.big.arff > output/ibol.s{}.arff'
 
 doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
 	echo "done!"
-
-
-###########
-# GLOBALS #
-###########
-
-NUM_FOLDS = 3
+	
+custom: nb-cv nb-model nb-test
 	
 ##################
 # RANDOM FORESTS #
-##################	
+##################
 
-#RF_PREFIX = weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.AttributeSelectedClassifier 
-#RF_POSTFIX = -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.trees.RandomForest -- -I 10 -K 0 -S 1 -num-slots 4
-
-RF_PREFIX = weka.classifiers.trees.RandomForest -I 10 -K 0 -S 1 -num-slots 4
+NUM_TREES = 10
+RF_PREFIX = weka.classifiers.trees.RandomForest -I $(NUM_TREES) -K 0 -S 1 -num-slots 4
 RF = weka.classifiers.trees.RandomForest
 
 rf-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-		java -server -Xmx7000M $(RF_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/ibol.rf.s$$i.result; \
+		java -Xmx7000M $(RF_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/ibol.rf.s$$i.result; \
 	done
 
 rf-model:
@@ -67,15 +60,12 @@ rf-test:
 # NAIVE BAYES #
 ###############
 
-#NB_PREFIX = weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -B 10 -M -1.0 -R first-last" -W weka.classifiers.meta.AttributeSelectedClassifier
-#NB_POSTFIX = -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.bayes.NaiveBayes
-
-NB_PREFIX = weka.classifiers.meta.FilteredClassifier -F "weka.filters.unsupervised.attribute.Discretize -F -B 10 -M -1.0 -R first-last" -W weka.classifiers.bayes.NaiveBayes
-NB = weka.classifiers.meta.FilteredClassifier
+NB_PREFIX = weka.classifiers.bayes.NaiveBayes
+NB = weka.classifiers.bayes.NaiveBayes
 
 nb-cv:
 	for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-		java -server -Xmx7000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/ibol.nb.s$$i.result; \
+		java -Xmx7000M $(NB_PREFIX) -t output/ibol.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/ibol.nb.s$$i.result; \
 	done
 	
 nb-model:
