@@ -22,8 +22,8 @@ json: premake
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.genus.json > output/res50k.genus.s{}.json
 	
 arff:
-	#$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.arff --intrain=output/res50k.family.s{}.json'
-	#$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.arff --intrain=output/res50k.genus.s{}.json'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.arff --intrain=output/res50k.family.s{}.json'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.arff --intrain=output/res50k.genus.s{}.json'
 	
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.arff > output/res50k.family.s{}.arff'
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.arff > output/res50k.genus.s{}.arff'
@@ -53,16 +53,31 @@ NUM_TREES = 30
 RF_PREFIX = weka.classifiers.trees.RandomForest -I $(NUM_TREES) -K 0 -S 1 -num-slots 4
 RF = weka.classifiers.trees.RandomForest
 
+##############
+# DIAGNOSTIC #
+##############
+
+# For this test, we want to see what accuracy we get when we deal with 3-mers, 4-mers, ... , and 7-mers individually.
+34567-test:
+	$(SEQ) 3 7 | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer={},{} --taxlevel=family --outtrain=$(TMP_OUTPUT)/34567.big.{}.arff --intrain=output/res50k.family.s1.json'
+	$(SEQ) 3 7 | parallel --max-proc=1 'java -Xmx14000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/34567.big.{}.arff > $(TMP_OUTPUT)/34567.{}.arff'
+	$(SEQ) 3 7 | parallel --max-proc=1 'java -Xmx14000M $(RF_PREFIX) -t $(TMP_OUTPUT_WIN)/34567.{}.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > diagnostic/34567.{}.result'
+
+ig-test-6:
+	for num in 4000 2000 1000 500 250 125 63 32; do \
+		java -Xmx13000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N $$num" -W weka.classifiers.trees.RandomForest -t $(TMP_OUTPUT_WIN)/34567.6.arff -c last -o -v -x $(NUM_FOLDS) -- -I 10 -K 0 -S 1 -num-slots 4 > diagnostic/6.ig$$num.result; \
+	done; \
+	
 ###################
 # INFO GAIN GRAPH #
-###################
-
+###################	
+	
 info-gain:
-	for num in 1000 500 250; do \
+	for num in 2000 1000 500 250; do \
 		if [ -e output/nb.ig$$num.model ]; then \
 			rm output/nb.ig$$num.model; \
 		fi; \
-		java -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x $(NUM_FOLDS) -o -v -- -D > results/res50k.family.nb.s1.ig$$num.result; \
+		java -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t output/res50k.family.s1.arff -no-predictions -c last -d output/nb.ig$$num.model -x $(NUM_FOLDS) -o -v -- > results/res50k.family.nb.s1.ig$$num.result; \
 		echo > results/res50k.family.nb.s1.ig$$num.time; \
 		for i in {1..5}; do \
 			{ time java -Xmx7000M weka.classifiers.meta.AttributeSelectedClassifier -no-predictions -l output/nb.ig$$num.model -T output/res50k.family.s1.arff > /dev/null; } 2>> results/res50k.family.nb.s1.ig$$num.time; \
@@ -72,13 +87,6 @@ info-gain:
 ########
 # MAIN #
 ########
-
-deleteme:
-	for rank in genus; do \
-		for i in {3..$(SEED_MAX)}; do \
-			java -Xmx7000M $(RF_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > results/res50k.$$rank.rf.s$$i.result; \
-		done; \
-	done
 	
 rf-cv:
 	for rank in family genus; do \

@@ -1,0 +1,12 @@
+diagnostic/6.ig4000.result,74.4667
+diagnostic/6.ig2000.result,76.08
+diagnostic/6.ig1000.result,77.4467
+diagnostic/6.ig500.result,78.4533
+diagnostic/6.ig250.result,78.4667
+diagnostic/6.ig125.result,76.86
+diagnostic/6.ig63.result,72.5733
+diagnostic/6.ig32.result,56.7067
+
+> y = c(74.4667, 76.08, 77.4467, 78.4533, 78.4667, 76.86, 72.5733, 56.7067)
+> x = c(4000, 2000, 1000, 500, 250, 125, 63, 32)
+> plot(x=x,y=y, xlab="Num features retained", ylab="X-validation accuracy", main="6mer binary features", pch=19)
