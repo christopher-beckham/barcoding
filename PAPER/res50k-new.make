@@ -50,39 +50,23 @@ nb-time: nb-model nb-test
 doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
 	echo "done!"
 	
+
+CV_PARAMS = -c last -x $(NUM_FOLDS) -v -o
+NUM_TREES = 30
+GRID_PREFIX = weka.Run weka.classifiers.meta.GridSearch
+GRID_POSTFIX = -E ACC -y-property classifier.search.numToSelect -y-min 0.0 -y-max 8.0 -y-step 1.0 -y-base 2.0 -y-expression 5000/pow\(BASE,I\) -filter weka.filters.AllFilter -x-property filter -x-min 0.0 -x-max 1.0 -x-step 1.0 -x-base 1.0 -x-expression I -sample-size 100.0 -traversal COLUMN-WISE -log-file /dev/null -num-slots 4 -S 1 -W weka.classifiers.meta.AttributeSelectedClassifier -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W
+
 ##################
 # RANDOM FORESTS #
 ##################
 
-
-CV_PARAMS = -c last -x $(NUM_FOLDS) -v
-NUM_TREES = 30
-GRID_PREFIX = weka.Run weka.classifiers.meta.GridSearch
-GRID_POSTFIX = -E ACC -y-property classifier.search.numToSelect -y-min 0.0 -y-max 8.0 -y-step 1.0 -y-base 2.0 -y-expression 5000/pow\(BASE,I\) -filter weka.filters.AllFilter -x-property filter -x-min 0.0 -x-max 1.0 -x-step 1.0 -x-base 1.0 -x-expression I -sample-size 100.0 -traversal COLUMN-WISE -log-file /dev/null -num-slots 4 -S 1 -W weka.classifiers.meta.AttributeSelectedClassifier -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.trees.RandomForest -- -I $(NUM_TREES) -K 0 -S 1 -num-slots 1
+RF_POSTFIX = weka.classifiers.trees.RandomForest -- -I $(NUM_TREES) -K 0 -S 1 -num-slots 1
 
 rf-cv:
-	#for rank in family genus; do \
-	#	java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) > results2/res50k.$$rank.rf.s1.result; \
-	#done
-	
-	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) > results2/ibol.rf.s1.result
-
-rf-model:
 	for rank in family genus; do \
-		if [ -e output/rf.$$rank.model ]; then \
-			rm output/rf.$$rank.model; \
-		fi; \
-	done; \
-	for rank in family genus; do \
-		echo > results/res50k.$$rank.rf.s1.training.time; \
-		for i in {1..5}; do \
-			echo "Progress: "$$i; \
-			{ time java -Xmx13G $(RF_PREFIX) -t output/res50k.$$rank.s1.arff -no-predictions -c last -d output/rf.$$rank.model -no-cv -o -v $(RF_POSTFIX) > /dev/null; } 2>> results/res50k.$$rank.rf.s1.training.time; \
-			if [ $$i != 5 ]; then \
-				rm output/rf.$$rank.model; \
-			fi; \
-		done; \
-	done
+		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(RF_POSTFIX) > results2/res50k.$$rank.rf.s1.result; \
+	done	
+	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(RF_POSTFIX) > results2/ibol.rf.s1.result
 	
 rf-test:
 	for rank in family genus; do \
@@ -96,32 +80,13 @@ rf-test:
 # NAIVE BAYES #
 ###############
 
-NB_PREFIX = weka.classifiers.bayes.NaiveBayes
-NB = weka.classifiers.bayes.NaiveBayes
+NB_POSTFIX = weka.classifiers.bayes.NaiveBayes
 
 nb-cv:
 	for rank in family genus; do \
-		for i in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			java -Xmx13G $(NB_PREFIX) -t output/res50k.$$rank.s$$i.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(NB_POSTFIX) > results/res50k.$$rank.nb.s$$i.result; \
-		done; \
+		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(NB_POSTFIX) > results2/res50k.$$rank.nb.s1.result; \
 	done
-	
-nb-model:
-	for rank in family genus; do \
-		if [ -e output/nb.$$rank.model ]; then \
-			rm output/nb.$$rank.model; \
-		fi; \
-	done; \
-	for rank in family genus; do \
-		echo > results/res50k.$$rank.nb.s1.training.time; \
-		for i in {1..5}; do \
-			echo "Progress: "$$i; \
-			{ time java -Xmx13G $(NB_PREFIX) -t output/res50k.$$rank.s1.arff -no-predictions -c last -d output/nb.$$rank.model -no-cv -o -v $(NB_POSTFIX) > /dev/null; } 2>> results/res50k.$$rank.nb.s1.training.time; \
-			if [ $$i != 5 ]; then \
-				rm output/nb.$$rank.model; \
-			fi; \
-		done; \
-	done
+	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(NB_POSTFIX) > results2/ibol.nb.s1.result
 
 nb-test:
 	for rank in family genus; do \
