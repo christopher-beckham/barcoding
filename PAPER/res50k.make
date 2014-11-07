@@ -63,9 +63,14 @@ RF = weka.classifiers.trees.RandomForest
 	$(SEQ) 3 7 | parallel --max-proc=1 'java -Xmx14000M weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/34567.big.{}.arff > $(TMP_OUTPUT)/34567.{}.arff'
 	$(SEQ) 3 7 | parallel --max-proc=1 'java -Xmx14000M $(RF_PREFIX) -t $(TMP_OUTPUT_WIN)/34567.{}.arff -no-predictions -c last -x $(NUM_FOLDS) -v -o $(RF_POSTFIX) > diagnostic/34567.{}.result'
 
-ig-test-6:
+ig-rf-test-6:
 	for num in 4000 2000 1000 500 250 125 63 32; do \
-		java -Xmx13000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N $$num" -W weka.classifiers.trees.RandomForest -t $(TMP_OUTPUT_WIN)/34567.6.arff -c last -o -v -x $(NUM_FOLDS) -- -I 10 -K 0 -S 1 -num-slots 4 > diagnostic/6.ig$$num.result; \
+		java -Xmx13000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N $$num" -W weka.classifiers.trees.RandomForest -t $(TMP_OUTPUT_WIN)/34567.6.arff -c last -o -v -x $(NUM_FOLDS) -- -I 10 -K 0 -S 1 -num-slots 4 > diagnostic/6.rf.ig$$num.result; \
+	done; \
+	
+ig-nb-test-6:
+	for num in 4000 2000 1000 500 250 125 63 32; do \
+		java -Xmx13000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N $$num" -W weka.classifiers.bayes.NaiveBayes -t $(TMP_OUTPUT_WIN)/34567.6.arff -c last -o -v -x $(NUM_FOLDS) -- > diagnostic/6.nb.ig$$num.result; \
 	done; \
 	
 ###################

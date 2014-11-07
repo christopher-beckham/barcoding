@@ -19,7 +19,7 @@ json: premake
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/ibol.json > output/ibol.s{}.json'
 	
 arff:
-	#$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.s{}.big.arff --intrain=output/ibol.s{}.json'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=6,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.s{}.big.arff --intrain=output/ibol.s{}.json'
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx7000M weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.s{}.big.arff > output/ibol.s{}.arff'
 
 doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
