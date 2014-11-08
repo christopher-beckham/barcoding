@@ -1,0 +1,1296 @@
+
+Options: -E ACC -y-property classifier.search.numToSelect -y-min 0.0 -y-max 8.0 -y-step 1.0 -y-base 2.0 -y-expression 5000/pow(BASE,I) -filter weka.filters.AllFilter -x-property filter -x-min 0.0 -x-max 1.0 -x-step 1.0 -x-base 1.0 -x-expression I -sample-size 100.0 -traversal COLUMN-WISE -log-file /dev/null -num-slots 4 -S 1 -W weka.classifiers.meta.AttributeSelectedClassifier -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W weka.classifiers.trees.RandomForest -- -I 30 -K 0 -S 1 -num-slots 1 
+
+weka.classifiers.meta.GridSearch:
+Filter: weka.filters.AllFilter
+Classifier: weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N 625" -W weka.classifiers.trees.RandomForest -- -I 30 -K 0 -S 1 -num-slots 1
+
+X property: filter
+Y property: classifier.search.numToSelect
+
+Evaluation: Accuracy
+Coordinates: [1.0, 3.0]
+Values: 1.0 (X coordinate), 625.0 (Y coordinate)
+
+AttributeSelectedClassifier:
+
+
+
+=== Attribute Selection on all input data ===
+
+Search Method:
+	Attribute ranking.
+	Threshold for discarding attributes:   0     
+
+Attribute Evaluator (supervised, Class (nominal): 5363 class):
+	Information Gain Ranking Filter
+
+Ranked attributes:
+ 0.551       637 GAAGA
+ 0.529      5331 GAAAAT
+ 0.523      1433 AAATGG
+ 0.522       582 GAAAA
+ 0.521      4439 AGAAAA
+ 0.516      1838 AAAATG
+ 0.513      5028 AGAAGA
+ 0.512      3172 GAAGAA
+ 0.507      5312 ATGGAG
+ 0.497      2367 GTAGAA
+ 0.495      2157 TAGAAA
+ 0.452       365 AATGG
+ 0.447      3909 TTGTAG
+ 0.446      1264 TCAAG
+ 0.439        25 GAAG
+ 0.433      2130 AAGAAT
+ 0.428      4633 GAATTG
+ 0.425      2137 AAGAAG
+ 0.424      1049 GGAAG
+ 0.413      3001 TCAAGA
+ 0.413      2848 TGTAGA
+ 0.413      3199 AATGGA
+ 0.412       857 AGAAA
+ 0.411       852 AGAAG
+ 0.41       4270 TTCAAG
+ 0.405       258 AAATG
+ 0.394       761 ATGGA
+ 0.39       2693 CAAGAA
+ 0.389      1479 CCCCAC
+ 0.387       789 GTAGA
+ 0.385      5064 ATAAGT
+ 0.383      5229 AACAGT
+ 0.383       565 AAGAA
+ 0.382      1047 CATGG
+ 0.38       2180 TGGAGC
+ 0.38       2117 AATTGT
+ 0.378       846 AGAAT
+ 0.376      2656 TAAGTT
+ 0.374      1621 AGAATT
+ 0.374      2788 TTAATT
+ 0.371      2796 TTTCAA
+ 0.37       2567 AGGATG
+ 0.369      5059 ATAAGA
+ 0.369      5283 ATATTG
+ 0.369        13 AAAG
+ 0.368       610 CAAGA
+ 0.367       706 TCAGG
+ 0.366      4672 CCCACT
+ 0.365      1183 AGAGG
+ 0.363      5294 AGGAAC
+ 0.362       986 TAAAA
+ 0.362      2042 CCCCCC
+ 0.362       598 TGTAG
+ 0.361       574 CGAAT
+ 0.361       147 AGAG
+ 0.359       162 CAAG
+ 0.359      5290 AGGAAG
+ 0.355       227 ATGG
+ 0.353      4325 CTTTCA
+ 0.353       714 AAAAT
+ 0.351       469 GTAAA
+ 0.349      2487 TAGCTA
+ 0.348      3164 GAAGAT
+ 0.347      2725 CGAATA
+ 0.344       662 ATTCA
+ 0.344      1851 GAACAG
+ 0.342       561 TAAGT
+ 0.342       831 ACTGG
+ 0.341      3795 GTTTTT
+ 0.339       514 AAGTT
+ 0.338      1657 TGAACA
+ 0.338       803 CCCCC
+ 0.338      2043 CCCCCA
+ 0.337      5046 CCACTT
+ 0.336      1406 AGTAGA
+ 0.335      1166 GCATT
+ 0.335       899 TAGAA
+ 0.335      3670 GGAAGA
+ 0.334      4875 GGAACA
+ 0.333      3002 CTAATA
+ 0.333      2174 ATCTAA
+ 0.333      1540 TAAATT
+ 0.332      2662 AGTGTA
+ 0.331      4194 ACTTTC
+ 0.33       4220 GAGGAA
+ 0.33       5269 AAGATC
+ 0.329      4412 GATGAA
+ 0.328      4352 GGATGA
+ 0.327      3575 CATGGA
+ 0.327      2995 CAGTGT
+ 0.326       422 GCTCA
+ 0.324      1399 GAGCAG
+ 0.324      2865 ATTGTA
+ 0.323      2906 AATTTC
+ 0.323      1265 ATAGG
+ 0.322      2755 AAGTTT
+ 0.321       244 CATA
+ 0.321      1033 AGTAG
+ 0.321      3388 ATGAAC
+ 0.32        576 AAGAT
+ 0.32        756 AGTGT
+ 0.319      1228 GTTGA
+ 0.318      1826 AAAATT
+ 0.318      2541 TAGTAG
+ 0.318      1083 TTGAA
+ 0.317      1430 ACAGTG
+ 0.317      3010 TCAGGA
+ 0.316      1252 TCAAT
+ 0.315      5250 CACTTT
+ 0.315      1681 AGATTT
+ 0.315       195 GTTG
+ 0.315       102 TCAG
+ 0.314      3958 GAACTG
+ 0.314      5220 AACAGG
+ 0.313      1008 GTGTA
+ 0.313      1775 CAGGAT
+ 0.312      2036 TATTTA
+ 0.312        10 AAAA
+ 0.312        56 AAGG
+ 0.312       733 GGATG
+ 0.311       171 GCAT
+ 0.31        794 GTAGT
+ 0.31       4257 TAATTA
+ 0.31        843 GCTTC
+ 0.309       213 GTGT
+ 0.309       291 CCCCA
+ 0.309      1718 TATTGC
+ 0.309      1072 ACAGT
+ 0.309      1064 ACAGG
+ 0.309      1691 AGTTTT
+ 0.308      3123 TCTAAT
+ 0.308      1109 GTTTT
+ 0.307       188 CTTG
+ 0.307      1039 AGTAA
+ 0.307       883 CAGTG
+ 0.306      2386 TAATAA
+ 0.305      1979 ACAATT
+ 0.304      4613 AATATA
+ 0.304      1725 TGTACC
+ 0.303      1755 ACAGGA
+ 0.303         4 CGAA
+ 0.302      1004 AACTG
+ 0.302       558 CCACT
+ 0.302      2831 GCAGGA
+ 0.3        1421 TCGAAT
+ 0.3        4570 TTCATC
+ 0.3         643 ATTGC
+ 0.3          61 AAGA
+ 0.3        4948 GTGTAC
+ 0.299      2509 ATTTCA
+ 0.299      2392 TAATAT
+ 0.299      1537 ATTTTG
+ 0.298      4629 GTAAAT
+ 0.298      3349 TCAATT
+ 0.297      1690 AACTGT
+ 0.297      1759 CAGGAA
+ 0.297      4594 TCATCT
+ 0.296      1190 CATCA
+ 0.296      4602 AATATT
+ 0.296       818 ACTGT
+ 0.296      4569 TGCTCA
+ 0.296      1066 CTTTC
+ 0.295      2267 TTGCTC
+ 0.295         7 AGTG
+ 0.295      2318 CTGGAA
+ 0.294        16 GTAG
+ 0.294      2823 TAATTT
+ 0.293       630 CATAT
+ 0.293      1135 TTTGT
+ 0.293      5262 CTCATG
+ 0.293      4013 TCCCCC
+ 0.292       304 TTCAG
+ 0.291       317 AACAG
+ 0.291      2269 GCTCAT
+ 0.289      2581 GAATAC
+ 0.289      1896 TATCAA
+ 0.289       769 GAACA
+ 0.289      1174 GCATC
+ 0.288      1048 CATGA
+ 0.288       486 TCTAA
+ 0.288      4437 AGATCT
+ 0.288      4836 TTTTTT
+ 0.287      3441 TTTAAC
+ 0.287        53 TATG
+ 0.287       600 TGTAC
+ 0.287      4139 ATTAAA
+ 0.287      1978 GATTTT
+ 0.286      4518 AATTAA
+ 0.286      5276 ATATTT
+ 0.286       696 TCAGT
+ 0.286      4335 GTTGAA
+ 0.285       322 AACAA
+ 0.285      3277 CATCTA
+ 0.284      3334 TGACTT
+ 0.284      1219 TGCTC
+ 0.283       240 ATGT
+ 0.283      5022 ACCCCC
+ 0.283      1801 ATCAAT
+ 0.283      5261 AAGATT
+ 0.282       564 GAAAG
+ 0.282      4680 GTACCC
+ 0.282      4072 TGAACT
+ 0.28       1437 ACAGTT
+ 0.28        992 GATGA
+ 0.28         68 AAGT
+ 0.28        623 TGTTG
+ 0.279       891 ATCAG
+ 0.279      1267 ATAGA
+ 0.278       966 GAATT
+ 0.278      3127 ACTGGA
+ 0.278       651 TTGCT
+ 0.277      3964 AACTAT
+ 0.277       923 TGGAG
+ 0.277      2613 TTGAAC
+ 0.277      4404 GGAGCA
+ 0.277      4329 GTTGAT
+ 0.277      1274 TATTG
+ 0.276      1233 CCCAC
+ 0.276      3083 TAAGAT
+ 0.276      1378 CAAATA
+ 0.275      4770 AGAATA
+ 0.275       499 ATTCT
+ 0.275      1046 GGAAC
+ 0.274      4525 TGGAAC
+ 0.274      4735 CATCAA
+ 0.273       719 AAAAA
+ 0.273      3432 TATTAA
+ 0.273      4485 TTATTG
+ 0.273       554 TAAGA
+ 0.273       942 ATATC
+ 0.273      1025 AGTAT
+ 0.273      2037 CCCCCT
+ 0.273      3861 TGGATG
+ 0.272       221 TTGC
+ 0.272       549 AGATC
+ 0.272      4825 TTTTTG
+ 0.272       305 TTCAA
+ 0.271      4418 GGAGCT
+ 0.271      5127 AACAAT
+ 0.271      2160 TAGAAG
+ 0.271      2912 ATTTAG
+ 0.271      1683 AACTGG
+ 0.271       908 GTACC
+ 0.27       3250 AATTCA
+ 0.27        620 CATAG
+ 0.27       4933 AGTAAA
+ 0.27       2739 CATTTA
+ 0.269      3375 GCTGGA
+ 0.269       138 CTAG
+ 0.269      1168 TAGTA
+ 0.269       635 ATTGT
+ 0.268       498 TTAGA
+ 0.268      1547 TAAATA
+ 0.268       306 AGCAT
+ 0.268       921 AGCTG
+ 0.267      2437 TTAATA
+ 0.267      2375 GTAGAT
+ 0.267      3355 CAGTTT
+ 0.267      2627 ATAAAA
+ 0.267      1005 AACTA
+ 0.267       234 CCCC
+ 0.267      2472 TGATTT
+ 0.266       765 GAACT
+ 0.266         3 GTAA
+ 0.266       478 GGAGC
+ 0.266      3262 AGCAGG
+ 0.266       920 GCAGG
+ 0.265       870 CAGTT
+ 0.265      2178 TGGAGG
+ 0.265      2801 AAATTC
+ 0.265      2171 TAACTT
+ 0.264       263 AAATA
+ 0.262      4440 TACCCC
+ 0.261       202 GGGG
+ 0.261      1490 TTTCTA
+ 0.261       540 AGATT
+ 0.261      1546 TAGCAA
+ 0.261       693 CTAGA
+ 0.261       446 ACTTT
+ 0.261      4145 ATTAAT
+ 0.261      1686 AGTTTA
+ 0.26       2910 ATTTAC
+ 0.26       4207 CTATTA
+ 0.26          8 AGTA
+ 0.26       3050 TAGATT
+ 0.26        219 GGTT
+ 0.26       3637 AGCTGG
+ 0.26       1562 GATTTA
+ 0.26       1077 AATAG
+ 0.259        24 GAAA
+ 0.259       165 GCAA
+ 0.258      1843 TTCAGG
+ 0.258      1272 TATTC
+ 0.258      3042 TACATT
+ 0.258      3487 GAGCTG
+ 0.258       196 GAGT
+ 0.257       319 GACTT
+ 0.257       725 TTGTA
+ 0.257       208 GCTC
+ 0.257       652 GAGCA
+ 0.257      4778 TCAAAT
+ 0.257       715 TCAAA
+ 0.256      3504 ATCAGT
+ 0.256      1081 TCCCC
+ 0.256       286 GATAC
+ 0.256      2714 TAGAGG
+ 0.256      1360 TCATGG
+ 0.256      4246 TAGGAG
+ 0.256      3058 TAGATC
+ 0.256      4319 TCATCA
+ 0.255      2850 AGCATT
+ 0.255       390 AGTTT
+ 0.255       702 CTTCT
+ 0.255      1794 ATCAAG
+ 0.255      2306 CCTTTA
+ 0.254      4832 TTAAAA
+ 0.253       524 TAGAG
+ 0.253      5179 TACGAT
+ 0.253       572 GCTGG
+ 0.253      2234 TTTTGA
+ 0.253      4085 TTTGAA
+ 0.253      3565 CCCCTC
+ 0.252      4308 TAACAA
+ 0.252      5177 ACGAAT
+ 0.252      4624 GAATTT
+ 0.252      2930 GATTAA
+ 0.252       798 CTAAT
+ 0.251       371 CACTT
+ 0.251       869 TCGAA
+ 0.251      4389 GTAGTA
+ 0.251       597 AAGTA
+ 0.25        398 AGTTG
+ 0.25        698 CAGGA
+ 0.25       1043 TCTGT
+ 0.25       4990 AACTTT
+ 0.25       3509 ATTTCT
+ 0.25       1140 AATTC
+ 0.25        661 ACGAA
+ 0.25       3078 TAAGAA
+ 0.25       4795 TTGATT
+ 0.25       3844 AATTAT
+ 0.249       827 CTTGC
+ 0.249      2035 TATTTC
+ 0.249       136 CACC
+ 0.249      3223 TTGACT
+ 0.249      3614 TGTTGA
+ 0.249      3274 ATAGAG
+ 0.249       602 TGTAA
+ 0.248       522 CCTCC
+ 0.248       433 ACCCC
+ 0.248       315 TCATC
+ 0.248       495 GGAGT
+ 0.248       859 TTAAC
+ 0.248      4986 AAATAT
+ 0.247      3495 GAGCTT
+ 0.247       931 AGCTT
+ 0.247       246 CATG
+ 0.247       297 AGCAA
+ 0.247       808 TTATG
+ 0.246      4969 AAATAA
+ 0.246      2885 AGGAGC
+ 0.246      3526 CTTTTA
+ 0.246       844 GATCT
+ 0.246      3868 TTAGGA
+ 0.246       547 AGATA
+ 0.245      1226 GCAAT
+ 0.245      4084 TTTGAC
+ 0.245      1117 GTTTA
+ 0.245       963 ATTTC
+ 0.244       375 TGACT
+ 0.244        62 CTAA
+ 0.244      3619 TAAAAT
+ 0.244      2515 TATAAA
+ 0.243      1185 CATCT
+ 0.243       580 CTGGA
+ 0.243      4552 CTAGAA
+ 0.243       203 GGGC
+ 0.243      2680 GACTTC
+ 0.243       712 CTCTT
+ 0.243       860 TTAAA
+ 0.243      1262 TCTTG
+ 0.243      4074 ATTGCT
+ 0.242       314 TCATA
+ 0.242      4195 ACTTTA
+ 0.242      2834 CAATTT
+ 0.242      1255 TTTCA
+ 0.242      5284 ATAGTA
+ 0.242      1157 GGTTG
+ 0.242      5042 AGCTTC
+ 0.242      1155 AAAGG
+ 0.242      4348 AATAGT
+ 0.241       517 ACAAT
+ 0.241      5037 AGCTTT
+ 0.241       533 GGGGC
+ 0.24       5047 TTAGCT
+ 0.24       1400 AGTAGT
+ 0.24        231 CAAC
+ 0.24        835 TGAAA
+ 0.239      2671 TCTTCT
+ 0.239      1222 TGCTG
+ 0.239      1798 ATCAAA
+ 0.238       728 CCTCT
+ 0.238       152 ATTC
+ 0.238      5067 ATAGGA
+ 0.238       515 TTAGT
+ 0.238       656 GTATA
+ 0.238      2990 AGTTGA
+ 0.238       902 TATCA
+ 0.238      2580 CATAGA
+ 0.238       518 AGGAA
+ 0.238      4873 CGATTA
+ 0.237      4508 TTTTAC
+ 0.236      3112 GTAATT
+ 0.236      3584 ACATTT
+ 0.236      1205 TTCTA
+ 0.236       488 TCTAG
+ 0.236       951 CCATC
+ 0.235      1125 AAGGA
+ 0.235       394 CCCCT
+ 0.235      1452 TCTAGA
+ 0.235      4486 TTATTA
+ 0.235       632 GAAGT
+ 0.235      2790 TTTCAT
+ 0.234      1129 TTTGA
+ 0.234      2845 CAATTA
+ 0.234      4008 GTATTT
+ 0.234       302 AGCAG
+ 0.234       260 GCCCA
+ 0.234      4006 AGAGGA
+ 0.233       410 TAACT
+ 0.233      3874 AGCAAT
+ 0.233      2165 TAACTA
+ 0.233       427 ATGAA
+ 0.232      4213 TTAACT
+ 0.232      2185 TCAGTA
+ 0.232        98 GCCC
+ 0.232       118 TGGG
+ 0.232      1732 AGTATA
+ 0.232      4842 GCAATT
+ 0.232       504 GAGCT
+ 0.232      4651 TCTGTA
+ 0.232       228 TGCT
+ 0.231      5356 CCTCCT
+ 0.23       4925 AATAAG
+ 0.23        650 GTATT
+ 0.23       1206 CTCCT
+ 0.23        475 CAACA
+ 0.23       2564 ATCTTC
+ 0.23        932 GCAGT
+ 0.23       3876 ATAGCA
+ 0.23       2266 TTGCTA
+ 0.23       2254 TCTATT
+ 0.229       445 TAGCT
+ 0.229      2843 CAATTG
+ 0.229       704 CTTCC
+ 0.229       141 ACTG
+ 0.229       126 GCCT
+ 0.228      1050 CATGC
+ 0.228      5128 GGTTGA
+ 0.228       350 TAATA
+ 0.228       313 TCATG
+ 0.228       481 GGAGG
+ 0.228      1364 TTACAT
+ 0.228       430 ACATT
+ 0.228      4704 CTCGAA
+ 0.227      2457 GATCTT
+ 0.227      2962 TTCTAG
+ 0.227      2329 ATTTGT
+ 0.226       886 CCACC
+ 0.226       618 CATAA
+ 0.226       889 CAGTA
+ 0.226      4506 TTTTAA
+ 0.226      2325 CTGGAT
+ 0.226      1288 CTTCTA
+ 0.226      2698 TTCTTC
+ 0.226        28 GCTG
+ 0.226      1292 CTTCTG
+ 0.226       267 AAATT
+ 0.226      3210 GGAGGA
+ 0.226      4884 GGAACT
+ 0.225      1086 AATAT
+ 0.225       236 CCCA
+ 0.225      4438 AGATAT
+ 0.225      2110 AATTGC
+ 0.225      4792 TTGATA
+ 0.225      2501 TAGCTT
+ 0.224       472 ATCTA
+ 0.224      2617 ATAAAT
+ 0.224      2851 TTTACA
+ 0.224       929 TGGAT
+ 0.224      1221 TGCTA
+ 0.224      1564 GATCAG
+ 0.224        52 TCTC
+ 0.223      3075 CCCTCT
+ 0.223      3631 TAAAAA
+ 0.223      2612 TTGAAA
+ 0.223       668 TACTT
+ 0.222       833 TGAAC
+ 0.222      2800 AGCATC
+ 0.222      1207 TTCTG
+ 0.222      1449 ATACGA
+ 0.222      3187 CAGATA
+ 0.222      3358 TGCTGG
+ 0.222      4296 CAATAA
+ 0.222      1852 TTCAGT
+ 0.221         1 GTAC
+ 0.221      2536 TAGTAA
+ 0.221        78 AATC
+ 0.221      2445 GATCTG
+ 0.221      1027 CAAAT
+ 0.221      4258 TTCAAT
+ 0.221      1554 TAGCAT
+ 0.221        60 GTAT
+ 0.221      4203 ACTTTT
+ 0.221       211 GGTG
+ 0.22       2772 TATATC
+ 0.22        135 ACAC
+ 0.22       2401 TACCTT
+ 0.22       1131 TTTGC
+ 0.22        649 GAGGA
+ 0.22       4643 GGATTA
+ 0.219       279 TGGTA
+ 0.219       691 GATTA
+ 0.219        47 CTCT
+ 0.219      4843 CTGTAG
+ 0.219      4859 ATTCAG
+ 0.219      1492 TGCAGG
+ 0.219      4279 TATAGG
+ 0.219      2719 ATCTGT
+ 0.218      1107 TGATT
+ 0.218      1282 CTTCTT
+ 0.218       217 GAGG
+ 0.218       958 GAATA
+ 0.218      4736 CATCAG
+ 0.218      2621 ACGATT
+ 0.218      4972 CTTTAA
+ 0.218        82 GACT
+ 0.218       822 ATAAG
+ 0.218       567 AAGAG
+ 0.218       930 TCTCT
+ 0.218        65 GTGG
+ 0.218      3881 ATAGCT
+ 0.218       503 TTAGG
+ 0.217       163 CTTA
+ 0.217       346 TAATG
+ 0.217      4324 CTTTCC
+ 0.217      2324 TTATCA
+ 0.217      1912 CTCTTT
+ 0.217      4071 TTTGAT
+ 0.217       397 ATCTT
+ 0.216       516 ATTCC
+ 0.216      1095 TGATA
+ 0.216      3793 AAAAAT
+ 0.216      4028 GCATTT
+ 0.216       821 ATAAA
+ 0.216       710 CAGGT
+ 0.216      2194 TCAGTT
+ 0.216       408 CGATT
+ 0.216      2578 GAATAG
+ 0.216      3252 AATTCC
+ 0.216      3434 TATTAC
+ 0.216        23 GAAC
+ 0.216       980 TATGT
+ 0.216      4924 AATAAA
+ 0.215      1929 TTACCC
+ 0.215      1567 GATCAA
+ 0.215       468 ATCTG
+ 0.215      3406 GGAATA
+ 0.215        45 TGTA
+ 0.215      4907 TTGTTG
+ 0.215       119 ACTC
+ 0.214      1271 ATAGT
+ 0.214       851 TTAAT
+ 0.214      2154 ATTATG
+ 0.214       592 TCTAT
+ 0.214      4951 CATATT
+ 0.214       295 TTACC
+ 0.214      4495 TACAAC
+ 0.214      2633 ACGATC
+ 0.214      1548 ATTTTT
+ 0.214       166 CAAA
+ 0.213       473 CAATA
+ 0.213      3714 CCTTCT
+ 0.213       763 CCAGA
+ 0.213      4982 CTTTAT
+ 0.213      2362 CATGCA
+ 0.213      2562 ATCTTG
+ 0.213      2849 TTTACC
+ 0.213      4802 TATAAG
+ 0.213       378 ATACG
+ 0.213      2360 CATTAA
+ 0.213       318 TATAT
+ 0.213       442 GGTGC
+ 0.213      1126 CTTAT
+ 0.213       462 GTAAT
+ 0.212      2159 ATTATT
+ 0.212       369 AATGA
+ 0.212      1541 ATTTTC
+ 0.212        12 AAAC
+ 0.212       941 ATATA
+ 0.212      5134 TGCTAT
+ 0.212      1491 TTTCTC
+ 0.212       591 CTGGT
+ 0.212      1167 TGCAG
+ 0.211       950 ATATT
+ 0.211      1110 CTCAT
+ 0.211      1029 TACGA
+ 0.211       307 TTCAC
+ 0.211      3315 ATCCTC
+ 0.211      2297 ACTGTT
+ 0.211       200 ACCC
+ 0.21       1370 TCTTGC
+ 0.21       4227 CTTATT
+ 0.21       3033 AAGTAG
+ 0.21       3593 ATTACC
+ 0.21        193 GGGT
+ 0.21       1060 CTTTT
+ 0.209        37 CCAC
+ 0.209      4256 TAGGAT
+ 0.209      2433 CAGTAA
+ 0.209      2293 TGTAAT
+ 0.209      3864 ATATAT
+ 0.209      1153 AAAGA
+ 0.209       414 CGATC
+ 0.209      2888 GTTTAC
+
+Selected attributes: 637,5331,1433,582,4439,1838,5028,3172,5312,2367,2157,365,3909,1264,25,2130,4633,2137,1049,3001,2848,3199,857,852,4270,258,761,2693,1479,789,5064,5229,565,1047,2180,2117,846,2656,1621,2788,2796,2567,5059,5283,13,610,706,4672,1183,5294,986,2042,598,574,147,162,5290,227,4325,714,469,2487,3164,2725,662,1851,561,831,3795,514,1657,803,2043,5046,1406,1166,899,3670,4875,3002,2174,1540,2662,4194,4220,5269,4412,4352,3575,2995,422,1399,2865,2906,1265,2755,244,1033,3388,576,756,1228,1826,2541,1083,1430,3010,1252,5250,1681,195,102,3958,5220,1008,1775,2036,10,56,733,171,794,4257,843,213,291,1718,1072,1064,1691,3123,1109,188,1039,883,2386,1979,4613,1725,1755,4,1004,558,2831,1421,4570,643,61,4948,2509,2392,1537,4629,3349,1690,1759,4594,1190,4602,818,4569,1066,2267,7,2318,16,2823,630,1135,5262,4013,304,317,2269,2581,1896,769,1174,1048,486,4437,4836,3441,53,600,4139,1978,4518,5276,696,4335,322,3277,3334,1219,240,5022,1801,5261,564,4680,4072,1437,992,68,623,891,1267,966,3127,651,3964,923,2613,4404,4329,1274,1233,3083,1378,4770,499,1046,4525,4735,719,3432,4485,554,942,1025,2037,3861,221,549,4825,305,4418,5127,2160,2912,1683,908,3250,620,4933,2739,3375,138,1168,635,498,1547,306,921,2437,2375,3355,2627,1005,234,2472,765,3,478,3262,920,870,2178,2801,2171,263,4440,202,1490,540,1546,693,446,4145,1686,2910,4207,8,3050,219,3637,1562,1077,24,165,1843,1272,3042,3487,196,319,725,208,652,4778,715,3504,1081,286,2714,1360,4246,3058,4319,2850,390,702,1794,2306,4832,524,5179,572,2234,4085,3565,4308,5177,4624,2930,798,371,869,4389,597,398,698,1043,4990,3509,1140,661,3078,4795,3844,827,2035,136,3223,3614,3274,602,522,433,315,495,859,4986,3495,931,246,297,808,4969,2885,3526,844,3868,547,1226,4084,1117,963,375,62,3619,2515,1185,580,4552,203,2680,712,860,1262,4074,314,4195,2834,1255,5284,1157,5042,1155,4348,517,5037,533,5047,1400,231,835,2671,1222,1798,728,152,5067,515,656,2990,902,2580,518,4873,4508,3112,3584,1205,488,951,1125,394,1452,4486,632,2790,1129,2845,4008,302,260,4006,410,3874,2165,427,4213,2185,98,118,1732,4842,504,4651,228,5356,4925,650,1206,475,2564,932,3876,2266,2254,445,2843,704,141,126,1050,5128,350,313,481,1364,430,4704,2457,2962,2329,886,618,889,4506,2325,1288,2698,28,1292,267,3210,4884,1086,236,4438,2110,4792,2501,472,2617,2851,929,1221,1564,52,3075,3631,2612,668,833,2800,1207,1449,3187,3358,4296,1852,1,2536,78,2445,1027,4258,1554,60,4203,211,2772,135,2401,1131,649,4643,279,691,47,4843,4859,1492,4279,2719,1107,1282,217,958,4736,2621,4972,82,822,567,930,65,3881,503,163,346,4324,2324,1912,4071,397,516,1095,3793,4028,821,710,2194,408,2578,3252,3434,23,980,4924,1929,1567,468,3406,45,4907,119,1271,851,2154,592,4951,295,4495,2633,1548,166,473,3714,763,4982,2362,2562,2849,4802,378,2360,318,442,1126,462,2159,369,1541,12,941,5134,1491,591,1167,950,1110,1029,307,3315,2297,200,1370,4227,3033,3593,193,1060,37,4256,2433,2293,3864,1153,414,2888 : 625
+
+
+Header of reduced data:
+@relation '/cygdrive/e/tmp/res50k.genus.s1.big.456.arff-weka.filters.unsupervised.instance.ReservoirSample-S1-Z30000-weka.filters.AllFilter-weka.filters.unsupervised.attribute.Remove-V-R637,5331,1433,582,4439,1838,5028,3172,5312,2367,2157,365,3909,1264,25,2130,4633,2137,1049,3001,2848,3199,857,852,4270,258,761,2693,1479,789,5064,5229,565,1047,2180,2117,846,2656,1621,2788,2796,2567,5059,5283,13,610,706,4672,1183,5294,986,2042,598,574,147,162,5290,227,4325,714,469,2487,3164,2725,662,1851,561,831,3795,514,1657,803,2043,5046,1406,1166,899,3670,4875,3002,2174,1540,2662,4194,4220,5269,4412,4352,3575,2995,422,1399,2865,2906,1265,2755,244,1033,3388,576,756,1228,1826,2541,1083,1430,3010,1252,5250,1681,195,102,3958,5220,1008,1775,2036,10,56,733,171,794,4257,843,213,291,1718,1072,1064,1691,3123,1109,188,1039,883,2386,1979,4613,1725,1755,4,1004,558,2831,1421,4570,643,61,4948,2509,2392,1537,4629,3349,1690,1759,4594,1190,4602,818,4569,1066,2267,7,2318,16,2823,630,1135,5262,4013,304,317,2269,2581,1896,769,1174,1048,486,4437,4836,3441,53,600,4139,1978,4518,5276,696,4335,322,3277,3334,1219,240,5022,1801,5261,564,4680,4072,1437,992,68,623,891,1267,966,3127,651,3964,923,2613,4404,4329,1274,1233,3083,1378,4770,499,1046,4525,4735,719,3432,4485,554,942,1025,2037,3861,221,549,4825,305,4418,5127,2160,2912,1683,908,3250,620,4933,2739,3375,138,1168,635,498,1547,306,921,2437,2375,3355,2627,1005,234,2472,765,3,478,3262,920,870,2178,2801,2171,263,4440,202,1490,540,1546,693,446,4145,1686,2910,4207,8,3050,219,3637,1562,1077,24,165,1843,1272,3042,3487,196,319,725,208,652,4778,715,3504,1081,286,2714,1360,4246,3058,4319,2850,390,702,1794,2306,4832,524,5179,572,2234,4085,3565,4308,5177,4624,2930,798,371,869,4389,597,398,698,1043,4990,3509,1140,661,3078,4795,3844,827,2035,136,3223,3614,3274,602,522,433,315,495,859,4986,3495,931,246,297,808,4969,2885,3526,844,3868,547,1226,4084,1117,963,375,62,3619,2515,1185,580,4552,203,2680,712,860,1262,4074,314,4195,2834,1255,5284,1157,5042,1155,4348,517,5037,533,5047,1400,231,835,2671,1222,1798,728,152,5067,515,656,2990,902,2580,518,4873,4508,3112,3584,1205,488,951,1125,394,1452,4486,632,2790,1129,2845,4008,302,260,4006,410,3874,2165,427,4213,2185,98,118,1732,4842,504,4651,228,5356,4925,650,1206,475,2564,932,3876,2266,2254,445,2843,704,141,126,1050,5128,350,313,481,1364,430,4704,2457,2962,2329,886,618,889,4506,2325,1288,2698,28,1292,267,3210,4884,1086,236,4438,2110,4792,2501,472,2617,2851,929,1221,1564,52,3075,3631,2612,668,833,2800,1207,1449,3187,3358,4296,1852,1,2536,78,2445,1027,4258,1554,60,4203,211,2772,135,2401,1131,649,4643,279,691,47,4843,4859,1492,4279,2719,1107,1282,217,958,4736,2621,4972,82,822,567,930,65,3881,503,163,346,4324,2324,1912,4071,397,516,1095,3793,4028,821,710,2194,408,2578,3252,3434,23,980,4924,1929,1567,468,3406,45,4907,119,1271,851,2154,592,4951,295,4495,2633,1548,166,473,3714,763,4982,2362,2562,2849,4802,378,2360,318,442,1126,462,2159,369,1541,12,941,5134,1491,591,1167,950,1110,1029,307,3315,2297,200,1370,4227,3033,3593,193,1060,37,4256,2433,2293,3864,1153,414,2888,5363'
+
+@attribute GAAGA {0,1}
+@attribute GAAAAT {0,1}
+@attribute AAATGG {0,1}
+@attribute GAAAA {0,1}
+@attribute AGAAAA {0,1}
+@attribute AAAATG {0,1}
+@attribute AGAAGA {0,1}
+@attribute GAAGAA {0,1}
+@attribute ATGGAG {0,1}
+@attribute GTAGAA {0,1}
+@attribute TAGAAA {0,1}
+@attribute AATGG {0,1}
+@attribute TTGTAG {0,1}
+@attribute TCAAG {0,1}
+@attribute GAAG {0,1}
+@attribute AAGAAT {0,1}
+@attribute GAATTG {0,1}
+@attribute AAGAAG {0,1}
+@attribute GGAAG {0,1}
+@attribute TCAAGA {0,1}
+@attribute TGTAGA {0,1}
+@attribute AATGGA {0,1}
+@attribute AGAAA {0,1}
+@attribute AGAAG {0,1}
+@attribute TTCAAG {0,1}
+@attribute AAATG {0,1}
+@attribute ATGGA {0,1}
+@attribute CAAGAA {0,1}
+@attribute CCCCAC {0,1}
+@attribute GTAGA {0,1}
+@attribute ATAAGT {0,1}
+@attribute AACAGT {0,1}
+@attribute AAGAA {0,1}
+@attribute CATGG {0,1}
+@attribute TGGAGC {0,1}
+@attribute AATTGT {0,1}
+@attribute AGAAT {0,1}
+@attribute TAAGTT {0,1}
+@attribute AGAATT {0,1}
+@attribute TTAATT {0,1}
+@attribute TTTCAA {0,1}
+@attribute AGGATG {0,1}
+@attribute ATAAGA {0,1}
+@attribute ATATTG {0,1}
+@attribute AAAG {0,1}
+@attribute CAAGA {0,1}
+@attribute TCAGG {0,1}
+@attribute CCCACT {0,1}
+@attribute AGAGG {0,1}
+@attribute AGGAAC {0,1}
+@attribute TAAAA {0,1}
+@attribute CCCCCC {0,1}
+@attribute TGTAG {0,1}
+@attribute CGAAT {0,1}
+@attribute AGAG {0,1}
+@attribute CAAG {0,1}
+@attribute AGGAAG {0,1}
+@attribute ATGG {0,1}
+@attribute CTTTCA {0,1}
+@attribute AAAAT {0,1}
+@attribute GTAAA {0,1}
+@attribute TAGCTA {0,1}
+@attribute GAAGAT {0,1}
+@attribute CGAATA {0,1}
+@attribute ATTCA {0,1}
+@attribute GAACAG {0,1}
+@attribute TAAGT {0,1}
+@attribute ACTGG {0,1}
+@attribute GTTTTT {0,1}
+@attribute AAGTT {0,1}
+@attribute TGAACA {0,1}
+@attribute CCCCC {0,1}
+@attribute CCCCCA {0,1}
+@attribute CCACTT {0,1}
+@attribute AGTAGA {0,1}
+@attribute GCATT {0,1}
+@attribute TAGAA {0,1}
+@attribute GGAAGA {0,1}
+@attribute GGAACA {0,1}
+@attribute CTAATA {0,1}
+@attribute ATCTAA {0,1}
+@attribute TAAATT {0,1}
+@attribute AGTGTA {0,1}
+@attribute ACTTTC {0,1}
+@attribute GAGGAA {0,1}
+@attribute AAGATC {0,1}
+@attribute GATGAA {0,1}
+@attribute GGATGA {0,1}
+@attribute CATGGA {0,1}
+@attribute CAGTGT {0,1}
+@attribute GCTCA {0,1}
+@attribute GAGCAG {0,1}
+@attribute ATTGTA {0,1}
+@attribute AATTTC {0,1}
+@attribute ATAGG {0,1}
+@attribute AAGTTT {0,1}
+@attribute CATA {0,1}
+@attribute AGTAG {0,1}
+@attribute ATGAAC {0,1}
+@attribute AAGAT {0,1}
+@attribute AGTGT {0,1}
+@attribute GTTGA {0,1}
+@attribute AAAATT {0,1}
+@attribute TAGTAG {0,1}
+@attribute TTGAA {0,1}
+@attribute ACAGTG {0,1}
+@attribute TCAGGA {0,1}
+@attribute TCAAT {0,1}
+@attribute CACTTT {0,1}
+@attribute AGATTT {0,1}
+@attribute GTTG {0,1}
+@attribute TCAG {0,1}
+@attribute GAACTG {0,1}
+@attribute AACAGG {0,1}
+@attribute GTGTA {0,1}
+@attribute CAGGAT {0,1}
+@attribute TATTTA {0,1}
+@attribute AAAA {0,1}
+@attribute AAGG {0,1}
+@attribute GGATG {0,1}
+@attribute GCAT {0,1}
+@attribute GTAGT {0,1}
+@attribute TAATTA {0,1}
+@attribute GCTTC {0,1}
+@attribute GTGT {0,1}
+@attribute CCCCA {0,1}
+@attribute TATTGC {0,1}
+@attribute ACAGT {0,1}
+@attribute ACAGG {0,1}
+@attribute AGTTTT {0,1}
+@attribute TCTAAT {0,1}
+@attribute GTTTT {0,1}
+@attribute CTTG {0,1}
+@attribute AGTAA {0,1}
+@attribute CAGTG {0,1}
+@attribute TAATAA {0,1}
+@attribute ACAATT {0,1}
+@attribute AATATA {0,1}
+@attribute TGTACC {0,1}
+@attribute ACAGGA {0,1}
+@attribute CGAA {0,1}
+@attribute AACTG {0,1}
+@attribute CCACT {0,1}
+@attribute GCAGGA {0,1}
+@attribute TCGAAT {0,1}
+@attribute TTCATC {0,1}
+@attribute ATTGC {0,1}
+@attribute AAGA {0,1}
+@attribute GTGTAC {0,1}
+@attribute ATTTCA {0,1}
+@attribute TAATAT {0,1}
+@attribute ATTTTG {0,1}
+@attribute GTAAAT {0,1}
+@attribute TCAATT {0,1}
+@attribute AACTGT {0,1}
+@attribute CAGGAA {0,1}
+@attribute TCATCT {0,1}
+@attribute CATCA {0,1}
+@attribute AATATT {0,1}
+@attribute ACTGT {0,1}
+@attribute TGCTCA {0,1}
+@attribute CTTTC {0,1}
+@attribute TTGCTC {0,1}
+@attribute AGTG {0,1}
+@attribute CTGGAA {0,1}
+@attribute GTAG {0,1}
+@attribute TAATTT {0,1}
+@attribute CATAT {0,1}
+@attribute TTTGT {0,1}
+@attribute CTCATG {0,1}
+@attribute TCCCCC {0,1}
+@attribute TTCAG {0,1}
+@attribute AACAG {0,1}
+@attribute GCTCAT {0,1}
+@attribute GAATAC {0,1}
+@attribute TATCAA {0,1}
+@attribute GAACA {0,1}
+@attribute GCATC {0,1}
+@attribute CATGA {0,1}
+@attribute TCTAA {0,1}
+@attribute AGATCT {0,1}
+@attribute TTTTTT {0,1}
+@attribute TTTAAC {0,1}
+@attribute TATG {0,1}
+@attribute TGTAC {0,1}
+@attribute ATTAAA {0,1}
+@attribute GATTTT {0,1}
+@attribute AATTAA {0,1}
+@attribute ATATTT {0,1}
+@attribute TCAGT {0,1}
+@attribute GTTGAA {0,1}
+@attribute AACAA {0,1}
+@attribute CATCTA {0,1}
+@attribute TGACTT {0,1}
+@attribute TGCTC {0,1}
+@attribute ATGT {0,1}
+@attribute ACCCCC {0,1}
+@attribute ATCAAT {0,1}
+@attribute AAGATT {0,1}
+@attribute GAAAG {0,1}
+@attribute GTACCC {0,1}
+@attribute TGAACT {0,1}
+@attribute ACAGTT {0,1}
+@attribute GATGA {0,1}
+@attribute AAGT {0,1}
+@attribute TGTTG {0,1}
+@attribute ATCAG {0,1}
+@attribute ATAGA {0,1}
+@attribute GAATT {0,1}
+@attribute ACTGGA {0,1}
+@attribute TTGCT {0,1}
+@attribute AACTAT {0,1}
+@attribute TGGAG {0,1}
+@attribute TTGAAC {0,1}
+@attribute GGAGCA {0,1}
+@attribute GTTGAT {0,1}
+@attribute TATTG {0,1}
+@attribute CCCAC {0,1}
+@attribute TAAGAT {0,1}
+@attribute CAAATA {0,1}
+@attribute AGAATA {0,1}
+@attribute ATTCT {0,1}
+@attribute GGAAC {0,1}
+@attribute TGGAAC {0,1}
+@attribute CATCAA {0,1}
+@attribute AAAAA {0,1}
+@attribute TATTAA {0,1}
+@attribute TTATTG {0,1}
+@attribute TAAGA {0,1}
+@attribute ATATC {0,1}
+@attribute AGTAT {0,1}
+@attribute CCCCCT {0,1}
+@attribute TGGATG {0,1}
+@attribute TTGC {0,1}
+@attribute AGATC {0,1}
+@attribute TTTTTG {0,1}
+@attribute TTCAA {0,1}
+@attribute GGAGCT {0,1}
+@attribute AACAAT {0,1}
+@attribute TAGAAG {0,1}
+@attribute ATTTAG {0,1}
+@attribute AACTGG {0,1}
+@attribute GTACC {0,1}
+@attribute AATTCA {0,1}
+@attribute CATAG {0,1}
+@attribute AGTAAA {0,1}
+@attribute CATTTA {0,1}
+@attribute GCTGGA {0,1}
+@attribute CTAG {0,1}
+@attribute TAGTA {0,1}
+@attribute ATTGT {0,1}
+@attribute TTAGA {0,1}
+@attribute TAAATA {0,1}
+@attribute AGCAT {0,1}
+@attribute AGCTG {0,1}
+@attribute TTAATA {0,1}
+@attribute GTAGAT {0,1}
+@attribute CAGTTT {0,1}
+@attribute ATAAAA {0,1}
+@attribute AACTA {0,1}
+@attribute CCCC {0,1}
+@attribute TGATTT {0,1}
+@attribute GAACT {0,1}
+@attribute GTAA {0,1}
+@attribute GGAGC {0,1}
+@attribute AGCAGG {0,1}
+@attribute GCAGG {0,1}
+@attribute CAGTT {0,1}
+@attribute TGGAGG {0,1}
+@attribute AAATTC {0,1}
+@attribute TAACTT {0,1}
+@attribute AAATA {0,1}
+@attribute TACCCC {0,1}
+@attribute GGGG {0,1}
+@attribute TTTCTA {0,1}
+@attribute AGATT {0,1}
+@attribute TAGCAA {0,1}
+@attribute CTAGA {0,1}
+@attribute ACTTT {0,1}
+@attribute ATTAAT {0,1}
+@attribute AGTTTA {0,1}
+@attribute ATTTAC {0,1}
+@attribute CTATTA {0,1}
+@attribute AGTA {0,1}
+@attribute TAGATT {0,1}
+@attribute GGTT {0,1}
+@attribute AGCTGG {0,1}
+@attribute GATTTA {0,1}
+@attribute AATAG {0,1}
+@attribute GAAA {0,1}
+@attribute GCAA {0,1}
+@attribute TTCAGG {0,1}
+@attribute TATTC {0,1}
+@attribute TACATT {0,1}
+@attribute GAGCTG {0,1}
+@attribute GAGT {0,1}
+@attribute GACTT {0,1}
+@attribute TTGTA {0,1}
+@attribute GCTC {0,1}
+@attribute GAGCA {0,1}
+@attribute TCAAAT {0,1}
+@attribute TCAAA {0,1}
+@attribute ATCAGT {0,1}
+@attribute TCCCC {0,1}
+@attribute GATAC {0,1}
+@attribute TAGAGG {0,1}
+@attribute TCATGG {0,1}
+@attribute TAGGAG {0,1}
+@attribute TAGATC {0,1}
+@attribute TCATCA {0,1}
+@attribute AGCATT {0,1}
+@attribute AGTTT {0,1}
+@attribute CTTCT {0,1}
+@attribute ATCAAG {0,1}
+@attribute CCTTTA {0,1}
+@attribute TTAAAA {0,1}
+@attribute TAGAG {0,1}
+@attribute TACGAT {0,1}
+@attribute GCTGG {0,1}
+@attribute TTTTGA {0,1}
+@attribute TTTGAA {0,1}
+@attribute CCCCTC {0,1}
+@attribute TAACAA {0,1}
+@attribute ACGAAT {0,1}
+@attribute GAATTT {0,1}
+@attribute GATTAA {0,1}
+@attribute CTAAT {0,1}
+@attribute CACTT {0,1}
+@attribute TCGAA {0,1}
+@attribute GTAGTA {0,1}
+@attribute AAGTA {0,1}
+@attribute AGTTG {0,1}
+@attribute CAGGA {0,1}
+@attribute TCTGT {0,1}
+@attribute AACTTT {0,1}
+@attribute ATTTCT {0,1}
+@attribute AATTC {0,1}
+@attribute ACGAA {0,1}
+@attribute TAAGAA {0,1}
+@attribute TTGATT {0,1}
+@attribute AATTAT {0,1}
+@attribute CTTGC {0,1}
+@attribute TATTTC {0,1}
+@attribute CACC {0,1}
+@attribute TTGACT {0,1}
+@attribute TGTTGA {0,1}
+@attribute ATAGAG {0,1}
+@attribute TGTAA {0,1}
+@attribute CCTCC {0,1}
+@attribute ACCCC {0,1}
+@attribute TCATC {0,1}
+@attribute GGAGT {0,1}
+@attribute TTAAC {0,1}
+@attribute AAATAT {0,1}
+@attribute GAGCTT {0,1}
+@attribute AGCTT {0,1}
+@attribute CATG {0,1}
+@attribute AGCAA {0,1}
+@attribute TTATG {0,1}
+@attribute AAATAA {0,1}
+@attribute AGGAGC {0,1}
+@attribute CTTTTA {0,1}
+@attribute GATCT {0,1}
+@attribute TTAGGA {0,1}
+@attribute AGATA {0,1}
+@attribute GCAAT {0,1}
+@attribute TTTGAC {0,1}
+@attribute GTTTA {0,1}
+@attribute ATTTC {0,1}
+@attribute TGACT {0,1}
+@attribute CTAA {0,1}
+@attribute TAAAAT {0,1}
+@attribute TATAAA {0,1}
+@attribute CATCT {0,1}
+@attribute CTGGA {0,1}
+@attribute CTAGAA {0,1}
+@attribute GGGC {0,1}
+@attribute GACTTC {0,1}
+@attribute CTCTT {0,1}
+@attribute TTAAA {0,1}
+@attribute TCTTG {0,1}
+@attribute ATTGCT {0,1}
+@attribute TCATA {0,1}
+@attribute ACTTTA {0,1}
+@attribute CAATTT {0,1}
+@attribute TTTCA {0,1}
+@attribute ATAGTA {0,1}
+@attribute GGTTG {0,1}
+@attribute AGCTTC {0,1}
+@attribute AAAGG {0,1}
+@attribute AATAGT {0,1}
+@attribute ACAAT {0,1}
+@attribute AGCTTT {0,1}
+@attribute GGGGC {0,1}
+@attribute TTAGCT {0,1}
+@attribute AGTAGT {0,1}
+@attribute CAAC {0,1}
+@attribute TGAAA {0,1}
+@attribute TCTTCT {0,1}
+@attribute TGCTG {0,1}
+@attribute ATCAAA {0,1}
+@attribute CCTCT {0,1}
+@attribute ATTC {0,1}
+@attribute ATAGGA {0,1}
+@attribute TTAGT {0,1}
+@attribute GTATA {0,1}
+@attribute AGTTGA {0,1}
+@attribute TATCA {0,1}
+@attribute CATAGA {0,1}
+@attribute AGGAA {0,1}
+@attribute CGATTA {0,1}
+@attribute TTTTAC {0,1}
+@attribute GTAATT {0,1}
+@attribute ACATTT {0,1}
+@attribute TTCTA {0,1}
+@attribute TCTAG {0,1}
+@attribute CCATC {0,1}
+@attribute AAGGA {0,1}
+@attribute CCCCT {0,1}
+@attribute TCTAGA {0,1}
+@attribute TTATTA {0,1}
+@attribute GAAGT {0,1}
+@attribute TTTCAT {0,1}
+@attribute TTTGA {0,1}
+@attribute CAATTA {0,1}
+@attribute GTATTT {0,1}
+@attribute AGCAG {0,1}
+@attribute GCCCA {0,1}
+@attribute AGAGGA {0,1}
+@attribute TAACT {0,1}
+@attribute AGCAAT {0,1}
+@attribute TAACTA {0,1}
+@attribute ATGAA {0,1}
+@attribute TTAACT {0,1}
+@attribute TCAGTA {0,1}
+@attribute GCCC {0,1}
+@attribute TGGG {0,1}
+@attribute AGTATA {0,1}
+@attribute GCAATT {0,1}
+@attribute GAGCT {0,1}
+@attribute TCTGTA {0,1}
+@attribute TGCT {0,1}
+@attribute CCTCCT {0,1}
+@attribute AATAAG {0,1}
+@attribute GTATT {0,1}
+@attribute CTCCT {0,1}
+@attribute CAACA {0,1}
+@attribute ATCTTC {0,1}
+@attribute GCAGT {0,1}
+@attribute ATAGCA {0,1}
+@attribute TTGCTA {0,1}
+@attribute TCTATT {0,1}
+@attribute TAGCT {0,1}
+@attribute CAATTG {0,1}
+@attribute CTTCC {0,1}
+@attribute ACTG {0,1}
+@attribute GCCT {0,1}
+@attribute CATGC {0,1}
+@attribute GGTTGA {0,1}
+@attribute TAATA {0,1}
+@attribute TCATG {0,1}
+@attribute GGAGG {0,1}
+@attribute TTACAT {0,1}
+@attribute ACATT {0,1}
+@attribute CTCGAA {0,1}
+@attribute GATCTT {0,1}
+@attribute TTCTAG {0,1}
+@attribute ATTTGT {0,1}
+@attribute CCACC {0,1}
+@attribute CATAA {0,1}
+@attribute CAGTA {0,1}
+@attribute TTTTAA {0,1}
+@attribute CTGGAT {0,1}
+@attribute CTTCTA {0,1}
+@attribute TTCTTC {0,1}
+@attribute GCTG {0,1}
+@attribute CTTCTG {0,1}
+@attribute AAATT {0,1}
+@attribute GGAGGA {0,1}
+@attribute GGAACT {0,1}
+@attribute AATAT {0,1}
+@attribute CCCA {0,1}
+@attribute AGATAT {0,1}
+@attribute AATTGC {0,1}
+@attribute TTGATA {0,1}
+@attribute TAGCTT {0,1}
+@attribute ATCTA {0,1}
+@attribute ATAAAT {0,1}
+@attribute TTTACA {0,1}
+@attribute TGGAT {0,1}
+@attribute TGCTA {0,1}
+@attribute GATCAG {0,1}
+@attribute TCTC {0,1}
+@attribute CCCTCT {0,1}
+@attribute TAAAAA {0,1}
+@attribute TTGAAA {0,1}
+@attribute TACTT {0,1}
+@attribute TGAAC {0,1}
+@attribute AGCATC {0,1}
+@attribute TTCTG {0,1}
+@attribute ATACGA {0,1}
+@attribute CAGATA {0,1}
+@attribute TGCTGG {0,1}
+@attribute CAATAA {0,1}
+@attribute TTCAGT {0,1}
+@attribute GTAC {0,1}
+@attribute TAGTAA {0,1}
+@attribute AATC {0,1}
+@attribute GATCTG {0,1}
+@attribute CAAAT {0,1}
+@attribute TTCAAT {0,1}
+@attribute TAGCAT {0,1}
+@attribute GTAT {0,1}
+@attribute ACTTTT {0,1}
+@attribute GGTG {0,1}
+@attribute TATATC {0,1}
+@attribute ACAC {0,1}
+@attribute TACCTT {0,1}
+@attribute TTTGC {0,1}
+@attribute GAGGA {0,1}
+@attribute GGATTA {0,1}
+@attribute TGGTA {0,1}
+@attribute GATTA {0,1}
+@attribute CTCT {0,1}
+@attribute CTGTAG {0,1}
+@attribute ATTCAG {0,1}
+@attribute TGCAGG {0,1}
+@attribute TATAGG {0,1}
+@attribute ATCTGT {0,1}
+@attribute TGATT {0,1}
+@attribute CTTCTT {0,1}
+@attribute GAGG {0,1}
+@attribute GAATA {0,1}
+@attribute CATCAG {0,1}
+@attribute ACGATT {0,1}
+@attribute CTTTAA {0,1}
+@attribute GACT {0,1}
+@attribute ATAAG {0,1}
+@attribute AAGAG {0,1}
+@attribute TCTCT {0,1}
+@attribute GTGG {0,1}
+@attribute ATAGCT {0,1}
+@attribute TTAGG {0,1}
+@attribute CTTA {0,1}
+@attribute TAATG {0,1}
+@attribute CTTTCC {0,1}
+@attribute TTATCA {0,1}
+@attribute CTCTTT {0,1}
+@attribute TTTGAT {0,1}
+@attribute ATCTT {0,1}
+@attribute ATTCC {0,1}
+@attribute TGATA {0,1}
+@attribute AAAAAT {0,1}
+@attribute GCATTT {0,1}
+@attribute ATAAA {0,1}
+@attribute CAGGT {0,1}
+@attribute TCAGTT {0,1}
+@attribute CGATT {0,1}
+@attribute GAATAG {0,1}
+@attribute AATTCC {0,1}
+@attribute TATTAC {0,1}
+@attribute GAAC {0,1}
+@attribute TATGT {0,1}
+@attribute AATAAA {0,1}
+@attribute TTACCC {0,1}
+@attribute GATCAA {0,1}
+@attribute ATCTG {0,1}
+@attribute GGAATA {0,1}
+@attribute TGTA {0,1}
+@attribute TTGTTG {0,1}
+@attribute ACTC {0,1}
+@attribute ATAGT {0,1}
+@attribute TTAAT {0,1}
+@attribute ATTATG {0,1}
+@attribute TCTAT {0,1}
+@attribute CATATT {0,1}
+@attribute TTACC {0,1}
+@attribute TACAAC {0,1}
+@attribute ACGATC {0,1}
+@attribute ATTTTT {0,1}
+@attribute CAAA {0,1}
+@attribute CAATA {0,1}
+@attribute CCTTCT {0,1}
+@attribute CCAGA {0,1}
+@attribute CTTTAT {0,1}
+@attribute CATGCA {0,1}
+@attribute ATCTTG {0,1}
+@attribute TTTACC {0,1}
+@attribute TATAAG {0,1}
+@attribute ATACG {0,1}
+@attribute CATTAA {0,1}
+@attribute TATAT {0,1}
+@attribute GGTGC {0,1}
+@attribute CTTAT {0,1}
+@attribute GTAAT {0,1}
+@attribute ATTATT {0,1}
+@attribute AATGA {0,1}
+@attribute ATTTTC {0,1}
+@attribute AAAC {0,1}
+@attribute ATATA {0,1}
+@attribute TGCTAT {0,1}
+@attribute TTTCTC {0,1}
+@attribute CTGGT {0,1}
+@attribute TGCAG {0,1}
+@attribute ATATT {0,1}
+@attribute CTCAT {0,1}
+@attribute TACGA {0,1}
+@attribute TTCAC {0,1}
+@attribute ATCCTC {0,1}
+@attribute ACTGTT {0,1}
+@attribute ACCC {0,1}
+@attribute TCTTGC {0,1}
+@attribute CTTATT {0,1}
+@attribute AAGTAG {0,1}
+@attribute ATTACC {0,1}
+@attribute GGGT {0,1}
+@attribute CTTTT {0,1}
+@attribute CCAC {0,1}
+@attribute TAGGAT {0,1}
+@attribute CAGTAA {0,1}
+@attribute TGTAAT {0,1}
+@attribute ATATAT {0,1}
+@attribute AAAGA {0,1}
+@attribute CGATC {0,1}
+@attribute GTTTAC {0,1}
+@attribute class {Melissotarsus,Hippotion,Neoligia,Mycalesis,Oligia,Pnigalio,Syngrapha,Feltia,Terataner,Draeculacephala,Lucanus,Aedes,Enochrus,Apamea,Colias,Cinara,Pachycondyla,Conogethes,Amauronematus,Eucosma,Tapinoma,Eutomostethus,Cordulegaster,Claremontia,Hydropsyche,Tenthredo,Agnorisma,Helicopsyche,Agrius,Maruca,Machilis,Eois,Elachista,Lomographa,Notiospathius,Leucania,Thaumatotibia,Arge,Hyposmocoma,Aphodius,Pleophylla,Protodeltote,Eurytoma,Strumigenys,Lithophane,Ochlerotatus,Pachybrachis,Carabus,Ypthima,Pyrgonota,Papilio,Scirtothrips,Sympistis,Xylena,Strongylogaster,Donacia,Hepialus,Dinocras,Acalles,Operophtera,Euplexia,Nonarthra,Tettigettalna,Apiomorpha,Aseptis,Helicoverpa,Scopula,Heliconius,Asota,Gyrinus,Colocasiomyia,Condica,Agrochola,Pyramica,Siphlonurus,Apis,Megalodontes,Anoplotermes,Allantus,Pero,Ochropleura,Anopheles,Eupselia,Leucophenga,Xestia,Neolucanus,Tenthredopsis,Aphis,Rhodostrophia,Carnus,Errhomus,Glossina,Schizonycha,Melese,Cuerna,Crematogaster,Ostrinia,Leptidea,Neopsylla,Oxyethira,Kyklioacalles,Hillia,Adelomyrmex,Acraea,Agelasa,Appasus,Physocleora,Ilybius,Serratella,Fishia,Selatosomus,Hoplocampa,Lacanobia,Culex,Diaphorina,Hyalessa,Trichocorixa,Chrysis,Cladius,Paraleptophlebia,Lutzomyia,Lysandra,Chironomus,Platypalpus,Trichordestra,Altica,Hemicrepidius,Aphrophora,Cyclocephala,Triatoma,Culicoides,Hermeuptychia,Aglaostigma,Leptogenys,Mythimna,Siobla,Trochalus,Labrundinia,Schinia,Opius,Panorpa,Chimarra,Brachycaudus,Sergentomyia,Tetragonisca,Rhynchophorus,Pheidole,Monomorium,Egira,Copris,Houghia,Ameletus,Graphocephala,Calliphora,Microdon,Echinodera,Daphnis,Limonius,Philaenus,Exocelina,Anarta,Limnephilus,Osmia,Eupithecia,Cryptocephalus,Orthosia,Elaphropeza,Tanytarsus,Empria,Cucullia,Caradrina,Papaipema,Panthea,Pauropsalta,Nabis,Vespula,Calisto,Agabus,Tuberculatus,Abagrotis,Phagomyia,Euxoa,Aleiodes,Bactrocera,Eulaema,Liriomyza,Maniola,Hygrotus,Diarsia,Phlebotomus,Phengaris,Plutella,Operclipygus,Nephodia,Phelister,Drunella,Solenopsis,Hypena,Eurois,Orthodes,Cicindela,Melanchra,Kosciuscola,Bombus,Phyllophaga,Isochromodes,Poecilimon,Maliattha,Theretra,Colymbetes,Cephalotes,Caenota,Cylindera,Sarcophaga,Catops,Ametastegia,Gyponana,Coptotermes,Feralia,Rhantus,Athalia,Apanteles,Spodoptera,Elaphria,Hemideina,Cryptotympana,Amara,Trigonopterus,Cricotopus,Tetramorium,Pachynematus,Junonia,Idaea,Epeorus,Cydia,Acosmeryx,Cales,Myrmeleon,Blepharoneura,Macroglossum,Carcinops,Lacinipolia,Parabagrotis,Dolerus,Raphia,Anaxipha,Polia,Megacopta,Euura,Autographa,Hydroporus,Phyllonorycter,Ephoron,Cryptolestes,Sinopodisma,Boreonectes,Baetis,Cnephia,Lymantria,Neochera,Ephemerella,Longitarsus,Nicrophorus,Dendrolimus,Homorthodes,Pristiphora,Uroleucon,Acronicta,Proxenus,Psaliodes,Miobantia,Bembidion,Ambulyx,Coleophora,Tarachidia,Acroneuria,Spaelotis,Microvelia,Tamasia,Platypleura,Ectropis,Hydroptila,Dasysyrphus,Micropeplus,Psilogramma,Gnamptogenys,Camponotus,Agrotis,Xyela,Hypoponera,Bemisia,Cyphomyrmex,Simulium,Nematus,Lipocallia,Lasionycta,Polistes,Dicrotendipes,Catocala,Enargia,Panorpodes,Anomala,Drosophila,Pseudomyrmex,Copidosoma,Macrophya,Rhogogaster,Laricobius,Cyclophora,Graphiphora,Blastobasis,Polypedilum,Megalopaederus,Bradysia,Protorthodes,Nanos,Hyppa}
+
+@data
+
+
+Classifier Model
+Random forest of 30 trees, each constructed while considering 10 random features.
+Out of bag error: 0.0911
+
+
+

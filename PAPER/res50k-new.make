@@ -52,6 +52,7 @@ doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
 	
 
 CV_PARAMS = -c last -x $(NUM_FOLDS) -v -o
+TRAIN_PARAMS = -c last -no-cv -v
 NUM_TREES = 30
 GRID_PREFIX = weka.Run weka.classifiers.meta.GridSearch
 GRID_POSTFIX = -E ACC -y-property classifier.search.numToSelect -y-min 0.0 -y-max 8.0 -y-step 1.0 -y-base 2.0 -y-expression 5000/pow\(BASE,I\) -filter weka.filters.AllFilter -x-property filter -x-min 0.0 -x-max 1.0 -x-step 1.0 -x-base 1.0 -x-expression I -sample-size 100.0 -traversal COLUMN-WISE -log-file /dev/null -num-slots 4 -S 1 -W weka.classifiers.meta.AttributeSelectedClassifier -- -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0.0 -N -1" -W
@@ -67,6 +68,12 @@ rf-cv:
 		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(RF_POSTFIX) > results2/res50k.$$rank.rf.s1.result; \
 	done	
 	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(RF_POSTFIX) > results2/ibol.rf.s1.result
+	
+rf-model:
+	for rank in family genus; do \
+		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(TRAIN_PARAMS) -d output/res50k.$$rank.rf.s1.456.model $(GRID_POSTFIX) $(RF_POSTFIX) > results2/res50k.$$rank.rf.s1.train; \
+	done
+	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(TRAIN_PARAMS) -d output/ibol.rf.s1.456.model $(GRID_POSTFIX) $(RF_POSTFIX) > results2/ibol.rf.s1.train
 	
 rf-test:
 	for rank in family genus; do \
@@ -87,6 +94,12 @@ nb-cv:
 		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(NB_POSTFIX) > results2/res50k.$$rank.nb.s1.result; \
 	done
 	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(CV_PARAMS) $(GRID_POSTFIX) $(NB_POSTFIX) > results2/ibol.nb.s1.result
+	
+nb-model:
+	for rank in family genus; do \
+		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.arff $(TRAIN_PARAMS) -d output/res50k.$$rank.nb.s1.456.model $(GRID_POSTFIX) $(NB_POSTFIX) > results2/res50k.$$rank.nb.s1.train; \
+	done
+	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.arff $(TRAIN_PARAMS) -d output/ibol.nb.s1.456.model $(GRID_POSTFIX) $(NB_POSTFIX) > results2/ibol.nb.s1.train
 
 nb-test:
 	for rank in family genus; do \
