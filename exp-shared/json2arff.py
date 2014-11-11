@@ -32,6 +32,7 @@ parser.add_argument('--kmerrange', dest='kmerrange', required=True, help='Values
 parser.add_argument('--taxlevel', dest='taxlevel', required=True, help='The taxonomic level to be used (either "genus", "order", or "family").')
 parser.add_argument('--intest', dest='intest', help='Input testing JSON file')
 parser.add_argument('--outtest', dest='outtest', help='Output testing ARFF file')
+parser.add_argument('--freq', dest='freq', action='store_true', help='Use kmer frequencies instead of kmer binary')
 
 args = parser.parse_args()
 
@@ -73,8 +74,10 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 	f_outtrain.write("@relation " + outtrain_name + "\n") 
 	for kmer_set in kmer_sets:	
 		for kmer in kmer_set:
-			#f_outtrain.write("@attribute " + kmer + "_f" + " numeric\n")
-			f_outtrain.write("@attribute " + kmer + " {0,1}\n")
+			if args.freq:
+				f_outtrain.write("@attribute " + kmer + "_f" + " numeric\n")
+			else:
+				f_outtrain.write("@attribute " + kmer + " {0,1}\n")
 	class_string = "@attribute class {" + ",".join( ['"' + x + '"' for x in classname_set] ) + "}\n"
 	f_outtrain.write(class_string)
 	f_outtrain.write("@data\n")
@@ -96,10 +99,11 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 					if kmer not in hm:
 						vector.append('0')
 					else:
-						#prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
-						# QUICK CHANGE
-						# vector.append( str(prop) )
-						vector.append('1')
+						if args.freq:
+							prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
+							vector.append( str(prop) )
+						else:
+							vector.append('1')
 			vector.append( '"' + classname + '"' )
 			f_outtrain.write( ",".join(vector) + "\n" )
 
