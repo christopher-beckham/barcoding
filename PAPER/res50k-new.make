@@ -20,12 +20,12 @@ premake:
 
 json: premake
 	for rank in family genus; do \
-		python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=$$rank --minlen=300 < $(OUT_FOLDER)/res50k.json.pre > output/res50k.$$rank.json; \
+		python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=$$rank --minlen=300 --substr < $(OUT_FOLDER)/res50k.json.pre > output/res50k.$$rank.json; \
 	done; \
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.family.json > output/res50k.family.s{}.json'
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.genus.json > output/res50k.genus.s{}.json'
 	
-	python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=species --minlen=300 < $(OUT_FOLDER)/iBOL_phase_5.00_COI.json.pre > output/ibol.json
+	python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=species --minlen=300 --substr < $(OUT_FOLDER)/iBOL_phase_5.00_COI.json.pre > output/ibol.json
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/ibol.json > output/ibol.s{}.json'
 	
 arff:

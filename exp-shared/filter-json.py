@@ -38,7 +38,7 @@ for rec in records:
 	if classname not in db:
 		db[classname] = []
 	db[classname].append(rec)
-
+	
 new_db = dict()
 dupe_count = 0
 retained = 0
@@ -99,11 +99,11 @@ if CUTOFF:
 			chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:i] ] )
 			err("Number of retained class values: " + str(i) + "/" + str(len(sorted_counts)) )
 			break
+	if chosen_classnames == None:
+		chosen_classnames = set( [tp[0] for tp in sorted_counts] )
 else:
 	err("Limiting class values to " + str(MAX_CLASS) + " most common class values")
 	chosen_classnames = set( [ tp[0] for tp in sorted_counts[0:MAX_CLASS] ] )
-
-
 	
 final_records = []
 for classname in new_db:
