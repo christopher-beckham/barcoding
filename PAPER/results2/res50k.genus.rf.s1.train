@@ -2544,8 +2544,8 @@ Out of bag error: 0.1309
 
 
 
-Time taken to build model: 231.35 seconds
-Time taken to test model on training data: 9.92 seconds
+Time taken to build model: 236.57 seconds
+Time taken to test model on training data: 32.35 seconds
 
 === Error on training data ===
 
