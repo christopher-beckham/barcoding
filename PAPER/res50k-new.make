@@ -98,11 +98,10 @@ rf-train:
 	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.train.arff $(TRAIN_PARAMS) -d output/ibol.rf.s1.456.model $(GRID_POSTFIX) $(RF_POSTFIX) > results2/ibol.rf.s1.train
 	
 rf-test:
-	# BUG: genus doesn't work... do it manually in explorer
-	for rank in family genus; do \
-		java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.rf.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.rf.s1.result; \
-	done
-	java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.rf.s1.456.model -T output/ibol.s1.456.test.arff > results2/ibol.rf.s1.result
+	#for rank in family genus; do \
+	#	java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.rf.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.rf.s1.result; \
+	#done
+	java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.rf.s1.456.model -T output/ibol.s1.456.test.arff $(TEST_PARAMS) > results2/ibol.rf.s1.result
 	
 rf-test-time:
 	for rank in family genus; do \
@@ -129,10 +128,10 @@ nb-train:
 	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.train.arff $(TRAIN_PARAMS) -d output/ibol.nb.s1.456.model $(GRID_POSTFIX) $(NB_POSTFIX) > results2/ibol.nb.s1.train
 	
 nb-test:
-	for rank in family genus; do \
-		java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.nb.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.nb.s1.result; \
-	done
-	java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.nb.s1.456.model -T output/ibol.s1.456.test.arff > results2/ibol.nb.s1.result
+	#for rank in family genus; do \
+	#	java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.nb.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.nb.s1.result; \
+	#done
+	java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.nb.s1.456.model -T output/ibol.s1.456.test.arff $(TEST_PARAMS) > results2/ibol.nb.s1.result
 
 nb-test-time:
 	for rank in family genus; do \

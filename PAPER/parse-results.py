@@ -8,7 +8,7 @@ for filename in filenames:
 	stratified = False
 	for line in f:
 		line = line.rstrip()
-		if line == "=== Stratified cross-validation ===":
+		if "=== Stratified cross-validation ===" in line or "=== Error on test data ===" in line:
 			stratified = True
 		else:
 			if "Correctly Classified Instances" in line and stratified:
