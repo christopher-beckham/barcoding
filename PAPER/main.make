@@ -1,4 +1,4 @@
-.PHONY : all premake json arff rf-cv rf-model rf-test nb-cv nb-model nb-test clean fullclean
+.PHONY : all premake json arff rf-train rf-test rf-test-time nb-train nb-test nb-test-time rf-all rf-time nb-all nb-time
 
 ###########
 # GLOBALS #
@@ -33,21 +33,21 @@ arff:
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.456.arff --intrain=output/res50k.family.s{}.json'
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.456.arff --intrain=output/res50k.genus.s{}.json'
 	# Write res50k.family.s1.456.arff, res50k.family.s1.456.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.456.arff > $(TMP_OUTPUT)/res50k.family.s{}.456.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.456.arff > $(TMP_OUTPUT)/res50k.genus.s{}.456.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.456.arff > output/res50k.family.s{}.456.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.456.arff > output/res50k.genus.s{}.456.arff'
 	# Write res50k.family.s1.456.train.arff, res50k.family.s1.456.test.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/res50k.family.s{}.456.arff > output/res50k.family.s{}.456.train.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/res50k.family.s{}.456.arff > output/res50k.family.s{}.456.test.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < output/res50k.family.s{}.456.arff > output/res50k.family.s{}.456.train.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < output/res50k.family.s{}.456.arff > output/res50k.family.s{}.456.test.arff'
 	# Write res50k.genus.s1.456.train.arff, res50k.genus.s1.456.test.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/res50k.genus.s{}.456.arff > output/res50k.genus.s{}.456.train.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/res50k.genus.s{}.456.arff > output/res50k.genus.s{}.456.test.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < output/res50k.genus.s{}.456.arff > output/res50k.genus.s{}.456.train.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < output/res50k.genus.s{}.456.arff > output/res50k.genus.s{}.456.test.arff'
 	# Write ibol.s1.big.456.arff
 	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.s{}.big.456.arff --intrain=output/ibol.s{}.json'
 	# Write ibol.s1.456.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.s{}.big.456.arff > $(TMP_OUTPUT)/ibol.s{}.456.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.s{}.big.456.arff > output/ibol.s{}.456.arff'
 	# Write ibol.s1.456.train.arff, ibol.s1.456.test.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/ibol.s{}.456.arff > output/ibol.s1.456.train.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/ibol.s{}.456.arff > output/ibol.s1.456.test.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < output/ibol.s{}.456.arff > output/ibol.s1.456.train.arff'
+	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < output/ibol.s{}.456.arff > output/ibol.s1.456.test.arff'
 
 rf-all: rf-train rf-test rf-test-time
 	echo "Done all for RF!"
@@ -60,9 +60,6 @@ nb-all: nb-train nb-test nb-test-time
 	
 nb-time: nb-test-time
 	echo "Done time for NB!"
-	
-doall: rf-cv rf-model rf-test nb-cv nb-model nb-test
-	echo "done!"
 
 testing:
 	# testing the effect of 3-mers when they're in a feature space also consisting of 4,5,6-mers

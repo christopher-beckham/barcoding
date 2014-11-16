@@ -14,7 +14,10 @@ for filename in filenames:
 	first_time = True
 	num_instances = 0
 	for line in f:
-		line = line.rstrip().split(',')
+		line = line.rstrip()
+		if line == "":
+			continue
+		line = line.split(',')
 		if first_time:
 			vec['features'] = len(line) - 1
 			first_time = False
