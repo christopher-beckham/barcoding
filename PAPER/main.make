@@ -51,7 +51,7 @@ arff:
 	python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.species.s1.big.456.arff --intrain=output/ibol.species.s1.json
 	# Write ibol.s1.456.arff
 	##java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.species.s1.big.456.arff > output/ibol.species.s1.456.arff
-	# Write ibol.s1.456.train.arff, ibol.s1.456.test.arff
+	# Write ibol.species.s1.456.train.arff, ibol.species.s1.456.test.arff
 	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/ibol.species.s1.big.456.arff > output/ibol.species.s1.456.train.arff
 	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/ibol.species.s1.big.456.arff > output/ibol.species.s1.456.test.arff
 
@@ -66,20 +66,9 @@ nb-all: nb-train nb-test nb-test-time
 	
 nb-time: nb-test-time
 	echo "Done time for NB!"
-
-testing:
-	# testing the effect of 3-mers when they're in a feature space also consisting of 4,5,6-mers
-	python $(EXP_SHARED)/json2arff.py --kmer=3,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/family.testing.big.arff --intrain=output/res50k.family.s1.json --freq
-	java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/family.testing.big.arff > $(TMP_OUTPUT)/family.testing.arff
-	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/family.testing.arff > output/family.testing.train.arff
-	#rm $(TMP_OUTPUT)/family.testing.big.arff $(TMP_OUTPUT)/family.testing.arff
 	
-testing2:
-	# testing the effect of 7-mers when they're in a feature space also consisting of 4,5,6-mers
-	python $(EXP_SHARED)/json2arff.py --kmer=3,7 --taxlevel=family --outtrain=$(TMP_OUTPUT)/family.34567.big.arff --intrain=output/res50k.family.s1.json
-	java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/family.34567.big.arff > $(TMP_OUTPUT)/family.34567.arff
-	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/family.34567.arff > output/family.34567.train.arff
-	java -Xmx16G $(GRID_PREFIX) -t output/family.34567.train.arff -c last -no-cv $(GRID_POSTFIX) $(RF_POSTFIX) > notes/family.34567.train.result
+doall: rf-all nb-all
+	echo "done!"
 
 #CV_PARAMS = -c last -x $(NUM_FOLDS) -v -o
 TRAIN_PARAMS = -c last -no-cv
@@ -98,13 +87,13 @@ rf-train:
 	for rank in family genus; do \
 		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.train.arff $(TRAIN_PARAMS) -d output/res50k.$$rank.rf.s1.456.model $(GRID_POSTFIX) $(RF_POSTFIX) > results2/res50k.$$rank.rf.s1.train; \
 	done	
-	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.train.arff $(TRAIN_PARAMS) -d output/ibol.rf.s1.456.model $(GRID_POSTFIX) $(RF_POSTFIX) > results2/ibol.rf.s1.train
+	java -Xmx14G $(GRID_PREFIX) -t output/ibol.species.s1.456.train.arff $(TRAIN_PARAMS) -d output/ibol.rf.s1.456.model $(GRID_POSTFIX) $(RF_POSTFIX) > results2/ibol.rf.s1.train
 	
 rf-test:
-	#for rank in family genus; do \
-	#	java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.rf.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.rf.s1.result; \
-	#done
-	java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.rf.s1.456.model -T output/ibol.s1.456.test.arff $(TEST_PARAMS) > results2/ibol.rf.s1.result
+	for rank in family genus; do \
+		java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.rf.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.rf.s1.result; \
+	done
+	java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.rf.s1.456.model -T output/ibol.species.s1.456.test.arff $(TEST_PARAMS) > results2/ibol.rf.s1.result
 	
 rf-test-time:
 	for rank in family genus; do \
@@ -115,7 +104,7 @@ rf-test-time:
 	done
 	echo > results2/ibol.rf.s1.testing.time
 	for i in {1..3}; do \
-		{ time java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.rf.s1.456.model -T output/ibol.s1.456.test.arff > /dev/null; } 2>> results2/ibol.rf.s1.testing.time; \
+		{ time java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.rf.s1.456.model -T output/ibol.species.s1.456.test.arff > /dev/null; } 2>> results2/ibol.rf.s1.testing.time; \
 	done
 	
 ###############
@@ -128,13 +117,13 @@ nb-train:
 	for rank in family genus; do \
 		java -Xmx14G $(GRID_PREFIX) -t output/res50k.$$rank.s1.456.train.arff $(TRAIN_PARAMS) -d output/res50k.$$rank.nb.s1.456.model $(GRID_POSTFIX) $(NB_POSTFIX) > results2/res50k.$$rank.nb.s1.train; \
 	done
-	java -Xmx14G $(GRID_PREFIX) -t output/ibol.s1.456.train.arff $(TRAIN_PARAMS) -d output/ibol.nb.s1.456.model $(GRID_POSTFIX) $(NB_POSTFIX) > results2/ibol.nb.s1.train
+	java -Xmx14G $(GRID_PREFIX) -t output/ibol.species.s1.456.train.arff $(TRAIN_PARAMS) -d output/ibol.nb.s1.456.model $(GRID_POSTFIX) $(NB_POSTFIX) > results2/ibol.nb.s1.train
 	
 nb-test:
-	#for rank in family genus; do \
-	#	java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.nb.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.nb.s1.result; \
-	#done
-	java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.nb.s1.456.model -T output/ibol.s1.456.test.arff $(TEST_PARAMS) > results2/ibol.nb.s1.result
+	for rank in family genus; do \
+		java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/res50k.$$rank.nb.s1.456.model -T output/res50k.$$rank.s1.456.test.arff $(TEST_PARAMS) > results2/res50k.$$rank.nb.s1.result; \
+	done
+	java -Xmx14G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.nb.s1.456.model -T output/ibol.species.s1.456.test.arff $(TEST_PARAMS) > results2/ibol.nb.s1.result
 
 nb-test-time:
 	for rank in family genus; do \
@@ -145,5 +134,5 @@ nb-test-time:
 	done
 	echo > results2/ibol.nb.s1.testing.time
 	for i in {1..3}; do \
-		{ time java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.nb.s1.456.model -T output/ibol.s1.456.test.arff > /dev/null; } 2>> results2/ibol.nb.s1.testing.time; \
+		{ time java -Xmx16G weka.Run weka.classifiers.meta.GridSearch -l output/ibol.nb.s1.456.model -T output/ibol.species.s1.456.test.arff > /dev/null; } 2>> results2/ibol.nb.s1.testing.time; \
 	done
