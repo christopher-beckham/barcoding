@@ -1,4 +1,4 @@
-.PHONY: birds cyp
+.PHONY: cyp-arff birds-prep birds-train cyp-prep cyp-train doall
 
 SEED_MIN = 1
 SEED_MAX = 5
@@ -12,15 +12,17 @@ cyp-arff:
 birds-prep:
 	python fasta2json.py --infile=data/birds/ATrain.fas > output/birds.train.json
 	python fasta2json.py --infile=data/birds/ATest.fas > output/birds.test.json
-	python $(EXP_SHARED)/json2arff.py --outtrain=output/birds.train.arff --intrain=output/birds.train.json --kmerrange=3,5 --taxlevel=species --maxclass=m10000 --outtest=output/birds.test.arff --intest=output/birds.test.json
+	python $(EXP_SHARED)/json2arff.py --outtrain=output/birds.train.arff --intrain=output/birds.train.json --kmer=4,6 --taxlevel=species --outtest=output/birds.test.arff --intest=output/birds.test.json
 
 birds-train:
-	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N 500" -W weka.classifiers.bayes.NaiveBayes -t output/birds.train.arff -T output/birds.test.arff -o -v -no-predictions -- -D > results/birds.test.result
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N 500" -W weka.classifiers.bayes.NaiveBayes -t output/birds.train.arff -T output/birds.test.arff -o -v -no-predictions -- > results/birds.test.result
 	
 cyp-prep:
 	python fasta2json.py --infile=data/cypraeidae/CypraeidaeTrain.fasta > output/cyp.train.json
 	python fasta2json.py --infile=data/cypraeidae/CypraeidaeTest.fasta > output/cyp.test.json
-	python $(EXP_SHARED)/json2arff.py --outtrain=output/cyp.train.arff --intrain=output/cyp.train.json --kmerrange=3,5 --taxlevel=species --maxclass=m10000 --outtest=output/cyp.test.arff --intest=output/cyp.test.json
+	python $(EXP_SHARED)/json2arff.py --outtrain=output/cyp.train.arff --intrain=output/cyp.train.json --kmer=4,6 --taxlevel=species --outtest=output/cyp.test.arff --intest=output/cyp.test.json
 	
 cyp-train:
-	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N 500" -W weka.classifiers.bayes.NaiveBayes -t output/cyp.train.arff -T output/cyp.test.arff -o -v -no-predictions -- -D > results/cyp.test.result
+	java -Xmx6000M weka.classifiers.meta.AttributeSelectedClassifier -E "weka.attributeSelection.InfoGainAttributeEval " -S "weka.attributeSelection.Ranker -T 0 -N 500" -W weka.classifiers.bayes.NaiveBayes -t output/cyp.train.arff -T output/cyp.test.arff -o -v -no-predictions -- > results/cyp.test.result
+	
+doall: birds-prep birds-train cyp-prep cyp-train

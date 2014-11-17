@@ -15,4 +15,4 @@ for record in SeqIO.parse(f, "fasta"):
 	json_arr.append( {"nucid": seq, "taxinfo": {"species": classname}, "fasta": seq } )
 f.close()
 
-print json.dumps(json_dump, sort_keys=True, indent=4, separators=(',', ': '))
+print json.dumps(json_arr, sort_keys=True, indent=4, separators=(',', ': '))
