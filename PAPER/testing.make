@@ -40,3 +40,8 @@ testing2:
 	java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_TESTING)/family.45.big.arff > output-testing/family.45.arff
 	python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=family --outtrain=$(TMP_TESTING)/family.456.big.arff --intrain=output-testing/res50k.family.s1.json
 	java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_TESTING)/family.456.big.arff > output-testing/family.456.arff
+	
+testing3:
+	# test ambig nucleotides vs un-ambig
+	python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=family --outtrain=$(TMP_TESTING)/family.456.ambig.big.arff --intrain=output-testing/res50k.family.s1.json --ambig
+	java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_TESTING)/family.456.ambig.big.arff > output-testing/family.456.ambig.arff

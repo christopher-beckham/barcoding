@@ -33,6 +33,7 @@ parser.add_argument('--taxlevel', dest='taxlevel', required=True, help='The taxo
 parser.add_argument('--intest', dest='intest', help='Input testing JSON file')
 parser.add_argument('--outtest', dest='outtest', help='Output testing ARFF file')
 parser.add_argument('--freq', dest='freq', action='store_true', help='Use kmer frequencies instead of kmer binary')
+parser.add_argument('--ambig', dest='ambig', action='store_true', help='Use ambiguous nucleotides as well')
 
 args = parser.parse_args()
 
@@ -58,8 +59,7 @@ for k in range(KMER_MIN, KMER_MAX+1):
 		classnames.add(classname)
 		for x in range(0, len(rec['fasta']) - k + 1):
 			kmer = str(rec['fasta'][x:x+k])
-			#if args.noambig:
-			if ambig(kmer):
+			if args.ambig == False and ambig(kmer):
 				continue
 			if kmer not in kmer_sets[k]:
 				kmer_sets[k].add(kmer)

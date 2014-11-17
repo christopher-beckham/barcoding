@@ -4,16 +4,16 @@ files = ibol.nb ibol.rf res50k.genus.nb res50k.genus.rf res50k.family.nb res50k.
 arffs = ibol.s1.arff res50k.family.s1.arff res50k.genus.s1.arff
 
 SEED_MIN = 1
-SEED_MAX = 5
+SEED_MAX = 1
 
 f-measure:
 	for file in $(files); do \
 		for seed in {$(SEED_MIN)..$(SEED_MAX)}; do \
-			if [ ! -e results/$$file.s$$seed.result ]; then \
-				echo "Cannot find file "results/$$file.s$$seed.result; \
+			if [ ! -e results2/$$file.s$$seed.result ]; then \
+				echo "Cannot find file "results2/$$file.s$$seed.result; \
 				exit 1; \
 			fi; \
-			python parse-measures.py < results/$$file.s$$seed.result > R/f-measures/$$file.s$$seed.fmeasure; \
+			python parse-measures.py < results2/$$file.s$$seed.result > R/f-measures/$$file.s$$seed.fmeasure; \
 		done; \
 	done; \
 	#cd R; RScript f-measures.R
