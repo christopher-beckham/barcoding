@@ -4,8 +4,8 @@ pdf(file="f-measures-histogram.pdf")
 par(mfrow=c(2,3))
 
 files = c("ibol.nb.s1", "ibol.rf.s1", "res50k.genus.nb.s1", "res50k.genus.rf.s1", "res50k.family.nb.s1", "res50k.family.rf.s1")
-titles = c("iBOL Species NB (seed 1)", "iBOL Species RF (seed 1)", "Nucleotide Genus NB (seed 1)", "Nucleotide Genus RF (seed 1)",
-           "Nucleotide Family NB (seed 1)", "Nucleotide Family RF (seed 1)")
+titles = c("iBOL Species NB", "iBOL Species RF", "Nucleotide Genus NB", "Nucleotide Genus RF",
+           "Nucleotide Family NB", "Nucleotide Family RF")
 
 for(i in 1:length(files)) {
   df = read.csv(paste("f-measures/",files[i],".fmeasure",sep=""))

@@ -1,18 +1,17 @@
  
  @relation my-arff-file
 
- @attribute CTT_f numeric
+ @attribute CTT_f {0,1}
+ @attribute CTCA_f {0,1}
 
- @attribute CTCA_f numeric
-
- @attribute AGCAC_f numeric
+ @attribute AGCAC_f {0,1}
  @attribute class {'Spodoptera', 'Machilis', 'Theretra'}
 
  @data
- 0.020202,0.026936,0.013468,'Spodoptera'
- 0.020202,0.010101,0.013468,'Machilis'
- 0.020202,0.010101,0.013468,'Machilis'
- 0.03367,0.010101,0.016835,'Theretra'
- 0.020202,0.010101,0.013468,'Theretra'
+ 0,1,0,'Spodoptera'
+ 1,1,1,'Machilis'
+ 1,1,0,'Machilis'
+ 0,0,1,'Theretra'
+ 0,0,1,'Theretra'
 
 
