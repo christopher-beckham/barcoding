@@ -15,39 +15,45 @@ TRAIN_FOLD = 1
 TEST_FOLD = 2
 
 premake:
-	$(MAKE) -C $(EXP_SHARED) -f res50k.make
-	$(MAKE) -C $(EXP_SHARED) -f ibol-phase5.make
+	#$(MAKE) -C $(EXP_SHARED) -f res50k.make
+	#$(MAKE) -C $(EXP_SHARED) -f ibol-phase5.make
+	echo "This does nothing anymore."
 
-json: premake
-	for rank in family genus; do \
-		python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=$$rank --minlen=300 --substr < $(OUT_FOLDER)/res50k.json.pre > output/res50k.$$rank.json; \
-	done; \
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.family.json > output/res50k.family.s{}.json'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/res50k.genus.json > output/res50k.genus.s{}.json'
+json:
+	python $(EXP_SHARED)/split-json.py --fold=$(TRAIN_FOLD) < $(OUT_FOLDER)/res50k.json.clean > $(OUT_FOLDER)/res50k.json
+	python $(EXP_SHARED)/split-json.py --fold=$(TRAIN_FOLD) < $(OUT_FOLDER)/ibol.json.clean > $(OUT_FOLDER)/ibol.json
 	
-	python $(EXP_SHARED)/filter-json.py --maxclass=c20 --taxlevel=species --minlen=300 --substr < $(OUT_FOLDER)/iBOL_phase_5.00_COI.json.pre > output/ibol.json
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed={} < output/ibol.json > output/ibol.s{}.json'
+	for rank in family genus; do \
+		python $(EXP_SHARED)/filter-json.py --maxclass=c10 --taxlevel=$$rank --minlen=300 --substr < $(OUT_FOLDER)/res50k.json > output/res50k.$$rank.json; \
+	done; \
+	python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed=1 < output/res50k.family.json > output/res50k.family.s1.json
+	python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed=1 < output/res50k.genus.json > output/res50k.genus.s1.json
+	
+	python $(EXP_SHARED)/filter-json.py --maxclass=c10 --taxlevel=species --minlen=300 --substr < $(OUT_FOLDER)/ibol.json > output/ibol.species.json
+	python $(EXP_SHARED)/chop-json.py --fraglen=300 --maxfrags=5 --seed=1 < output/ibol.species.json > output/ibol.species.s1.json
 	
 arff:
 	# Write res50k.family.s1.big.456.arff, res50k.genus.s1.big.456.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s{}.big.456.arff --intrain=output/res50k.family.s{}.json'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s{}.big.456.arff --intrain=output/res50k.genus.s{}.json'
+	python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=family --outtrain=$(TMP_OUTPUT)/res50k.family.s1.big.456.arff --intrain=output/res50k.family.s1.json
+	python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=genus --outtrain=$(TMP_OUTPUT)/res50k.genus.s1.big.456.arff --intrain=output/res50k.genus.s1.json
 	# Write res50k.family.s1.456.arff, res50k.family.s1.456.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s{}.big.456.arff > output/res50k.family.s{}.456.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s{}.big.456.arff > output/res50k.genus.s{}.456.arff'
+	##java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.family.s1.big.456.arff > output/res50k.family.s1.456.arff
+	##java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/res50k.genus.s1.big.456.arff > output/res50k.genus.s1.456.arff
 	# Write res50k.family.s1.456.train.arff, res50k.family.s1.456.test.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < output/res50k.family.s{}.456.arff > output/res50k.family.s{}.456.train.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < output/res50k.family.s{}.456.arff > output/res50k.family.s{}.456.test.arff'
+	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/res50k.family.s1.big.456.arff > output/res50k.family.s1.456.train.arff
+	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/res50k.family.s1.big.456.arff > output/res50k.family.s1.456.test.arff
 	# Write res50k.genus.s1.456.train.arff, res50k.genus.s1.456.test.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < output/res50k.genus.s{}.456.arff > output/res50k.genus.s{}.456.train.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < output/res50k.genus.s{}.456.arff > output/res50k.genus.s{}.456.test.arff'
+	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/res50k.genus.s1.big.456.arff > output/res50k.genus.s1.456.train.arff
+	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/res50k.genus.s1.big.456.arff > output/res50k.genus.s1.456.test.arff
+	
+	
 	# Write ibol.s1.big.456.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=4 'python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.s{}.big.456.arff --intrain=output/ibol.s{}.json'
+	python $(EXP_SHARED)/json2arff.py --kmer=4,6 --taxlevel=species --outtrain=$(TMP_OUTPUT)/ibol.species.s1.big.456.arff --intrain=output/ibol.species.s1.json
 	# Write ibol.s1.456.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S {} -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.s{}.big.456.arff > output/ibol.s{}.456.arff'
+	##java -Xmx13G weka.filters.unsupervised.instance.ReservoirSample -S 1 -Z $(SAMPLE_SIZE) < $(TMP_OUTPUT)/ibol.species.s1.big.456.arff > output/ibol.species.s1.456.arff
 	# Write ibol.s1.456.train.arff, ibol.s1.456.test.arff
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TRAIN_FOLD) < output/ibol.s{}.456.arff > output/ibol.s1.456.train.arff'
-	$(SEQ) $(SEED_MIN) $(SEED_MAX) | parallel --max-proc=1 'java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S {} -N 2 -F $(TEST_FOLD) < output/ibol.s{}.456.arff > output/ibol.s1.456.test.arff'
+	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TRAIN_FOLD) < $(TMP_OUTPUT)/ibol.species.s1.big.456.arff > output/ibol.species.s1.456.train.arff
+	java -Xmx13G weka.filters.supervised.instance.StratifiedRemoveFolds -c last -S 1 -N 2 -F $(TEST_FOLD) < $(TMP_OUTPUT)/ibol.species.s1.big.456.arff > output/ibol.species.s1.456.test.arff
 
 rf-all: rf-train rf-test rf-test-time
 	echo "Done all for RF!"
