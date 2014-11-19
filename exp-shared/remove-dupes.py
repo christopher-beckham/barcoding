@@ -1,6 +1,5 @@
 import sys
 import StringIO
-import random
 import argparse
 import json
 import operator
