@@ -4,7 +4,6 @@ This script seems messy... could do with a clean-up!
 
 import sys
 import StringIO
-import random
 import argparse
 import json
 import operator
