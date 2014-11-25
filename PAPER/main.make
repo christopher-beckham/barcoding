@@ -5,7 +5,6 @@
 ###########
 
 NUM_FOLDS = 2
-TMP_OUTPUT = /cygdrive/e/tmp
 SAMPLE_SIZE = 40000
 
 SEED_MIN = 1
@@ -59,6 +58,10 @@ tally:
 	python tally-classes.py < output/ibol.species.s1.big.456.arff > output/ibol.species.s1.big.456.dist
 	python tally-classes.py < output/res50k.genus.s1.big.456.arff > output/res50k.genus.s1.big.456.dist
 	python tally-classes.py < output/res50k.family.s1.big.456.arff > output/res50k.family.s1.big.456.dist
+
+deleteme:
+	python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=family --outtrain=output/deleteme.family.arff --intrain=output/res50k.genus.json
+	python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=genus --outtrain=output/deleteme.genus.arff --intrain=output/res50k.genus.json
 
 rf-all: rf-train rf-test rf-test-time
 	echo "Done all for RF!"
