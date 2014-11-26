@@ -60,8 +60,9 @@ tally:
 	python tally-classes.py < output/res50k.family.s1.big.456.arff > output/res50k.family.s1.big.456.dist
 
 deleteme:
-	python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=family --outtrain=output/deleteme.family.arff --intrain=output/res50k.genus.json
-	python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=genus --outtrain=output/deleteme.genus.arff --intrain=output/res50k.genus.json
+	#python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=family --outtrain=output/deleteme.family.arff --intrain=output/res50k.genus.json
+	#python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=genus --outtrain=output/deleteme.genus.arff --intrain=output/res50k.genus.json
+	python $(EXP_SHARED)/json2arff.py --kmer=3,4 --freq --taxlevel=family --outtrain=output/deleteme.realfamily.arff --intrain=output/res50k.family.json
 
 rf-all: rf-train rf-test rf-test-time
 	echo "Done all for RF!"
