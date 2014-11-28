@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-all: $(OUT_FOLDER)/iBOL_phase_5.00_COI.json
+all: $(OUT_FOLDER)/iBOL_phase_5.00_COI.json.pre
 
 $(OUT_FOLDER)/iBOL_phase_5.00_COI.tsv:
 	cd output; unzip iBOL_phase_5.00_COI.tsv.zip
