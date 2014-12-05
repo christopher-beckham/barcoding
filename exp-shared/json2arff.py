@@ -100,7 +100,7 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 						vector.append('0')
 					else:
 						if args.freq:
-							prop = float(hm[kmer]) / float( len(rec['fasta']) - k )
+							prop = float(hm[kmer]) / float( len(rec['fasta']) - k + 1)
 							vector.append( str(prop) )
 						else:
 							vector.append('1')
