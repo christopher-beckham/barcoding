@@ -53,7 +53,7 @@ Building list of kmers and class values
 def n_ify(st):
 	st = list(st)
 	for x in range(1, len(st), 2):
-		st[x] = 'N'
+		st[x] = 'x'
 	return "".join(st)
 
 def match(n_st, full_st):
@@ -76,8 +76,8 @@ for k in range(KMER_MIN, KMER_MAX+1):
 			kmer = str(rec['fasta'][x:x+k])
 			kmer = n_ify(kmer)
 			#print kmer
-			#if args.ambig == False and ambig(kmer):
-			#	continue
+			if args.ambig == False and ambig(kmer):
+				continue
 			if kmer not in kmer_sets[k]:
 				kmer_sets[k].add(kmer)
 
@@ -99,28 +99,38 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 	f_outtrain.write(class_string)
 	f_outtrain.write("@data\n")
 
+	cc=0.0
 	for rec in records:
+		cc += 1
+		sys.stderr.write( str( cc / len(records) ) + "\n" )
 		vector = [] # one particular instance
 		classname = rec['taxinfo'][args.taxlevel]
 		if classname in classname_set:
 			for k in range(KMER_MIN, KMER_MAX+1):
 				kmer_set = kmer_sets[k]
-				hm = set() # the set of kmers we see in this particular record
+
+				hm = dict()
 				for x in range(0, len(rec['fasta']) - k + 1):
 					kmer = str(rec['fasta'][x:x+k])
-					hm.add(kmer)
-				#print hm
+					kmer = n_ify(kmer)
+					if kmer not in hm:
+						hm[kmer] = 1
+					else:
+						hm[kmer] += 1
+
 				for kmer in kmer_set:
-					kmer_count = 0
-					for key in hm:
-						if match(kmer, key):
-							kmer_count += 1
-					vector.append(kmer_count)
-			new_vector = []
-			for v in range(0, len(vector)):
-				new_vector.append( str( float(vector[v]) / float(sum(vector)) ) )
-			new_vector.append( '"' + classname + '"' )
-			f_outtrain.write( ",".join(new_vector) + "\n" )
+					if kmer not in hm:
+						vector.append('0')
+					else:
+						if args.freq:
+							prop = float(hm[kmer]) / float( len(rec['fasta']) - k + 1)
+							vector.append( str(prop) )
+						else:
+							vector.append('1')
+			#for v in range(0, len(vector)):
+			#	vector[v] = float(vector[v]) / sum(vector)
+			vector = [str(v) for v in vector] + ['"' + classname + '"']
+			f_outtrain.write( ",".join(vector) + "\n" )
 
 	f_outtrain.close()
 	
