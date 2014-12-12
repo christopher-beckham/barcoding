@@ -50,10 +50,10 @@ if args.intest != None:
 Building list of kmers and class values
 """
 
-def n_ify(st):
+def n_ify(st,x_size):
 	st = list(st)
-	for x in range(1, len(st), 2):
-		st[x] = 'x'
+	for x in range(1, len(st), x_size+1):
+		st[x:x+x_size] = "".join(['x' for i in range(0, x_size)])
 	return "".join(st)
 
 def match(n_st, full_st):
@@ -74,7 +74,7 @@ for k in range(KMER_MIN, KMER_MAX+1):
 		classnames.add(classname)
 		for x in range(0, len(rec['fasta']) - k + 1):
 			kmer = str(rec['fasta'][x:x+k])
-			kmer = n_ify(kmer)
+			kmer = n_ify(kmer, 1)
 			#print kmer
 			if args.ambig == False and ambig(kmer):
 				continue
@@ -112,7 +112,7 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 				hm = dict()
 				for x in range(0, len(rec['fasta']) - k + 1):
 					kmer = str(rec['fasta'][x:x+k])
-					kmer = n_ify(kmer)
+					kmer = n_ify(kmer, 1)
 					if kmer not in hm:
 						hm[kmer] = 1
 					else:
