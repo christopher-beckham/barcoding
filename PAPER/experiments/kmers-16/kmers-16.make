@@ -1,4 +1,4 @@
-.PHONY : arff R
+.PHONY : arff R f-measure
 
 ###########
 # GLOBALS #
@@ -37,9 +37,3 @@ arff:
 			done; \
 		done; \
 	done; \
-
-R:
-	python $(EXP_SHARED)/tally-classes.py < output/res50k.family.seq150.k11.arff > R/family-dist.csv
-	python $(EXP_SHARED)/tally-classes.py < output/res50k.genus.seq150.k11.arff > R/genus-dist.csv
-	python $(EXP_SHARED)/tally-classes.py < output/ibol.species.seq150.k11.arff > R/species-dist.csv
-	RScript create-distn.R
