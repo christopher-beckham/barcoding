@@ -2,20 +2,18 @@
 
 # 650 x 540
 
-filenames = c("R/family-dist.csv",
-              "R/genus-dist.csv",
-              "R/species-dist.csv")
+filenames = list.files(path="tally-classes", pattern="*.txt", full.names=T, recursive=FALSE)
 
-names = c("iBOL Species", "Nucleotide Family", "Nucleotide Genus")
+pdf(file="tally-classes/figure-classdist.pdf")
 
-#png(filename="figure-classdist.png", width=672, height=574, pointsize=16)
-pdf(file="R/figure-classdist.pdf")
+par(mfrow=c(4,3))
 
-par(mfrow=c(2,2))
-
-for( i in 1:3 ) {
+for( i in 1:length(filenames) ) {
   df = read.csv(filenames[i], header=TRUE)
-  plot(table(df$class), xaxt="n", ylab="Frequency", xlab="Class", main=paste("Class distribution", names[i]))
+  title = gsub(".txt", "", filenames[i])
+  title = gsub("tally-classes/", "", title)
+  title = gsub("res50k", "ncbi", title)
+  plot(table(df$class), xaxt="n", ylab="Frequency", xlab="Class", main=title )
 }
 
 dev.off()

@@ -1,0 +1,34 @@
+@relation output/res50k.family.seq600.k11.arff
+@attribute A_f numeric
+@attribute C_f numeric
+@attribute T_f numeric
+@attribute G_f numeric
+@attribute class {"Pyralidae","Rhopalidae","Chrysomelidae","Plataspidae","Notodontidae","Anthocoridae","Vespidae","Encyrtidae","Ameletidae","Ichneumonidae","Fergusoninidae","Perlodidae","Empididae","Panorpodidae","Braconidae","Cephidae","Drepanosiphidae","Cimbicidae","Nycteribiidae","Autostichidae","Megachilidae","Platycnemididae","Cleridae","Gelechiidae","Arctiidae","Limnephilidae","Cynipidae","Agromyzidae","Curculionidae","Psychidae","Berytidae","Nepticulidae","Phengodidae","Tenebrionidae","Geometridae","Reduviidae","Xyelidae","Hydroptilidae","Chrysopidae","Haliplidae","Cantharidae","Hydrophilidae","Acroceridae","Drosophilidae","Silphidae","Muscidae","Ciidae","Sarcophagidae","Leptoceridae","Tineidae","Eulophidae","Polymitarcyidae","Coleophoridae","Chironomidae","Nemouridae","Gracillariidae","Calocidae","Philopotamidae","Papilionidae","Psychodidae","Chloropidae","Saturniidae","Helicopsychidae","Coenagrionidae","Blastobasidae","Diaspididae","Platystictidae","Megalodontesidae","Chloroperlidae","Diprionidae","Limacodidae","Ephemeridae","Pseudococcidae","Siphlonuridae","Cossidae","Nogodinidae","Tortricidae","Simuliidae","Ctenophthalmidae","Lycidae","Cecidomyiidae","Aphrophoridae","Culicidae","Heptageniidae","Syrphidae","Sphingidae","Plutellidae","Torymidae","Pieridae","Aleyrodidae","Prionoceridae","Phlaeothripidae","Argidae","Crambidae","Ephemerellidae","Yponomeutidae","Chrysididae","Tingidae","Veliidae","Tenthredinidae","Hybotidae","Attelabidae","Machilidae","Argiolestidae","Perlidae","Elachistidae","Belostomatidae","Leiodidae","Staphylinidae","Crabronidae","Agaonidae","Megapodagrionidae","Corixidae","Oecophoridae","Elateridae","Sepsidae","Hepialidae","Acrididae","Calophyidae","Coccinellidae","Pentatomidae","Chlorocyphidae","Lasiocampidae","Panorpidae","Pemphigidae","Capniidae","Brachycentridae","Epermeniidae","Dictyopharidae","Lucanidae","Phoridae","Nabidae","Coreidae","Gyrinidae","Hesperiidae","Lachnidae","Eucnemidae","Baetidae","Thespidae","Scarabaeidae","Lycaenidae","Calopterygidae","Caenidae","Thripidae","Histeridae","Melittidae","Erebidae","Myrmeleontidae","Ceratopogonidae","Nolidae","Cimicidae","Lymantriidae","Pergidae","Gryllidae","Sciaridae","Cerambycidae","Dytiscidae","Rhinotermitidae","Lygaeidae","Psyllidae","Cicadellidae","Rhyparochromidae","Cosmopterigidae","Miridae","Scirtidae","Laemophloeidae","Termitidae","Nymphalidae","Aphididae","Tephritidae","Protoneuridae","Tachinidae","Apidae","Isonychiidae","Libellulidae","Membracidae","Carposinidae","Formicidae","Choreutidae","Sesiidae","Elmidae","Tettigoniidae","Cicadidae","Noctuidae","Hormaphididae","Lampyridae","Calliphoridae","Trichogrammatidae","Carabidae","Hydropsychidae","Pamphiliidae","Glossinidae","Ulidiidae"}
+@data
+0.337890625,0.201171875,0.300130208333,0.160807291667,"Plataspidae"
+0.337239583333,0.201171875,0.30078125,0.160807291667,"Plataspidae"
+0.336588541667,0.201822916667,0.30078125,0.160807291667,"Plataspidae"
+0.33984375,0.202473958333,0.298828125,0.158854166667,"Plataspidae"
+0.339192708333,0.201822916667,0.299479166667,0.159505208333,"Plataspidae"
+0.337890625,0.201171875,0.300130208333,0.160807291667,"Plataspidae"
+0.237577639752,0.214285714286,0.35248447205,0.194099378882,"Perlodidae"
+0.253105590062,0.217391304348,0.344720496894,0.184782608696,"Perlodidae"
+0.245723172628,0.216174183515,0.346811819596,0.191290824261,"Perlodidae"
+0.237577639752,0.214285714286,0.35248447205,0.195652173913,"Perlodidae"
+0.243788819876,0.215838509317,0.346273291925,0.194099378882,"Perlodidae"
+0.239130434783,0.214285714286,0.35248447205,0.194099378882,"Perlodidae"
+0.246894409938,0.197204968944,0.364906832298,0.189440993789,"Perlodidae"
+0.246894409938,0.195652173913,0.366459627329,0.189440993789,"Perlodidae"
+0.281967213115,0.167213114754,0.396721311475,0.154098360656,"Panorpodidae"
+0.280327868852,0.172131147541,0.390163934426,0.15737704918,"Panorpodidae"
+0.293442622951,0.168852459016,0.388524590164,0.149180327869,"Panorpodidae"
+0.286885245902,0.160655737705,0.398360655738,0.154098360656,"Panorpodidae"
+0.285245901639,0.16393442623,0.395081967213,0.155737704918,"Panorpodidae"
+0.291803278689,0.168852459016,0.388524590164,0.150819672131,"Panorpodidae"
+0.291803278689,0.152459016393,0.404918032787,0.150819672131,"Panorpodidae"
+0.280327868852,0.162295081967,0.4,0.15737704918,"Panorpodidae"
+0.303738317757,0.155763239875,0.395638629283,0.144859813084,"Gelechiidae"
+0.288753799392,0.153495440729,0.407294832827,0.150455927052,"Gelechiidae"
+0.297872340426,0.173252279635,0.387537993921,0.141337386018,"Gelechiidae"
+0.297872340426,0.174772036474,0.384498480243,0.142857142857,"Gelechiidae"
+0.285046728972,0.160436137072,0.390965732087,0.163551401869,"Gelechiidae"

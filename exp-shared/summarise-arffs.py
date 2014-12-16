@@ -1,7 +1,26 @@
 import sys
 import glob
 
+header = \
+[
+"\\begin{table}[h!]",
+"\caption{Summary information for each ARFF file.}",
+"\\begin{tabular}{cccc}",
+"\hline",
+"& \# instances & \# features & \# classes \\\\ ",
+"\hline"
+]
+
+footer = \
+[
+"\hline",
+"\end{tabular}",
+"\end{table}"
+]
+
 filenames = glob.glob( sys.argv[1] )
+
+print "\n".join(header)
 
 for filename in filenames:
 	classnames = set()
@@ -27,4 +46,6 @@ for filename in filenames:
 	vec['classes'] = len(classnames)
 	vec['instances'] = num_instances
 	f.close()
-	print vec
+	print filename + " & " + str(vec['instances']) + " & " + str(vec['features']) + " & " + str(vec['classes']) + " \\\\"
+
+print "\n".join(footer)

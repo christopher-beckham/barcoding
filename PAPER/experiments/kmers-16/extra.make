@@ -1,4 +1,4 @@
-.PHONY : R f-measure parse-f-measure
+.PHONY : R f-measure parse-f-measure summarise-arff tally-classes
 
 R:
 	python $(EXP_SHARED)/tally-classes.py < output/res50k.family.seq150.k11.arff > R/family-dist.csv
@@ -23,3 +23,13 @@ parse-f-measure:
 		echo $$filename; \
 		python $(EXP_SHARED)/parse-fmeasures.py < $$filename > $$filename.fmeasure; \
 	done; \
+
+summarise-arff:
+	python $(EXP_SHARED)/summarise-arffs.py "output/*.arff"
+
+tally-classes:
+	for filename in `cd output; find res50k.*.k11.arff; find ibol.*.k11.arff`; do \
+		echo $$filename; \
+		python $(EXP_SHARED)/tally-classes.py < output/$$filename > tally-classes/$$filename.txt; \
+	done; \
+	RScript create-distn.R
