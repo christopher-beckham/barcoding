@@ -1,3 +1,5 @@
+.PHONY : prep tests tests2 dupe-test
+
 prep:
 	cd output
 	mv TrainingTheClassifier/GenBankFamily_TrainingFiles/GenBank_Family.fasta GenBank_Family.fasta
@@ -18,3 +20,11 @@ tests:
 tests2:
 	java -Xmx16g weka.classifiers.trees.RandomForest -I 10 -K 0 -S 1 -num-slots 3 -x 2 -t output/genbank.family.small.arff > output/genbank.family.small.rf.result
 	java -Xmx16g weka.classifiers.trees.RandomForest -I 10 -K 0 -S 1 -num-slots 3 -x 2 -t output/genbank.genus.small.arff > output/genbank.genus.small.rf.result
+
+dupe-test:
+	python porter-fasta2json.py --infile=output/GenBank_Family.fasta > output/genbank.family.json
+	python porter-fasta2json.py --infile=output/GenBank_Genus.fasta > output/genbank.genus.json
+	python porter-fasta2json.py --infile=output/GenBank_Barcode.fasta > output/genbank.barcode.json
+	python $(EXP_SHARED)/remove-dupes.py < output/genbank.family.json > /dev/null
+	python $(EXP_SHARED)/remove-dupes.py < output/genbank.genus.json > /dev/null
+	python $(EXP_SHARED)/remove-dupes.py < output/genbank.barcode.json > /dev/null

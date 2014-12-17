@@ -1,5 +1,5 @@
 #png(filename="f-measures-classsize.png", width=672, height=574, pointsize=16)
-pdf(file="f-measures-histogram.pdf")
+pdf(file="f-measure/f-measures-histogram.pdf")
 
 par(mfrow=c(2,3))
 
