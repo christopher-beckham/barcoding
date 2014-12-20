@@ -15,7 +15,7 @@ def err(st):
 	
 def ambig(kmer):
 	for k in kmer:
-		if k.upper() not in ['A', 'T', 'C', 'G']:
+		if k in ambigs:
 			return True
 	return False
 	
@@ -33,7 +33,7 @@ parser.add_argument('--taxlevel', dest='taxlevel', required=True, help='The taxo
 parser.add_argument('--intest', dest='intest', help='Input testing JSON file')
 parser.add_argument('--outtest', dest='outtest', help='Output testing ARFF file')
 parser.add_argument('--freq', dest='freq', action='store_true', help='Use kmer frequencies instead of kmer binary')
-parser.add_argument('--ambig', dest='ambig', action='store_true', help='Use ambiguous nucleotides as well') # hasn't been thoroughly tested
+parser.add_argument('--ambig', dest='ambig', action='store_true', help='Use ambiguous nucleotides as well')
 
 args = parser.parse_args()
 
@@ -89,12 +89,8 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 			for k in range(KMER_MIN, KMER_MAX+1):
 				kmer_set = kmer_sets[k]
 				hm = dict()
-				kmer_count = 0
 				for x in range(0, len(rec['fasta']) - k + 1):
 					kmer = str(rec['fasta'][x:x+k])
-					if args.ambig == False and ambig(kmer):
-						continue
-					kmer_count += 1
 					if kmer not in hm:
 						hm[kmer] = 1
 					else:
@@ -104,7 +100,7 @@ def write_arff(records, kmer_sets, classname_set, outtrain_name):
 						vector.append('0')
 					else:
 						if args.freq:
-							prop = float(hm[kmer]) / float(kmer_count)
+							prop = float(hm[kmer]) / float( len(rec['fasta']) - k + 1)
 							vector.append( str(prop) )
 						else:
 							vector.append('1')
