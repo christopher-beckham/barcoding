@@ -13,6 +13,9 @@ for( i in 1:length(filenames) ) {
   title = gsub(".txt", "", filenames[i])
   title = gsub("tally-classes/", "", title)
   title = gsub("res50k", "ncbi", title)
+  if( title == "ibol.species.seq600.k11.arff" ) {
+    next
+  }
   plot(table(df$class), xaxt="n", ylab="Frequency", xlab="Class", main=title )
 }
 
