@@ -39,3 +39,7 @@ arff:
 		done; \
 	done; \
 
+binary:
+	for filename in `cd output; find *.arff`; do \
+		python nominal-to-binary.py --infile=output/$$filename --kmer=5,6 > output-mix/$$filename; \
+	done; \

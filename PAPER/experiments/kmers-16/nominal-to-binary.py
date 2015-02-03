@@ -6,7 +6,6 @@ import math
 import json
 
 parser = argparse.ArgumentParser(description='Allows conversion of numeric features to binary ones')
-parser.add_argument('--outfile', dest='outfile', required=True, help='Output ARFF file')
 parser.add_argument('--infile', dest='infile', required=True, help='Input ARFF file')
 parser.add_argument('--kmer', dest='kmer', required=True, help='Values of k to binarise (comma separated)')
 args = parser.parse_args()
