@@ -1,0 +1,106 @@
+Tester:     weka.experiment.PairedCorrectedTTester -G 4,5,6 -D 1 -R 2 -S 0.05 -result-matrix "weka.experiment.ResultMatrixLatex -mean-prec 2 -stddev-prec 2 -col-name-width 0 -row-name-width 0 -mean-width 0 -stddev-width 0 -sig-width 0 -count-width 0 -print-row-names -enum-col-names"
+Analysing:  PERCENT_CORRECT
+Datasets:   72
+Resultsets: 7
+Confidence: 0.05 (two tailed)
+Sorted by:  -
+Date:       10/02/15 11:10 AM
+
+
+\begin{table}[thb]
+\caption{\label{labelname}Table Caption}
+\footnotesize
+{\centering \begin{tabular}{lrr@{\hspace{0.1cm}}cr@{\hspace{0.1cm}}c}
+\\
+\hline
+Dataset & (2)& (3) & \\
+\hline
+output/ibol.species.seq150.k11.arff &  4.67 &   6.74 &    $\circ$\\
+output/ibol.species.seq150.k12.arff & 13.74 &  49.61 &    $\circ$\\
+output/ibol.species.seq150.k13.arff & 54.76 &  74.05 &    $\circ$\\
+output/ibol.species.seq150.k14.arff & 81.26 &  83.39 &    $\circ$\\
+output/ibol.species.seq150.k15.arff & 89.05 &  86.11 &  $\bullet$\\
+output/ibol.species.seq300.k11.arff & 11.67 &  14.90 &    $\circ$\\
+output/ibol.species.seq150.k16.arff & 84.93 &  87.64 &    $\circ$\\
+output/ibol.species.seq300.k12.arff & 57.38 &  73.18 &    $\circ$\\
+output/ibol.species.seq300.k13.arff & 93.21 &  92.59 &           \\
+output/ibol.species.seq300.k14.arff & 97.14 &  97.58 &           \\
+output/ibol.species.seq300.k15.arff & 98.52 &  98.57 &           \\
+output/ibol.species.seq300.k16.arff & 98.46 &  98.73 &           \\
+output/ibol.species.seq450.k11.arff & 21.20 &  26.29 &    $\circ$\\
+output/ibol.species.seq450.k12.arff & 87.90 &  89.76 &    $\circ$\\
+output/ibol.species.seq450.k13.arff & 98.67 &  98.97 &           \\
+output/ibol.species.seq450.k14.arff & 99.68 &  99.91 &           \\
+output/ibol.species.seq450.k15.arff & 99.82 &  99.98 &    $\circ$\\
+output/ibol.species.seq450.k16.arff & 99.83 &  99.97 &           \\
+output/ibol.species.seq600.k11.arff & 82.84 &  82.90 &           \\
+output/ibol.species.seq600.k12.arff & 97.61 &  98.87 &    $\circ$\\
+output/ibol.species.seq600.k13.arff & 98.93 &  99.94 &           \\
+output/ibol.species.seq600.k14.arff & 99.37 &  99.94 &           \\
+output/ibol.species.seq600.k15.arff & 99.37 & 100.00 &           \\
+output/ibol.species.seq600.k16.arff & 99.37 & 100.00 &           \\
+output/res50k.family.seq150.k11.arff & 19.94 &  14.24 &  $\bullet$\\
+output/res50k.family.seq150.k12.arff & 19.56 &  38.12 &    $\circ$\\
+output/res50k.family.seq150.k13.arff & 22.08 &  48.32 &    $\circ$\\
+output/res50k.family.seq150.k14.arff & 34.77 &  55.29 &    $\circ$\\
+output/res50k.family.seq150.k15.arff & 47.28 &  58.20 &    $\circ$\\
+output/res50k.family.seq300.k11.arff & 30.95 &  22.87 &  $\bullet$\\
+output/res50k.family.seq300.k12.arff & 36.10 &  51.88 &    $\circ$\\
+output/res50k.family.seq300.k13.arff & 46.38 &  61.50 &    $\circ$\\
+output/res50k.family.seq150.k16.arff & 58.49 &  58.58 &           \\
+output/res50k.family.seq300.k14.arff & 61.95 &  69.71 &    $\circ$\\
+output/res50k.family.seq300.k15.arff & 71.64 &  72.53 &           \\
+output/res50k.family.seq300.k16.arff & 76.55 &  72.21 &  $\bullet$\\
+output/res50k.family.seq450.k11.arff & 35.11 &  29.52 &  $\bullet$\\
+output/res50k.family.seq450.k12.arff & 44.80 &  60.74 &    $\circ$\\
+output/res50k.family.seq450.k13.arff & 59.72 &  70.38 &    $\circ$\\
+output/res50k.family.seq450.k14.arff & 73.47 &  77.41 &    $\circ$\\
+output/res50k.family.seq450.k15.arff & 80.15 &  80.37 &           \\
+output/res50k.family.seq450.k16.arff & 82.65 &  80.04 &  $\bullet$\\
+output/res50k.family.seq600.k11.arff & 42.61 &  53.45 &    $\circ$\\
+output/res50k.family.seq600.k12.arff & 56.01 &  78.12 &    $\circ$\\
+output/res50k.family.seq600.k13.arff & 69.82 &  83.59 &    $\circ$\\
+output/res50k.family.seq600.k14.arff & 74.58 &  87.12 &    $\circ$\\
+output/res50k.family.seq600.k15.arff & 64.66 &  87.90 &    $\circ$\\
+output/res50k.family.seq600.k16.arff & 72.38 &  86.97 &    $\circ$\\
+output/res50k.genus.seq150.k11.arff &  7.93 &   5.43 &  $\bullet$\\
+output/res50k.genus.seq150.k12.arff &  9.99 &  27.51 &    $\circ$\\
+output/res50k.genus.seq150.k13.arff & 24.49 &  41.78 &    $\circ$\\
+output/res50k.genus.seq150.k14.arff & 43.63 &  50.51 &    $\circ$\\
+output/res50k.genus.seq150.k15.arff & 56.22 &  53.89 &  $\bullet$\\
+output/res50k.genus.seq150.k16.arff & 56.08 &  56.11 &           \\
+output/res50k.genus.seq300.k11.arff & 15.27 &  12.32 &  $\bullet$\\
+output/res50k.genus.seq300.k12.arff & 30.11 &  43.60 &    $\circ$\\
+output/res50k.genus.seq300.k13.arff & 57.91 &  59.47 &           \\
+output/res50k.genus.seq300.k14.arff & 75.04 &  69.87 &  $\bullet$\\
+output/res50k.genus.seq300.k15.arff & 81.71 &  73.80 &  $\bullet$\\
+output/res50k.genus.seq300.k16.arff & 80.59 &  74.95 &  $\bullet$\\
+output/res50k.genus.seq450.k11.arff & 19.48 &  18.49 &           \\
+output/res50k.genus.seq450.k12.arff & 45.62 &  56.17 &    $\circ$\\
+output/res50k.genus.seq450.k13.arff & 75.93 &  72.70 &  $\bullet$\\
+output/res50k.genus.seq450.k14.arff & 86.20 &  82.06 &  $\bullet$\\
+output/res50k.genus.seq450.k15.arff & 89.07 &  85.28 &  $\bullet$\\
+output/res50k.genus.seq450.k16.arff & 89.27 &  85.74 &  $\bullet$\\
+output/res50k.genus.seq600.k11.arff & 36.96 &  50.17 &    $\circ$\\
+output/res50k.genus.seq600.k12.arff & 69.39 &  81.07 &    $\circ$\\
+output/res50k.genus.seq600.k13.arff & 84.67 &  88.32 &    $\circ$\\
+output/res50k.genus.seq600.k14.arff & 82.89 &  91.10 &    $\circ$\\
+output/res50k.genus.seq600.k15.arff & 85.77 &  91.62 &    $\circ$\\
+output/res50k.genus.seq600.k16.arff & 86.70 &  91.04 &    $\circ$\\
+\hline
+\multicolumn{4}{c}{$\circ$, $\bullet$ statistically significant improvement or degradation}\\
+\end{tabular} \footnotesize \par}
+\end{table}
+
+
+\begin{table}[thb]
+\caption{\label{labelname}Table Caption (Key)}
+\scriptsize
+{\centering
+\begin{tabular}{cl}\\
+(2) & meta.FilteredClassifier '-F \textbackslash"unsupervised.attribute.BarcodingNumericToBinary -R 6\textbackslash" -W bayes.NaiveBayes' -4523450618538717400 \\
+(3) & trees.RandomForest '-I 30 -K 0 -S 1 -num-slots 4' 1116839470751428698 \\
+\end{tabular}
+}
+\end{table}
+
