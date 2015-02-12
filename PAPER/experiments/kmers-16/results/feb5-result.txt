@@ -14,8 +14,8 @@ output/ibol.species.seq150.k12.arff       (3)   13.74 |    49.61 v
 output/ibol.species.seq150.k13.arff       (3)   54.76 |    74.05 v
 output/ibol.species.seq150.k14.arff       (3)   81.26 |    83.39 v
 output/ibol.species.seq150.k15.arff       (3)   89.05 |    86.11 *
-output/ibol.species.seq300.k11.arff       (3)   11.67 |    14.90 v
 output/ibol.species.seq150.k16.arff       (3)   84.93 |    87.64 v
+output/ibol.species.seq300.k11.arff       (3)   11.67 |    14.90 v
 output/ibol.species.seq300.k12.arff       (3)   57.38 |    73.18 v
 output/ibol.species.seq300.k13.arff       (3)   93.21 |    92.59  
 output/ibol.species.seq300.k14.arff       (3)   97.14 |    97.58  
@@ -38,10 +38,10 @@ output/res50k.family.seq150.k12.arff      (3)   19.56 |    38.12 v
 output/res50k.family.seq150.k13.arff      (3)   22.08 |    48.32 v
 output/res50k.family.seq150.k14.arff      (3)   34.77 |    55.29 v
 output/res50k.family.seq150.k15.arff      (3)   47.28 |    58.20 v
+output/res50k.family.seq150.k16.arff      (3)   58.49 |    58.58  
 output/res50k.family.seq300.k11.arff      (3)   30.95 |    22.87 *
 output/res50k.family.seq300.k12.arff      (3)   36.10 |    51.88 v
 output/res50k.family.seq300.k13.arff      (3)   46.38 |    61.50 v
-output/res50k.family.seq150.k16.arff      (3)   58.49 |    58.58  
 output/res50k.family.seq300.k14.arff      (3)   61.95 |    69.71 v
 output/res50k.family.seq300.k15.arff      (3)   71.64 |    72.53  
 output/res50k.family.seq300.k16.arff      (3)   76.55 |    72.21 *

@@ -1,6 +1,6 @@
-df = read.csv("results/new-xml-cleaned.csv")
+df = read.csv("results/feb5-result-csv-cleaned.csv")
 
-pdf(file="results/new-xml-graph.pdf", width=8, height=8)
+pdf(file="results/feb5-graph.pdf", width=8, height=8)
 
 par(mfrow=c(3,4))
 for( i in seq(1, nrow(df), 6) ) {
@@ -11,16 +11,12 @@ for( i in seq(1, nrow(df), 6) ) {
   plot(x=1:6, y=subset$nb, xlab="k", ylab="Accuracy (%)", ylim=c(0,100),
        pch=19, col="blue", cex=0.5, main=title)
   points(x=1:6, y=subset$rf, pch=19, col="red", cex=0.5)
-  points(x=1:6, y=subset$nbd, pch=19, col="orange", cex=0.5)
-  points(x=1:6, y=subset$rfd, pch=19, col="green", cex=0.5)
   # lines
   lines(x=1:6, y=subset$nb, pch=19, col="blue")
   lines(x=1:6, y=subset$rf, pch=19, col="red")
-  lines(x=1:6, y=subset$nbd, pch=19, col="orange")
-  lines(x=1:6, y=subset$rfd, pch=19, col="green")
   # legend
-  legend('bottomright', legend=c("NB","RF","NB (d)","RF (d)"),
-         fill=c("blue","red","orange","green"), cex=0.6)
+  legend('bottomright', legend=c("NB","RF"),
+         fill=c("blue","red"), cex=0.6)
 }
 
 dev.off()

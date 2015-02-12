@@ -1,7 +1,7 @@
 import sys
 
-cols_to_retain = 5
-cols = ["dataset", "nb", "rf", "nbd", "rfd"]
+cols_to_retain = 3
+cols = ["dataset", "nb", "rf"]
 
 instances = []
 
