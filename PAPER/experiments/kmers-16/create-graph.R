@@ -9,7 +9,7 @@ for( i in seq(1, nrow(df), 6) ) {
   title = gsub("output/", "", as.character(subset$dataset[1]))
   title = gsub("res50k", "ncbi", title)
   plot(x=1:6, y=subset$nb, xlab="k", ylab="Accuracy (%)", ylim=c(0,100),
-       pch=19, col="blue", cex=0.5, main=title)
+       pch=19, col="blue", cex=0.5, main=gsub(".k11.arff", "", title))
   points(x=1:6, y=subset$rf, pch=19, col="red", cex=0.5)
   # lines
   lines(x=1:6, y=subset$nb, pch=19, col="blue")
