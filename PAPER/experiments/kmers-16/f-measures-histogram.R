@@ -15,7 +15,8 @@ for(i in 1:length(files)) {
   ttl = gsub(".nb$", "\n(NB)", ttl)
   boxplot(df$f_measure[1:nrow(df)-1], main=ttl, col="grey", ylab="F-Measure")
   #abline(v=0.5, lty="dashed")
-  print(length(which(df$f_measure >= 0.5)) / (nrow(df)))
+  print(length(which(df$f_measure > 0.5)) / (nrow(df)))
+  legend('bottomright', paste(round(length(which(df$f_measure > 0.5)) / (nrow(df)), 2)), bty="n")
 }
 
 dev.off()
