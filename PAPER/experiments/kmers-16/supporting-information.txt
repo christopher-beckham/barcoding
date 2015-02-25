@@ -1,0 +1,97 @@
+Tester:     weka.experiment.PairedCorrectedTTester -G 4,5,6 -D 1 -R 2 -S 0.05 -result-matrix "weka.experiment.ResultMatrixPlainText -mean-prec 2 -stddev-prec 2 -col-name-width 0 -row-name-width 40 -mean-width 3 -stddev-width 2 -sig-width 1 -count-width 5 -print-col-names -print-row-names -enum-col-names"
+Analysing:  PERCENT_CORRECT
+Datasets:   72
+Resultsets: 9
+Confidence: 0.05 (two tailed)
+Sorted by:  -
+Date:       26/02/15 10:16 AM
+
+
+Dataset                                  (2) meta.Fil | (1) meta. (3) trees. (4) meta. (5) meta.F (6) meta. (7) meta.F (8) bayes (9) bayes
+------------------------------------------------------------------------------------------------------------------------------------------
+ibol.species.seq150.k11.arff       (3)    4.67 |    4.67       6.74 v    2.24 *     2.24 *    5.26       5.65 v    4.67      6.36 v
+ibol.species.seq150.k12.arff       (3)   13.74 |   13.74      49.61 v    2.24 *     2.24 *   22.61 v                               
+ibol.species.seq150.k13.arff       (3)   54.76 |   54.76      74.05 v    2.24 *     2.24 *   60.84 v    72.33 v   54.76     61.94 v
+ibol.species.seq150.k14.arff       (3)   81.26 |   81.26      83.39 v    2.24 *     2.24 *   72.82 *    80.70     81.26     85.66 v
+ibol.species.seq150.k15.arff       (3)   89.05 |   83.39 *    86.11 *    2.24 *     2.24 *   71.00 *    83.96 *   89.05     91.50 v
+ibol.species.seq150.k16.arff       (3)   84.93 |   76.07 *    87.64 v    2.24 *     2.24 *   60.02 *    85.88     91.75 v          
+ibol.species.seq300.k11.arff       (3)   11.67 |   11.67      14.90 v    2.24 *     2.24 *   11.46      11.77     11.67     13.84 v
+ibol.species.seq300.k12.arff       (3)   57.38 |   57.38      73.18 v    2.24 *     2.24 *   54.43      72.22 v   57.38     58.98 v
+ibol.species.seq300.k13.arff       (3)   93.21 |   93.21      92.59      2.24 *     2.24 *   92.84 *    91.80 *   93.21     94.45 v
+ibol.species.seq300.k14.arff       (3)   97.14 |   97.14      97.58      2.24 *     2.24 *   97.41      96.25 *   97.14     97.39  
+ibol.species.seq300.k15.arff       (3)   98.52 |   97.89 *    98.57      2.24 *     2.24 *   97.56 *    97.91 *   98.52     98.28  
+ibol.species.seq300.k16.arff       (3)   98.46 |   97.95 *    98.73      2.24 *     2.24 *   95.56 *    98.54     98.88 v          
+ibol.species.seq450.k11.arff       (3)   21.20 |   21.20      26.29 v    2.24 *     2.24 *   18.21 *    20.76     21.20     23.93 v
+ibol.species.seq450.k12.arff       (3)   87.90 |   87.90      89.76 v    2.24 *     2.24 *   79.33 *    89.07 v   87.90     88.56  
+ibol.species.seq450.k13.arff       (3)   98.67 |   98.67      98.97      2.24 *     2.24 *   99.29 v    98.81     98.67     98.74  
+ibol.species.seq450.k14.arff       (3)   99.68 |   99.68      99.91      2.24 *     2.24 *   99.77      99.75     99.68     99.67  
+ibol.species.seq450.k15.arff       (3)   99.82 |   99.77 *    99.98 v    2.24 *     2.24 *   99.67      99.91 v   99.82     99.79  
+ibol.species.seq450.k16.arff       (3)   99.83 |   99.78      99.97      2.24 *     2.24 *   99.27 *    99.93     99.87            
+ibol.species.seq600.k11.arff       (3)   82.84 |   82.84      82.90     75.30 *    80.01     70.08 *    74.54     82.84     83.72  
+ibol.species.seq600.k12.arff       (3)   97.61 |   97.61      98.87 v   98.55      99.25     98.55      99.12     97.61     97.11  
+ibol.species.seq600.k13.arff       (3)   98.93 |   98.93      99.94     99.75      99.87     99.81      99.87     98.93     98.24  
+ibol.species.seq600.k14.arff       (3)   99.37 |   99.37      99.94     99.25      99.87 v   99.69      99.94     99.37     99.12  
+ibol.species.seq600.k15.arff       (3)   99.37 |   99.37     100.00     99.50     100.00     99.50     100.00     99.37     99.12  
+ibol.species.seq600.k16.arff       (3)   99.37 |   99.37     100.00     99.62     100.00     97.05     100.00     99.37     99.12  
+ncbi.family.seq150.k11.arff      (3)   19.94 |   19.94      14.24 *   17.68      19.89     19.53      17.44 *   19.94     20.62  
+ncbi.family.seq150.k12.arff      (3)   19.56 |   19.56      38.12 v   20.89      25.31 v   22.73 v    37.60 v   19.56     24.40 v
+ncbi.family.seq150.k13.arff      (3)   22.08 |   22.08      48.32 v   23.12      36.78 v   34.61 v    46.08 v   22.08     34.90 v
+ncbi.family.seq150.k14.arff      (3)   34.77 |   34.77      55.29 v   28.89 *    47.81 v   47.12 v    51.83 v   34.77     48.55 v
+ncbi.family.seq150.k15.arff      (3)   47.28 |   46.75      58.20 v   40.89 *    56.77 v   55.34 v    54.83 v   47.28     57.72 v
+ncbi.family.seq150.k16.arff      (3)   58.49 |   58.51      58.58     48.61 *    62.38 v   59.13      56.76     53.92 *   63.75 v
+ncbi.family.seq300.k11.arff      (3)   30.95 |   30.95      22.87 *   29.56 *    30.15 *   29.50 *    26.32 *   30.95     31.41  
+ncbi.family.seq300.k12.arff      (3)   36.10 |   36.10      51.88 v   36.80      43.08 v   37.83      50.98 v   36.10     39.19 v
+ncbi.family.seq300.k13.arff      (3)   46.38 |   46.38      61.50 v   46.49      58.68 v   54.05 v    59.40 v   46.38     53.92 v
+ncbi.family.seq300.k14.arff      (3)   61.95 |   61.95      69.71 v   62.50      69.01 v   67.24 v    64.78 v   61.95     68.88 v
+ncbi.family.seq300.k15.arff      (3)   71.64 |   70.10 *    72.53     70.86      72.71     72.13      68.06 *   71.64     75.36 v
+ncbi.family.seq300.k16.arff      (3)   76.55 |   76.03      72.21 *   76.16      73.52 *   73.38 *    69.53 *   76.50     79.25 v
+ncbi.family.seq450.k11.arff      (3)   35.11 |   35.11      29.52 *   34.00      34.73     32.87 *    30.47 *   35.11     35.95 v
+ncbi.family.seq450.k12.arff      (3)   44.80 |   44.80      60.74 v   46.49 v    55.27 v   46.10      59.49 v   44.80     47.34  
+ncbi.family.seq450.k13.arff      (3)   59.72 |   59.72      70.38 v   60.21      68.33 v   64.33 v    68.67 v   59.72     64.06 v
+ncbi.family.seq450.k14.arff      (3)   73.47 |   73.47      77.41 v   74.55      76.89     75.88 v    72.94     73.47     77.55 v
+ncbi.family.seq450.k15.arff      (3)   80.15 |   79.02      80.37     80.47      80.21     79.43      76.08 *   80.15     82.42 v
+ncbi.family.seq450.k16.arff      (3)   82.65 |   82.35      80.04 *   82.82      80.81     79.78 *    76.97 *   83.48     84.51 v
+ncbi.family.seq600.k11.arff      (3)   42.61 |   42.61      53.45 v   42.57      46.22 v   40.31      43.88     42.61     44.70 v
+ncbi.family.seq600.k12.arff      (3)   56.01 |   56.01      78.12 v   58.95      74.80 v   59.78 v    76.91 v   56.01     59.94 v
+ncbi.family.seq600.k13.arff      (3)   69.82 |   69.82      83.59 v   71.48 v    76.70 v   70.27      82.06 v   69.82     70.04  
+ncbi.family.seq600.k14.arff      (3)   74.58 |   74.58      87.12 v   64.22 *    86.41 v   63.97 *    84.91 v   74.58     66.30 *
+ncbi.family.seq600.k15.arff      (3)   64.66 |   80.48 v    87.90 v   59.24 *                                                    
+ncbi.family.seq600.k16.arff      (3)   72.38 |   84.82 v    86.97 v   58.46 *                                                    
+ncbi.genus.seq150.k11.arff       (3)    7.93 |    7.93       5.43 *    2.89 *     2.89 *    7.80       5.54 *    7.93      8.61 v
+ncbi.genus.seq150.k12.arff       (3)    9.99 |    9.99      27.51 v    2.89 *     2.89 *   13.79 v    27.42 v    9.99     13.64 v
+ncbi.genus.seq150.k13.arff       (3)   24.49 |   24.49      41.78 v    2.89 *     2.89 *   30.97 v    40.18 v   24.49     31.43 v
+ncbi.genus.seq150.k14.arff       (3)   43.63 |   43.63      50.51 v    4.15 *     4.15 *   42.02 *    47.17 v   43.63     48.78 v
+ncbi.genus.seq150.k15.arff       (3)   56.22 |   51.80 *    53.89 *    4.72 *     4.87 *   45.57 *    51.81 *   56.22     58.79 v
+ncbi.genus.seq150.k16.arff       (3)   56.08 |   51.97 *    56.11      5.20 *     6.12 *   44.18 *    53.98     62.44 v          
+ncbi.genus.seq300.k11.arff       (3)   15.27 |   15.27      12.32 *   12.44 *    12.52 *   14.02 *    11.57 *   15.27     16.12  
+ncbi.genus.seq300.k12.arff       (3)   30.11 |   30.11      43.60 v   19.62 *    21.40 *   30.35      42.83 v   30.11     32.32 v
+ncbi.genus.seq300.k13.arff       (3)   57.91 |   57.91      59.47     25.89 *    32.58 *   56.76      57.80     57.91     60.88 v
+ncbi.genus.seq300.k14.arff       (3)   75.04 |   75.04      69.87 *   51.85 *    62.68 *   67.91 *    65.34 *   75.04     76.56  
+ncbi.genus.seq300.k15.arff       (3)   81.71 |   79.67 *    73.80 *   69.28 *    74.58 *   69.56 *    69.91 *   81.71     82.26  
+ncbi.genus.seq300.k16.arff       (3)   80.59 |   78.01 *    74.95 *   76.98 *    79.46 *   65.34 *    72.23 *   85.03 v          
+ncbi.genus.seq450.k11.arff       (3)   19.48 |   19.48      18.49     17.99      18.32     17.77      15.70 *   19.48     20.80 v
+ncbi.genus.seq450.k12.arff       (3)   45.62 |   45.62      56.17 v   36.16 *    42.77 *   43.95      55.25 v   45.62     47.33 v
+ncbi.genus.seq450.k13.arff       (3)   75.93 |   75.93      72.70 *   65.99 *    70.16 *   72.70 *    71.27 *   75.93     77.51  
+ncbi.genus.seq450.k14.arff       (3)   86.20 |   86.20      82.06 *   85.21 *    82.52 *   82.16 *    77.91 *   86.20     87.67 v
+ncbi.genus.seq450.k15.arff       (3)   89.07 |   89.09      85.28 *   90.60      86.92 *   82.28 *    81.69 *   89.07     90.39 v
+ncbi.genus.seq450.k16.arff       (3)   89.27 |   88.71 *    85.74 *   91.66 v    87.32     77.79 *    82.96 *   90.90 v          
+ncbi.genus.seq600.k11.arff       (3)   36.96 |   36.96      50.17 v   30.17 *    34.15     31.56 *    36.17                      
+ncbi.genus.seq600.k12.arff       (3)   69.39 |   69.39      81.07 v   59.01 *    75.65 v   68.68      79.64 v                    
+ncbi.genus.seq600.k13.arff       (3)   84.67 |   84.67      88.32 v   74.97 *    80.90     85.54      86.93                      
+ncbi.genus.seq600.k14.arff       (3)   82.89 |   82.89      91.10 v   57.49 *    91.28 v   81.52      89.56 v                    
+ncbi.genus.seq600.k15.arff       (3)   85.77 |   86.15      91.62 v   40.57 *    92.09 v   73.74 *    89.84 v                    
+ncbi.genus.seq600.k16.arff       (3)   86.70 |   88.73 v    91.04 v   34.59 *                                                    
+------------------------------------------------------------------------------------------------------------------------------------------
+                                              (v/ /*) | (3/58/11) (38/18/16) (3/22/47) (18/15/36 (14/27/28) (25/21/22)  (5/57/1) (36/20/1)
+
+
+Key:
+(1) meta.FilteredClassifier '-F \"unsupervised.attribute.BarcodingNumericToBinary -R 5,6\" -W bayes.NaiveBayes' -4523450618538717400
+(2) meta.FilteredClassifier '-F \"unsupervised.attribute.BarcodingNumericToBinary -R 6\" -W bayes.NaiveBayes' -4523450618538717400
+(3) trees.RandomForest '-I 30 -K 0 -S 1 -num-slots 4' 1116839470751428698
+(4) meta.FilteredClassifier '-F \"supervised.attribute.Discretize -R first-last -precision 6\" -W bayes.NaiveBayes' -4523450618538717400
+(5) meta.FilteredClassifier '-F \"supervised.attribute.Discretize -D -R first-last -precision 6\" -W trees.RandomForest -- -I 30 -K 0 -S 1 -num-slots 4' -4523450618538717400
+(6) meta.FilteredClassifier '-F \"unsupervised.attribute.Discretize -F -B 10 -M -1.0 -R first-last\" -W bayes.NaiveBayes' -4523450618538717400
+(7) meta.FilteredClassifier '-F \"unsupervised.attribute.Discretize -D -F -B 10 -M -1.0 -R first-last\" -W trees.RandomForest -- -I 30 -K 0 -S 1 -num-slots 4' -4523450618538717400
+(8) bayes.NaiveBayes '' 5995231201785697655
+(9) bayes.NaiveBayes -K 5995231201785697655
